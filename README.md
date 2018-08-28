@@ -30,7 +30,7 @@ You can install all the dependencies except PyTorch with `pip3`:
 
 ```
 git clone https://github.com/maximecb/gym-miniworld.git
-cd gym-minworld
+cd gym-miniworld
 pip3 install -e .
 ```
 
