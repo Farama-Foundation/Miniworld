@@ -1,6 +1,6 @@
 # gym-miniworld
 
-Simple 3D interior simulator for RL &amp; robotics research
+Simple 3D interior environment simulator for RL &amp; robotics research.
 
 Please use this bibtex if you want to cite this repository in your publications:
 
