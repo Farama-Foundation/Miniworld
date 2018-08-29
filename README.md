@@ -1,6 +1,10 @@
 # gym-miniworld
 
-Simple 3D interior environment simulator for RL &amp; robotics research.
+MiniWorld is a minimalistic 3D interior environment simulator for reinforcement
+learning &amp; robotics research. It can be used to simulate environments with
+rooms, doors, hallways and various objects (eg: office and home environments).
+MiniWorld can be seen as an alternative to VizDoom or DMLab. It is written
+100% in Python and designed to be easily modified or extended.
 
 Please use this bibtex if you want to cite this repository in your publications:
 
@@ -21,18 +25,23 @@ This simulator was created as part of work done at [Mila](https://mila.quebec/).
 
 Requirements:
 - Python 3.5+
-- OpenAI gym
+- OpenAI Gym
 - NumPy
 - Pyglet
 - PyYAML
 
-You can install all the dependencies except PyTorch with `pip3`:
+You can install all the dependencies with `pip3`:
 
 ```
 git clone https://github.com/maximecb/gym-miniworld.git
 cd gym-miniworld
 pip3 install -e .
 ```
+
+If you run into any problems, take a look at the troubleshooting
+section below, and if you're still stuck, please
+[open an issue](https://github.com/maximecb/gym-miniworld/issues) on this
+repository to let us know something is wrong.
 
 ## Usage
 
@@ -44,9 +53,8 @@ TODO
 
 ### Observations
 
-The observations are single camera images, as numpy arrays of size (120, 160, 3). These arrays contain unsigned 8-bit integer values in the [0, 255] range.
-This image size was chosen because it is exactly one quarter of the 640x480 image resolution provided by the camera, which makes it fast and easy to scale down
-the images. The choice of 8-bit integer values over floating-point values was made because the resulting images are smaller if stored on disk and faster to send over a networked connection.
+The observations are single camera images, as numpy arrays of size (210, 160, 3). These arrays contain unsigned 8-bit integer values in the [0, 255] range. This image format was chosen for compatibility, because it matches that of the Atari environments, which every RL framework out there tries to support. It is possible to configure the observation image size by directly instantiating the environment class and setting the appropriate
+parameters in the constructor.
 
 ### Actions
 
