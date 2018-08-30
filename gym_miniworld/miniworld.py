@@ -104,7 +104,8 @@ class MiniWorld(gym.Env):
         pass
 
     def seed(self, seed=None):
-        assert False
+        # FIXME
+        pass
 
         #self.np_random, _ = seeding.np_random(seed)
         #return [seed]
@@ -187,7 +188,7 @@ class MiniWorld(gym.Env):
         #glCallList(0)
 
         # TODO
-        assert False
+        pass
 
     def render(self, mode='human', close=False):
         """

@@ -1,4 +1,5 @@
 from ..miniworld import MiniWorld
 
-def HallwayEnv(MiniWorld):
-    pass
+class HallwayEnv(MiniWorld):
+    def __init__(self):
+        super().__init__()
