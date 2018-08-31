@@ -18,8 +18,6 @@ def register_envs():
         gym_id = 'MiniWorld-%s-v0' % (env_name)
         entry_point = '%s:%s' % (module_name, global_name)
 
-        print(entry_point)
-
         gym.envs.registration.register(
             id=gym_id,
             entry_point=entry_point,

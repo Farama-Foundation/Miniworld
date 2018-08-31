@@ -14,7 +14,7 @@ import gym
 import gym_miniworld
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--env-name', default=None)
+parser.add_argument('--env-name', default='MiniWorld-Hallway-v0')
 parser.add_argument('--domain-rand', action='store_true', help='enable domain randomization')
 args = parser.parse_args()
 
@@ -52,18 +52,16 @@ def update(dt):
     action = np.array([0.0, 0.0])
 
     if key_handler[key.UP]:
-        action = np.array([0.44, 0.0])
+        action = env.actions.move_forward
     if key_handler[key.DOWN]:
-        action = np.array([-0.44, 0])
+        action = env.actions.move_back
     if key_handler[key.LEFT]:
-        action = np.array([0.35, +1])
+        action = env.actions.turn_left
     if key_handler[key.RIGHT]:
-        action = np.array([0.35, -1])
-    if key_handler[key.SPACE]:
-        action = np.array([0, 0])
+        action = env.actions.turn_right
 
     obs, reward, done, info = env.step(action)
-    print('step_count = %s, reward=%.3f' % (env.unwrapped.step_count, reward))
+    print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
 
     if done:
         print('done!')

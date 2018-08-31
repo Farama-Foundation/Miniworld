@@ -6,6 +6,7 @@ import pybullet
 from .random import *
 from .opengl import *
 #from .objmesh import *
+from .entity import *
 
 class MiniWorld(gym.Env):
     """
@@ -121,10 +122,15 @@ class MiniWorld(gym.Env):
         # Step count since episode start
         self.step_count = 0
 
+        # Create the agent
+        self.agent = Agent()
+
         # TODO: randomize elements of the world
+        # Perform domain-randomization
+        # do we want a gen_world here?
 
-
-
+        # Pre-compile static parts of the environment into a display list
+        self._render_static()
 
         # Generate the first camera image
         obs = self.render_obs()
@@ -165,13 +171,23 @@ class MiniWorld(gym.Env):
 
         return obs, reward, done, {}
 
-    def _render_static():
+    def _render_static(self):
         """
         Render the static elements of the scene into a display list.
         Called once at the beginning of each episode.
         """
 
-        glNewList(0, GL_COMPILE);
+        glNewList(1, GL_COMPILE);
+
+
+
+        for i in range(0, 100):
+            glColor3f(1, 0, 0)
+            glBegin(GL_TRIANGLES)
+            glVertex3f(1, 2.0,-0.5)
+            glVertex3f(1, 2.0, 0.5)
+            glVertex3f(1, 1.0, 0.5)
+            glEnd()
 
 
 
@@ -181,7 +197,13 @@ class MiniWorld(gym.Env):
 
         glEndList()
 
-    def _render_world(self, frame_buffer):
+    def _render_world(
+        self,
+        frame_buffer,
+        cam_pos,
+        cam_dir,
+        cam_fov_y
+    ):
         """
         Render the world from a given camera position into a frame buffer,
         and produce a numpy image array as output.
@@ -199,26 +221,48 @@ class MiniWorld(gym.Env):
         glClearDepth(1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        # Set the projection matrix
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(
+            cam_fov_y,
+            frame_buffer.width / float(frame_buffer.height),
+            0.04,
+            100.0
+        )
 
+        # Setup the camera
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        gluLookAt(
+            # Eye position
+            *cam_pos,
+            # Target
+            *(cam_pos + cam_dir),
+            # Up vector
+            0, 1.0, 0.0
+        )
 
-
-        #glCallList(0)
-
-
-
-
-
+        # Call the display list for the static parts of the environment
+        glCallList(1)
 
         # Resolve the rendered imahe into a numpy array
         return frame_buffer.resolve()
 
-    def render_obs(self):
+    def render_obs(self, frame_buffer=None):
         """
         Render an observation from the point of view of the agent
         """
 
-        # TODO: pass appropriate camera parameter for the agent
-        return self._render_world(self.obs_fb)
+        if frame_buffer == None:
+            frame_buffer = self.obs_fb
+
+        return self._render_world(
+            frame_buffer,
+            self.agent.cam_pos,
+            self.agent.cam_dir,
+            self.agent.cam_fov_y
+        )
 
     def render(self, mode='human', close=False):
         """
@@ -230,10 +274,54 @@ class MiniWorld(gym.Env):
                 self.window.close()
             return
 
+        # Render the image
+        img = self.render_obs(self.vis_fb)
 
+        if mode == 'rgb_array':
+            return img
 
+        width = img.shape[1]
+        height = img.shape[0]
 
+        if self.window is None:
+            config = pyglet.gl.Config(double_buffer=False)
+            self.window = pyglet.window.Window(
+                width=width,
+                height=height,
+                resizable=False,
+                config=config
+            )
 
+        self.window.clear()
+        self.window.switch_to()
+        self.window.dispatch_events()
 
-        # TODO
-        return None
+        # Bind the default frame buffer
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        # Setup orghogonal projection
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        glOrtho(0, width, 0, height, 0, 10)
+
+        # Draw the image to the rendering window
+        img = np.ascontiguousarray(np.flip(img, axis=0))
+        img_data = pyglet.image.ImageData(
+            width,
+            height,
+            'RGB',
+            img.ctypes.data_as(POINTER(GLubyte)),
+            pitch=width * 3,
+        )
+        img_data.blit(
+            0,
+            0,
+            0,
+            width=width,
+            height=height
+        )
+
+        # Force execution of queued commands
+        glFlush()
