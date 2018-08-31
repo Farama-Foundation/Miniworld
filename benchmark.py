@@ -4,12 +4,10 @@ import time
 import numpy as np
 import gym
 import gym_miniworld
-#from gym_duckietown.envs import DuckietownEnv
 
-"""
 # Benchmark loading time
 st = time.time()
-env = DuckietownEnv(max_steps = 20000, map_name='loop_obstacles')
+env = gym.make('MiniWorld-Hallway-v0')
 env.seed(0)
 env.reset()
 load_time = 1000 * (time.time() - st)
@@ -31,7 +29,7 @@ while True:
         break
 
     # Slow speed to minimize resets
-    action = np.array([0.01, 0.01])
+    action = 0
     obs, reward, done, info = env.step(action)
 
     if done:
@@ -49,4 +47,3 @@ print('frame time: {:,.1f} ms'.format(frame_time))
 print('frame rate: {:,.1f} FPS'.format(fps))
 
 env.close()
-"""

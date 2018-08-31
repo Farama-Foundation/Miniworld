@@ -46,7 +46,10 @@ class MiniWorld(gym.Env):
         self,
         max_episode_steps=1500,
         frame_rate=30,
-        frame_skip=1,
+        obs_width=210,
+        obs_height=160,
+        window_width=800,
+        window_height=600,
         domain_rand=True
     ):
         # Action enumeration for this environment
@@ -61,7 +64,7 @@ class MiniWorld(gym.Env):
         self.observation_space = gym.spaces.Box(
             low=0,
             high=255,
-            shape=(210, 160, 3),
+            shape=(obs_height, obs_width, 3),
             dtype=np.uint8
         )
 
@@ -73,9 +76,6 @@ class MiniWorld(gym.Env):
         # Frame rate to run at
         self.frame_rate = frame_rate
 
-        # Number of frames to skip per action
-        self.frame_skip = frame_skip
-
         # Flag to enable/disable domain randomization
         self.domain_rand = domain_rand
 
@@ -85,6 +85,12 @@ class MiniWorld(gym.Env):
         # Invisible window to render into (shadow OpenGL context)
         self.shadow_window = pyglet.window.Window(width=1, height=1, visible=False)
 
+        # Frame buffer used to render observations
+        self.obs_fb = FrameBuffer(obs_width, obs_height)
+
+        # Frame buffer used for human visualization
+        self.vis_fb = FrameBuffer(window_width, window_height, 8)
+
         """
         # For displaying text
         self.text_label = pyglet.text.Label(
@@ -93,26 +99,6 @@ class MiniWorld(gym.Env):
             x = 5,
             y = WINDOW_HEIGHT - 19
         )
-
-        # Create a frame buffer object for the observation
-        self.multi_fbo, self.final_fbo = create_frame_buffers(
-            CAMERA_WIDTH,
-            CAMERA_HEIGHT,
-            16
-        )
-
-        # Array to render the image into (for observation rendering)
-        self.img_array = np.zeros(shape=self.observation_space.shape, dtype=np.uint8)
-
-        # Create a frame buffer object for human rendering
-        self.multi_fbo_human, self.final_fbo_human = create_frame_buffers(
-            WINDOW_WIDTH,
-            WINDOW_HEIGHT,
-            4
-        )
-
-        # Array to render the image into (for human rendering)
-        self.img_array_human = np.zeros(shape=(WINDOW_HEIGHT, WINDOW_WIDTH, 3), dtype=np.uint8)
         """
 
         # Initialize the state
@@ -151,15 +137,14 @@ class MiniWorld(gym.Env):
         Perform one action and update the simulation
         """
 
-        # Actions could be a Python list
-        actions = np.array(actions)
+        self.step_count += 1
 
         delta_time = 1 / self.frame_rate
 
-        for _ in range(self.frame_skip):
-            self.step_count += 1
+        # TODO: update the world
 
-            # TODO: update the world
+
+
 
 
 
@@ -174,7 +159,7 @@ class MiniWorld(gym.Env):
             reward = 0
             return obs, reward, done, {}
 
-        # TODO
+        # TODO: reward computation
         reward = 0
         done = False
 
@@ -196,19 +181,48 @@ class MiniWorld(gym.Env):
 
         glEndList()
 
+    def _render_world(self, frame_buffer):
+        """
+        Render the world from a given camera position into a frame buffer,
+        and produce a numpy image array as output.
+        """
+
+        # Switch to the default context
+        # This is necessary on Linux Nvidia drivers
+        self.shadow_window.switch_to()
+
+        # Bind the frame buffer before rendering into it
+        frame_buffer.bind()
+
+        # Clear the color and depth buffers
+        glClearColor(0, 0, 0, 1.0)
+        glClearDepth(1.0)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+
+        #glCallList(0)
+
+
+
+
+
+
+        # Resolve the rendered imahe into a numpy array
+        return frame_buffer.resolve()
+
     def render_obs(self):
         """
         Render an observation from the point of view of the agent
         """
 
-        #glCallList(0)
-
-        # TODO
-        pass
+        # TODO: pass appropriate camera parameter for the agent
+        return self._render_world(self.obs_fb)
 
     def render(self, mode='human', close=False):
         """
-        Render the environment for viewing
+        Render the environment for human viewing
         """
 
         if close:
