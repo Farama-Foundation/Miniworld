@@ -1,4 +1,5 @@
 import math
+from enum import IntEnum
 import numpy as np
 import gym
 import pyglet
@@ -19,6 +20,30 @@ class MiniWorld(gym.Env):
         'video.frames_per_second' : 30
     }
 
+    # Enumeration of possible actions
+    class Actions(IntEnum):
+        # Turn left or right by a small amount
+        turn_left = 0
+        turn_right = 1
+
+        # Move forward or back by a small amount
+        move_forward = 2
+        move_back = 3
+
+        # Pitch the camera up or down
+        look_up = 4
+        look_down = 5
+
+        # Pick up or drop an object being carried
+        pickup = 6
+        drop = 7
+
+        # Toggle/activate an object
+        toggle = 8
+
+        # Done completing task
+        done = 9
+
     def __init__(
         self,
         max_episode_steps=1500,
@@ -26,15 +51,11 @@ class MiniWorld(gym.Env):
         frame_skip=1,
         domain_rand=True
     ):
-        # Continuous actions.
-        # The first value represents the left/right turning velocity
-        # The second value is the backwards/forward movement velocity
-        self.action_space = gym.spaces.Box(
-            low=-1,
-            high=1,
-            shape=(2,),
-            dtype=np.float32
-        )
+        # Action enumeration for this environment
+        self.actions = MiniWorld.Actions
+
+        # Actions are discrete integer values
+        self.action_space = gym.spaces.Discrete(len(self.actions))
 
         # Observations are RGB images with pixels in [0, 255]
         # The default observation size matches that of Atari environment
@@ -104,11 +125,8 @@ class MiniWorld(gym.Env):
         pass
 
     def seed(self, seed=None):
-        # FIXME
-        pass
-
-        #self.np_random, _ = seeding.np_random(seed)
-        #return [seed]
+        self.rand = RandGen(seed)
+        return [seed]
 
     def reset(self):
         """
@@ -153,7 +171,7 @@ class MiniWorld(gym.Env):
         obs = self.render_obs()
 
         # If the maximum time step count is reached
-        if self.step_count >= self.max_steps:
+        if self.step_count >= self.max_episode_steps:
             done = True
             reward = 0
             return obs, reward, done, {}

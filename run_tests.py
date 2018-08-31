@@ -10,8 +10,8 @@ import gym_miniworld
 env = gym.make('MiniWorld-Hallway-v0')
 
 # Try stepping a few times
-#for i in range(0, 10):
-#    obs, _, _, _ = env.step(np.array([0.1, 0.1]))
+for i in range(0, 10):
+    obs, _, _, _ = env.step(0)
 
 """
 # Check that the human rendering resembles the agent's view
