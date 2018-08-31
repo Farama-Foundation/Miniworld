@@ -2,11 +2,9 @@ import math
 from enum import IntEnum
 import numpy as np
 import gym
-import pyglet
-from pyglet.gl import *
 import pybullet
-
 from .random import *
+from .opengl import *
 #from .objmesh import *
 
 class MiniWorld(gym.Env):
