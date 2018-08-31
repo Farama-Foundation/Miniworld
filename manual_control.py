@@ -49,7 +49,7 @@ def update(dt):
     movement/stepping and redrawing
     """
 
-    action = np.array([0.0, 0.0])
+    action = env.actions.do_nothing
 
     if key_handler[key.UP]:
         action = env.actions.move_forward

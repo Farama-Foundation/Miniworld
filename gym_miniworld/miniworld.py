@@ -21,27 +21,29 @@ class MiniWorld(gym.Env):
 
     # Enumeration of possible actions
     class Actions(IntEnum):
+        do_nothing = 0
+
         # Turn left or right by a small amount
-        turn_left = 0
-        turn_right = 1
+        turn_left = 1
+        turn_right = 2
 
         # Move forward or back by a small amount
-        move_forward = 2
-        move_back = 3
+        move_forward = 3
+        move_back = 4
 
         # Pitch the camera up or down
-        look_up = 4
-        look_down = 5
+        look_up = 5
+        look_down = 6
 
         # Pick up or drop an object being carried
-        pickup = 6
-        drop = 7
+        pickup = 7
+        drop = 8
 
         # Toggle/activate an object
-        toggle = 8
+        toggle = 9
 
         # Done completing task
-        done = 9
+        done = 10
 
     def __init__(
         self,
@@ -125,6 +127,15 @@ class MiniWorld(gym.Env):
         # Create the agent
         self.agent = Agent()
 
+        """
+        self.agent.position = np.array([
+            self.rand.float(-0.5, 0.5),
+            0,
+            self.rand.float(-0.5, 0.5)
+        ])
+        """
+        self.agent.direction = self.rand.float(-math.pi/4, math.pi/4)
+
         # TODO: randomize elements of the world
         # Perform domain-randomization
         # do we want a gen_world here?
@@ -138,7 +149,7 @@ class MiniWorld(gym.Env):
         # Return first observation
         return obs
 
-    def step(self, actions):
+    def step(self, action):
         """
         Perform one action and update the simulation
         """
@@ -147,14 +158,19 @@ class MiniWorld(gym.Env):
 
         delta_time = 1 / self.frame_rate
 
+        if action == self.actions.move_forward:
+            self.agent.position = self.agent.position + self.agent.dir_vec * 0.05
+
+        elif action == self.actions.move_back:
+            self.agent.position = self.agent.position - self.agent.dir_vec * 0.05
+
+        elif action == self.actions.turn_left:
+            self.agent.direction += math.pi * 0.025
+
+        elif action == self.actions.turn_right:
+            self.agent.direction -= math.pi * 0.025
+
         # TODO: update the world
-
-
-
-
-
-
-
 
         # Generate the current camera image
         obs = self.render_obs()

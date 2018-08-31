@@ -23,6 +23,7 @@ class Agent(Entity):
         self.position = np.array([0, 0, 0])
 
         # Direction angle in radians
+        # Angle zero points towards the positive X axis
         self.direction = 0
 
         # Distance between the camera and the floor
@@ -36,13 +37,23 @@ class Agent(Entity):
 
     @property
     def dir_vec(self):
-        # TODO
-        return np.array([1, 0, 0])
+        """
+        Vector pointing in the direction of forward movement
+        """
+
+        x = math.cos(self.direction)
+        z = -math.sin(self.direction)
+        return np.array([x, 0, z])
 
     @property
     def right_vec(self):
-        # TODO
-        return np.array([0, 0, 1])
+        """
+        Vector pointing to the right of the agent
+        """
+
+        x = math.sin(self.direction)
+        z = math.cos(self.direction)
+        return np.array([x, 0, z])
 
     @property
     def cam_pos(self):
@@ -50,8 +61,8 @@ class Agent(Entity):
 
     @property
     def cam_dir(self):
-        # TODO
-        return np.array([1, 0, 0])
+        # FIXME: take cam_angle into account
+        return self.dir_vec
 
     def step(self, delta_time):
         pass
