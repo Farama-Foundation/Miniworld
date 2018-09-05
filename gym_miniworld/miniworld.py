@@ -40,11 +40,16 @@ class Room:
     def gen_polys(self):
         """
         Generate polygons for this room
+        Needed for rendering and collision detection
         """
 
         # TODO: to begin, start with no portals case
 
         # Do we actually need this? Could just do it in render()
+        # Yes, we need it for collision detection!
+
+
+
 
         pass
 
@@ -62,8 +67,8 @@ class Room:
 
 
 
-        #GL_QUADS for walls
-
+        #glBegin(GL_QUADS) for walls
+        #glEnd()
 
 
         pass
