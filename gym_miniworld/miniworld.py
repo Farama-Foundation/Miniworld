@@ -8,6 +8,66 @@ from .opengl import *
 #from .objmesh import *
 from .entity import *
 
+class Room:
+    """
+    Represent an individual room and its contents
+    """
+
+    def __init__(
+        self,
+        outline,
+        wall_height=2.74
+    ):
+        assert len(outline) >= 3
+        self.wall_height = wall_height
+
+        # List of 2D points forming the outline of the room
+        self.outline = outline
+
+        # TODO: list of wall textures
+        # Could limit to just one to start
+        #self.wall_tex
+        #self.floor_tex
+        #self.ceil_tex
+
+        # List of portals
+        self.portals = []
+
+        # List of neighbor rooms
+        # Same length as portals
+        self.neighbors = []
+
+    def gen_polys(self):
+        """
+        Generate polygons for this room
+        """
+
+        # TODO: to begin, start with no portals case
+
+        # Do we actually need this? Could just do it in render()
+
+        pass
+
+    def render(self):
+        """
+        Render the static elements of the room
+        """
+
+        # TODO: start with different colors for floor, walls, ceiling
+        # random colors?
+
+        #glBegin(GL_POLYGON) for floor and ceiling
+        #glEnd()
+
+
+
+
+        #GL_QUADS for walls
+
+
+
+        pass
+
 class MiniWorld(gym.Env):
     """
     Base class for MiniWorld environments. Implements the procedural
@@ -136,9 +196,13 @@ class MiniWorld(gym.Env):
         """
         self.agent.direction = self.rand.float(-math.pi/4, math.pi/4)
 
+        # List of rooms in the world
+        self.rooms = []
+
         # TODO: randomize elements of the world
         # Perform domain-randomization
-        # do we want a gen_world here?
+
+        # TODO: do we want a gen_world method here?
 
         # Pre-compile static parts of the environment into a display list
         self._render_static()
@@ -195,7 +259,8 @@ class MiniWorld(gym.Env):
 
         glNewList(1, GL_COMPILE);
 
-
+        for room in self.rooms:
+            room.render()
 
         for i in range(0, 100):
             glColor3f(1, 0, 0)
@@ -204,12 +269,6 @@ class MiniWorld(gym.Env):
             glVertex3f(1, 2.0, 0.5)
             glVertex3f(1, 1.0, 0.5)
             glEnd()
-
-
-
-
-
-
 
         glEndList()
 
