@@ -18,11 +18,22 @@ class Room:
         outline,
         wall_height=2.74
     ):
-        assert len(outline) >= 3
-        self.wall_height = wall_height
+        # The outlien should have shape Nx2
+        assert len(outline.shape) == 2
+        assert outline.shape[1] == 2
+
+        # Add a Y coordinate to the outline points
+        outline = np.insert(outline, 1, 0,axis=1)
+
+        # Number of outline vertices / walls
+        self.num_walls = outline.shape[0]
 
         # List of 2D points forming the outline of the room
+        # Shape is Nx3
         self.outline = outline
+
+        # Height of the room walls
+        self.wall_height = wall_height
 
         # TODO: list of wall textures
         # Could limit to just one to start
@@ -37,23 +48,30 @@ class Room:
         # Same length as portals
         self.neighbors = []
 
-    def gen_polys(self):
+    def _gen_polys(self):
         """
         Generate polygons for this room
         Needed for rendering and collision detection
+        Note: the wall polygons are quads, but the floor and
+              ceiling can be arbitrary n-gons
         """
 
-        # TODO: to begin, start with no portals case
+        up_vec = np.array([0, self.wall_height, 0])
 
-        # Do we actually need this? Could just do it in render()
-        # Yes, we need it for collision detection!
+        self.floor_verts = self.outline
+        self.ceil_verts = self.outline + up_vec
 
+        self.wall_verts = []
+        for i in range(self.num_walls):
+            p0 = self.outline[i, :]
+            p1 = self.outline[(i+1) % self.num_walls, :]
+            self.wall_verts.append(p0)
+            self.wall_verts.append(p0+up_vec)
+            self.wall_verts.append(p1+up_vec)
+            self.wall_verts.append(p1)
+        self.wall_verts = np.array(self.wall_verts)
 
-
-
-        pass
-
-    def render(self):
+    def _render(self):
         """
         Render the static elements of the room
         """
@@ -61,17 +79,38 @@ class Room:
         # TODO: start with different colors for floor, walls, ceiling
         # random colors?
 
-        #glBegin(GL_POLYGON) for floor and ceiling
-        #glEnd()
+        # Draw the floor
+        glColor3f(1, 1, 1)
+        glBegin(GL_POLYGON)
+        for i in range(self.floor_verts.shape[0]):
+            point = self.floor_verts[i, :]
+            glVertex3f(*point)
+        glEnd()
+
+        # Draw the ceiling
+        glColor3f(1, 1, 1)
+        glBegin(GL_POLYGON)
+        for i in range(self.ceil_verts.shape[0]):
+            point = self.ceil_verts[i, :]
+            glVertex3f(*point)
+        glEnd()
+
+
+        glColor3f(0, 0, 1)
+        glBegin(GL_QUADS)
+        for i in range(self.wall_verts.shape[0]):
+            point = self.wall_verts[i, :]
+            glVertex3f(*point)
+        glEnd()
 
 
 
 
-        #glBegin(GL_QUADS) for walls
-        #glEnd()
 
 
-        pass
+
+
+
 
 class MiniWorldEnv(gym.Env):
     """
@@ -199,7 +238,7 @@ class MiniWorldEnv(gym.Env):
             self.rand.float(-0.5, 0.5)
         ])
         """
-        #self.agent.direction = self.rand.float(-math.pi/4, math.pi/4)
+        self.agent.direction = self.rand.float(-math.pi/4, math.pi/4)
 
         # List of rooms in the world
         self.rooms = []
@@ -209,6 +248,10 @@ class MiniWorldEnv(gym.Env):
 
         # Generate the world
         self._gen_world()
+
+        # Generate the polygons for each room
+        for room in self.rooms:
+            room._gen_polys()
 
         # Pre-compile static parts of the environment into a display list
         self._render_static()
@@ -240,7 +283,7 @@ class MiniWorldEnv(gym.Env):
         elif action == self.actions.turn_right:
             self.agent.direction -= math.pi * 0.025
 
-        # TODO: update the world
+        # TODO: update the world state, objects, etc.
 
         # Generate the current camera image
         obs = self.render_obs()
@@ -266,19 +309,15 @@ class MiniWorldEnv(gym.Env):
         Create a rectangular room
         """
 
-        # TODO: compute the outline coordinates
+        # 2D outline coordinates of the room
+        outline = np.array([
+            [min_x          , min_z],
+            [min_x          , min_z + size_z],
+            [min_x + size_x , min_z + size_z],
+            [min_x + size_x , min_z]
+        ])
 
-        #outline = np.ndarray([
-        #[],
-        #[],
-        #[],
-        #])
-
-        #self.rooms.append(Room(outline))
-
-
-        pass
-
+        self.rooms.append(Room(outline))
 
     def _gen_world(self):
         """
@@ -296,15 +335,7 @@ class MiniWorldEnv(gym.Env):
         glNewList(1, GL_COMPILE);
 
         for room in self.rooms:
-            room.render()
-
-        for i in range(0, 100):
-            glColor3f(1, 0, 0)
-            glBegin(GL_TRIANGLES)
-            glVertex3f(5, 2.0,-0.5)
-            glVertex3f(5, 2.0, 0.5)
-            glVertex3f(5, 1.0, 0.5)
-            glEnd()
+            room._render()
 
         glEndList()
 

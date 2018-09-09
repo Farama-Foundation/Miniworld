@@ -1,3 +1,5 @@
+import numpy as np
+import math
 from ..miniworld import MiniWorldEnv, Room
 
 class HallwayEnv(MiniWorldEnv):
@@ -7,6 +9,23 @@ class HallwayEnv(MiniWorldEnv):
     def _gen_world(self):
 
         room = self.create_rect_room(
-            0, 0,
-            2, 10
+            -1, -2,
+            12, 4
         )
+
+        self.agent.position = np.array([
+            self.rand.float(-0.5, 0.5),
+            0,
+            self.rand.float(-0.5, 0.5)
+        ])
+
+        self.agent.direction = self.rand.float(-math.pi/4, math.pi/4)
+
+    def step(self, action):
+        obs, reward, done, info = super().step(action)
+
+        # TODO: reward computation
+
+
+
+        return obs, reward, done, info

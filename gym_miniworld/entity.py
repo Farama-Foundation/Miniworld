@@ -33,7 +33,7 @@ class Agent(Entity):
         self.cam_angle = 0
 
         # Vertical field of view
-        self.cam_fov_y = 45
+        self.cam_fov_y = 60
 
     @property
     def dir_vec(self):
