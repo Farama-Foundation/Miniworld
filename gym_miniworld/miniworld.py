@@ -73,7 +73,7 @@ class Room:
 
         pass
 
-class MiniWorld(gym.Env):
+class MiniWorldEnv(gym.Env):
     """
     Base class for MiniWorld environments. Implements the procedural
     world generation and simulation logic.
@@ -121,7 +121,7 @@ class MiniWorld(gym.Env):
         domain_rand=True
     ):
         # Action enumeration for this environment
-        self.actions = MiniWorld.Actions
+        self.actions = MiniWorldEnv.Actions
 
         # Actions are discrete integer values
         self.action_space = gym.spaces.Discrete(len(self.actions))
@@ -199,7 +199,7 @@ class MiniWorld(gym.Env):
             self.rand.float(-0.5, 0.5)
         ])
         """
-        self.agent.direction = self.rand.float(-math.pi/4, math.pi/4)
+        #self.agent.direction = self.rand.float(-math.pi/4, math.pi/4)
 
         # List of rooms in the world
         self.rooms = []
@@ -207,7 +207,8 @@ class MiniWorld(gym.Env):
         # TODO: randomize elements of the world
         # Perform domain-randomization
 
-        # TODO: do we want a gen_world method here?
+        # Generate the world
+        self._gen_world()
 
         # Pre-compile static parts of the environment into a display list
         self._render_static()
@@ -256,6 +257,26 @@ class MiniWorld(gym.Env):
 
         return obs, reward, done, {}
 
+    def create_rect_room(
+        self,
+        min_x, min_y,
+        size_x, size_y
+    ):
+        """
+        Create a rectangular room
+        """
+
+
+        pass
+
+
+    def _gen_world(self):
+        """
+        Generate the world. Derived classes must implement this method.
+        """
+
+        raise NotImplementedError
+
     def _render_static(self):
         """
         Render the static elements of the scene into a display list.
@@ -270,9 +291,9 @@ class MiniWorld(gym.Env):
         for i in range(0, 100):
             glColor3f(1, 0, 0)
             glBegin(GL_TRIANGLES)
-            glVertex3f(1, 2.0,-0.5)
-            glVertex3f(1, 2.0, 0.5)
-            glVertex3f(1, 1.0, 0.5)
+            glVertex3f(5, 2.0,-0.5)
+            glVertex3f(5, 2.0, 0.5)
+            glVertex3f(5, 1.0, 0.5)
             glEnd()
 
         glEndList()
@@ -314,6 +335,18 @@ class MiniWorld(gym.Env):
         # Setup the camera
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
+
+        """
+        # Multiply the modelview matrix so that the +Z axis points up
+        # The matrix is column-major
+        glMultMatrixf((GLfloat * 16)(
+            1,  0,  0,  0,
+            0,  1,  0,  0,
+            0,  0,  1,  0,
+            0,  0,  0,  1,
+        ))
+        """
+
         gluLookAt(
             # Eye position
             *cam_pos,
@@ -322,6 +355,14 @@ class MiniWorld(gym.Env):
             # Up vector
             0, 1.0, 0.0
         )
+
+
+
+
+
+
+
+
 
         # Call the display list for the static parts of the environment
         glCallList(1)

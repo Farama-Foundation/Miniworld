@@ -1,8 +1,12 @@
-from ..miniworld import MiniWorld, Room
+from ..miniworld import MiniWorldEnv, Room
 
-class HallwayEnv(MiniWorld):
+class HallwayEnv(MiniWorldEnv):
     def __init__(self):
         super().__init__()
 
-    def gen_world(self):
-        pass
+    def _gen_world(self):
+
+        room = self.create_rect_room(
+            0, 0,
+            2, 10
+        )
