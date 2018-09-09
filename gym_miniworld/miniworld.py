@@ -231,15 +231,6 @@ class MiniWorldEnv(gym.Env):
         # Create the agent
         self.agent = Agent()
 
-        """
-        self.agent.position = np.array([
-            self.rand.float(-0.5, 0.5),
-            0,
-            self.rand.float(-0.5, 0.5)
-        ])
-        """
-        self.agent.direction = self.rand.float(-math.pi/4, math.pi/4)
-
         # List of rooms in the world
         self.rooms = []
 
