@@ -259,12 +259,22 @@ class MiniWorldEnv(gym.Env):
 
     def create_rect_room(
         self,
-        min_x, min_y,
-        size_x, size_y
+        min_x, min_z,
+        size_x, size_z
     ):
         """
         Create a rectangular room
         """
+
+        # TODO: compute the outline coordinates
+
+        #outline = np.ndarray([
+        #[],
+        #[],
+        #[],
+        #])
+
+        #self.rooms.append(Room(outline))
 
 
         pass
@@ -335,18 +345,6 @@ class MiniWorldEnv(gym.Env):
         # Setup the camera
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
-
-        """
-        # Multiply the modelview matrix so that the +Z axis points up
-        # The matrix is column-major
-        glMultMatrixf((GLfloat * 16)(
-            1,  0,  0,  0,
-            0,  1,  0,  0,
-            0,  0,  1,  0,
-            0,  0,  0,  1,
-        ))
-        """
-
         gluLookAt(
             # Eye position
             *cam_pos,
