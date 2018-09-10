@@ -8,6 +8,23 @@ from .opengl import *
 #from .objmesh import *
 from .entity import *
 
+# Texture size/density in texels/meter
+TEX_DENSITY = 512
+
+def gen_tex_coords(tex, width, height):
+    w = width * (TEX_DENSITY / tex.width)
+    h = height * (TEX_DENSITY / tex.height)
+
+    return np.array(
+        [
+            [0, 0],
+            [0, h],
+            [w, h],
+            [w, 0],
+        ],
+        dtype=np.float32
+    )
+
 class Room:
     """
     Represent an individual room and its contents
@@ -35,11 +52,9 @@ class Room:
         # Height of the room walls
         self.wall_height = wall_height
 
-        # TODO: list of wall textures
-        # Could limit to just one to start
-        #self.wall_tex
-        #self.floor_tex
-        #self.ceil_tex
+        self.wall_tex = Texture.get('concrete')
+        self.floor_tex = Texture.get('floor_tiles_bw')
+        self.ceil_tex = Texture.get('concrete_tiles')
 
         # List of portals
         self.portals = []
@@ -59,17 +74,42 @@ class Room:
         up_vec = np.array([0, self.wall_height, 0])
 
         self.floor_verts = self.outline
+        self.floor_texcs = gen_tex_coords(
+            self.floor_tex,
+            np.linalg.norm(self.outline[2,:] - self.outline[1,:]),
+            np.linalg.norm(self.outline[1,:] - self.outline[0,:])
+        )
+
         self.ceil_verts = self.outline + up_vec
+        self.ceil_texcs = gen_tex_coords(
+            self.ceil_tex,
+            np.linalg.norm(self.outline[2,:] - self.outline[1,:]),
+            np.linalg.norm(self.outline[1,:] - self.outline[0,:])
+        )
 
         self.wall_verts = []
+        self.wall_texcs = []
+
         for i in range(self.num_walls):
             p0 = self.outline[i, :]
             p1 = self.outline[(i+1) % self.num_walls, :]
+            side_vec = p1 - p0
+            wall_width = np.linalg.norm(side_vec)
+
             self.wall_verts.append(p0)
             self.wall_verts.append(p0+up_vec)
             self.wall_verts.append(p1+up_vec)
             self.wall_verts.append(p1)
+
+            texcs = gen_tex_coords(
+                self.wall_tex,
+                wall_width,
+                self.wall_height
+            )
+            self.wall_texcs.append(texcs)
+
         self.wall_verts = np.array(self.wall_verts)
+        self.wall_texcs = np.concatenate(self.wall_texcs)
 
     def _render(self):
         """
@@ -79,35 +119,31 @@ class Room:
         # TODO: start with different colors for floor, walls, ceiling
         # random colors?
 
+        glEnable(GL_TEXTURE_2D)
+
         # Draw the floor
-        glColor3f(1, 1, 1)
+        self.floor_tex.bind()
         glBegin(GL_POLYGON)
         for i in range(self.floor_verts.shape[0]):
-            point = self.floor_verts[i, :]
-            glVertex3f(*point)
+            glTexCoord2f(*self.floor_texcs[i, :])
+            glVertex3f(*self.floor_verts[i, :])
         glEnd()
 
         # Draw the ceiling
-        glColor3f(1, 1, 1)
+        self.ceil_tex.bind()
         glBegin(GL_POLYGON)
         for i in range(self.ceil_verts.shape[0]):
-            point = self.ceil_verts[i, :]
-            glVertex3f(*point)
+            glTexCoord2f(*self.ceil_texcs[i, :])
+            glVertex3f(*self.ceil_verts[i, :])
         glEnd()
 
-
-        glColor3f(0, 0, 1)
+        # Draw the walls
+        self.wall_tex.bind()
         glBegin(GL_QUADS)
         for i in range(self.wall_verts.shape[0]):
-            point = self.wall_verts[i, :]
-            glVertex3f(*point)
+            glTexCoord2f(*self.wall_texcs[i, :])
+            glVertex3f(*self.wall_verts[i, :])
         glEnd()
-
-
-
-
-
-
 
 
 
@@ -323,6 +359,9 @@ class MiniWorldEnv(gym.Env):
         Called once at the beginning of each episode.
         """
 
+        # TODO: manage this automatically
+        # glIsList
+        glDeleteLists(1, 1);
         glNewList(1, GL_COMPILE);
 
         for room in self.rooms:

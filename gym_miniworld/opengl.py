@@ -30,6 +30,7 @@ class Texture:
         if len(paths) == 0:
             for i in range(1, 10):
                 path = get_file_path('textures', '%s_%d' % (tex_name, i), 'png')
+
                 if not os.path.exists(path):
                     break
                 paths.append(path)
@@ -43,12 +44,12 @@ class Texture:
             path = paths[0]
 
         if path not in self.tex_cache:
-            self.tex_cache[path] = Texture(load_texture(path))
+            self.tex_cache[path] = Texture(Texture.load(path))
 
         return self.tex_cache[path]
 
     @classmethod
-    def load(tex_path):
+    def load(cls, tex_path):
         """
         Load a texture based on its path. No domain randomization.
         In mose cases, this method should not be used directly.
@@ -77,6 +78,8 @@ class Texture:
     def __init__(self, tex):
         assert not isinstance(tex, str)
         self.tex = tex
+        self.width = self.tex.width
+        self.height = self.tex.height
 
     def bind(self):
         glBindTexture(self.tex.target, self.tex.id)
