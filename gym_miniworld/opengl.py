@@ -61,6 +61,10 @@ class Texture:
         tex = img.get_texture()
         glEnable(tex.target)
         glBindTexture(tex.target, tex.id)
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
@@ -72,6 +76,9 @@ class Texture:
             GL_UNSIGNED_BYTE,
             img.get_image_data().get_data('RGBA', img.width * 4)
         )
+
+        # Unbind the texture
+        glBindTexture(GL_TEXTURE_2D, 0)
 
         return tex
 

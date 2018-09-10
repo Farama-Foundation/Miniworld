@@ -145,9 +145,6 @@ class Room:
             glVertex3f(*self.wall_verts[i, :])
         glEnd()
 
-
-
-
 class MiniWorldEnv(gym.Env):
     """
     Base class for MiniWorld environments. Implements the procedural
@@ -229,10 +226,10 @@ class MiniWorldEnv(gym.Env):
         self.shadow_window = pyglet.window.Window(width=1, height=1, visible=False)
 
         # Frame buffer used to render observations
-        self.obs_fb = FrameBuffer(obs_width, obs_height)
+        self.obs_fb = FrameBuffer(obs_width, obs_height, 1)
 
         # Frame buffer used for human visualization
-        self.vis_fb = FrameBuffer(window_width, window_height, 8)
+        self.vis_fb = FrameBuffer(window_width, window_height, 16)
 
         """
         # For displaying text

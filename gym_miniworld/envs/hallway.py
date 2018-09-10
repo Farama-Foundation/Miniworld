@@ -15,8 +15,11 @@ class HallwayEnv(MiniWorldEnv):
             1 + self.length, 4
         )
 
+        self.goal_pos = np.array([self.length - 0.5, 0, 0])
+
+        # Place the agent a random distance away from the goal
         self.agent.position = np.array([
-            self.rand.float(-0.5, 0.5),
+            self.rand.float(-0.5, self.goal_pos[0] - 0.25),
             0,
             self.rand.float(-0.5, 0.5)
         ])
@@ -26,8 +29,10 @@ class HallwayEnv(MiniWorldEnv):
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
-        # TODO: reward computation
+        dist = np.linalg.norm(self.agent.position - self.goal_pos)
 
-
+        if dist < 0.25:
+            reward = 1000 - self.step_count
+            done = True
 
         return obs, reward, done, info
