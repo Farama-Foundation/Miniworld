@@ -39,6 +39,14 @@ class RandGen:
         idx = self.int(0, len(lst))
         return lst[idx]
 
+    def color(self):
+        """
+        Pick a random color name
+        """
+
+        from .miniworld import COLOR_NAMES
+        return self.elem(COLOR_NAMES)
+
     def subset(self, iterable, num_elems):
         """
         Sample a random subset of distinct elements of a list

@@ -11,6 +11,19 @@ from .entity import *
 # Texture size/density in texels/meter
 TEX_DENSITY = 512
 
+# Map of color names to RGB values
+COLORS = {
+    'red'   : np.array([255, 0, 0]),
+    'green' : np.array([0, 255, 0]),
+    'blue'  : np.array([0, 0, 255]),
+    'purple': np.array([112, 39, 195]),
+    'yellow': np.array([255, 255, 0]),
+    'grey'  : np.array([100, 100, 100])
+}
+
+# List of color names, sorted alphabetically
+COLOR_NAMES = sorted(list(COLORS.keys()))
+
 def gen_tex_coords(tex, width, height):
     w = width * (TEX_DENSITY / tex.width)
     h = height * (TEX_DENSITY / tex.height)
@@ -296,16 +309,16 @@ class MiniWorldEnv(gym.Env):
         delta_time = 1 / self.frame_rate
 
         if action == self.actions.move_forward:
-            self.agent.position = self.agent.position + self.agent.dir_vec * 0.05
+            self.agent.position = self.agent.position + self.agent.dir_vec * 0.1
 
         elif action == self.actions.move_back:
-            self.agent.position = self.agent.position - self.agent.dir_vec * 0.05
+            self.agent.position = self.agent.position - self.agent.dir_vec * 0.1
 
         elif action == self.actions.turn_left:
-            self.agent.direction += math.pi * 0.025
+            self.agent.direction += math.pi * 0.03
 
         elif action == self.actions.turn_right:
-            self.agent.direction -= math.pi * 0.025
+            self.agent.direction -= math.pi * 0.03
 
         # TODO: update the world state, objects, etc.
 
