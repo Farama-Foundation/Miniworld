@@ -15,10 +15,49 @@ class Entity:
         """
         Update the state of the object
         """
-        raise NotImplementedError
+        pass
+
+    @property
+    def is_static(self):
+        """
+        True for objects that cannot move or animate
+        (can be rendered statically)
+        """
+        return False
+
+class CeilingLight(Entity):
+    """
+    Ceiling light object
+    """
+
+    def __init__(self, x, y, z):
+        super().__init__()
+        self.pos = np.array([x, y, z])
+
+    def is_static(self):
+        return True
+
+    def render(self):
+        """
+        Draw the object
+        """
+
+        x, y, z = self.pos
+
+        glDisable(GL_LIGHTING)
+        glDisable(GL_TEXTURE_2D)
+
+        glBegin(GL_QUADS)
+        glVertex3f(x - 0.5, y - 0.05, z + 0.5)
+        glVertex3f(x + 0.5, y - 0.05, z + 0.5)
+        glVertex3f(x + 0.5, y - 0.05, z - 0.5)
+        glVertex3f(x - 0.5, y - 0.05, z - 0.5)
+        glEnd(GL_QUADS)
 
 class Agent(Entity):
     def __init__(self):
+        super().__init__()
+
         # Position of the agent (at floor level)
         self.position = np.array([0, 0, 0])
 

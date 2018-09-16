@@ -62,6 +62,12 @@ class Room:
         # Shape is Nx3
         self.outline = outline
 
+        # Compute the min and max x, z extents
+        self.min_x = self.outline[:, 0].min()
+        self.max_x = self.outline[:, 0].max()
+        self.min_z = self.outline[:, 2].min()
+        self.max_z = self.outline[:, 2].max()
+
         # Height of the room walls
         self.wall_height = wall_height
 
@@ -73,8 +79,11 @@ class Room:
         self.portals = []
 
         # List of neighbor rooms
-        # Same length as portals
+        # Same length as list of portals
         self.neighbors = []
+
+        # List of entities contained
+        self.entities = []
 
     def _gen_polys(self):
         """
@@ -129,9 +138,6 @@ class Room:
         Render the static elements of the room
         """
 
-        # TODO: start with different colors for floor, walls, ceiling
-        # random colors?
-
         glEnable(GL_TEXTURE_2D)
 
         # Draw the floor
@@ -157,6 +163,11 @@ class Room:
             glTexCoord2f(*self.wall_texcs[i, :])
             glVertex3f(*self.wall_verts[i, :])
         glEnd()
+
+        # Render the static entities
+        for ent in self.entities:
+            if ent.is_static():
+                ent.render()
 
 class MiniWorldEnv(gym.Env):
     """
@@ -199,8 +210,8 @@ class MiniWorldEnv(gym.Env):
         self,
         max_episode_steps=1500,
         frame_rate=30,
-        obs_width=210,
-        obs_height=160,
+        obs_width=80,
+        obs_height=60,
         window_width=800,
         window_height=600,
         domain_rand=True
@@ -212,8 +223,6 @@ class MiniWorldEnv(gym.Env):
         self.action_space = gym.spaces.Discrete(len(self.actions))
 
         # Observations are RGB images with pixels in [0, 255]
-        # The default observation size matches that of Atari environment
-        # for compatibility with existing RL frameworks.
         self.observation_space = gym.spaces.Box(
             low=0,
             high=255,
@@ -221,7 +230,7 @@ class MiniWorldEnv(gym.Env):
             dtype=np.uint8
         )
 
-        self.reward_range = (0, 1)
+        self.reward_range = (-math.inf, math.inf)
 
         # Maximum number of steps per episode
         self.max_episode_steps = max_episode_steps
@@ -354,7 +363,9 @@ class MiniWorldEnv(gym.Env):
             [min_x + size_x , min_z]
         ])
 
-        self.rooms.append(Room(outline))
+        room = Room(outline)
+        self.rooms.append(room)
+        return room
 
     def _gen_world(self):
         """

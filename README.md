@@ -54,7 +54,7 @@ TODO
 
 ### Observations
 
-The observations are single camera images, as numpy arrays of size (210, 160, 3). These arrays contain unsigned 8-bit integer values in the [0, 255] range. This image format was chosen for compatibility, because it matches that of the Atari environments, which every RL framework out there tries to support. It is possible to configure the observation image size by directly instantiating the environment class and setting the appropriate
+The observations are single camera images, as numpy arrays of size (80, 60, 3). These arrays contain unsigned 8-bit integer values in the [0, 255] range. It is possible to change the observation image size by directly instantiating the environment class and setting the appropriate
 parameters in the constructor.
 
 ### Actions

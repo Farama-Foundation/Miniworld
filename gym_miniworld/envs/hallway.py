@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from ..miniworld import MiniWorldEnv, Room
+from ..entity import CeilingLight
 
 class HallwayEnv(MiniWorldEnv):
     def __init__(self, length=12):
@@ -15,11 +16,19 @@ class HallwayEnv(MiniWorldEnv):
             1 + self.length, 4
         )
 
-        self.goal_pos = np.array([self.length - 0.5, 0, 0])
+        """
+        room.entities.append(CeilingLight(
+            1 + self.length - 2,
+            room.wall_height,
+            0
+        ))
+        """
+
+        self.goal_pos = np.array([room.max_x - 0.5, 0, 0])
 
         # Place the agent a random distance away from the goal
         self.agent.position = np.array([
-            self.rand.float(-0.5, self.goal_pos[0] - 0.25),
+            self.rand.float(room.min_x + 0.5, self.goal_pos[0] - 0.25),
             0,
             self.rand.float(-0.5, 0.5)
         ])
