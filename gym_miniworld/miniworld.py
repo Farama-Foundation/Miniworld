@@ -253,15 +253,13 @@ class MiniWorldEnv(gym.Env):
         # Frame buffer used for human visualization
         self.vis_fb = FrameBuffer(window_width, window_height, 16)
 
-        """
         # For displaying text
         self.text_label = pyglet.text.Label(
             font_name="Arial",
             font_size=14,
             x = 5,
-            y = WINDOW_HEIGHT - 19
+            y = window_height - 19
         )
-        """
 
         # Initialize the state
         self.seed()
@@ -523,6 +521,14 @@ class MiniWorldEnv(gym.Env):
             width=width,
             height=height
         )
+
+        # Draw the text label in the window
+        self.text_label.text = "pos: (%.2f, %.2f, %.2f), angle: %d, steps: %d" % (
+            *self.agent.position,
+            int(self.agent.direction * 180 / math.pi),
+            self.step_count
+        )
+        self.text_label.draw()
 
         # Force execution of queued commands
         glFlush()

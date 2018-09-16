@@ -33,8 +33,6 @@ def on_key_press(symbol, modifiers):
         print('RESET')
         env.reset()
         env.render()
-    elif symbol == key.PAGEUP:
-        env.unwrapped.cam_angle[0] = 0
     elif symbol == key.ESCAPE:
         env.close()
         sys.exit(0)

@@ -4,10 +4,14 @@ from ..miniworld import MiniWorldEnv, Room
 from ..entity import CeilingLight
 
 class HallwayEnv(MiniWorldEnv):
-    def __init__(self, length=12):
+    def __init__(self, length=12, **kwargs):
         assert length >= 1
         self.length = length
-        super().__init__()
+
+        super().__init__(
+            max_episode_steps=500,
+            **kwargs
+        )
 
     def _gen_world(self):
 
@@ -24,11 +28,9 @@ class HallwayEnv(MiniWorldEnv):
         ))
         """
 
-        self.goal_pos = np.array([room.max_x - 0.5, 0, 0])
-
         # Place the agent a random distance away from the goal
         self.agent.position = np.array([
-            self.rand.float(room.min_x + 0.5, self.goal_pos[0] - 0.25),
+            self.rand.float(room.min_x + 0.5, room.max_x - 1.0),
             0,
             self.rand.float(-0.5, 0.5)
         ])
@@ -38,10 +40,12 @@ class HallwayEnv(MiniWorldEnv):
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
-        dist = np.linalg.norm(self.agent.position - self.goal_pos)
+        room = self.rooms[0]
+        x, _, z = self.agent.position
 
-        if dist < 0.25:
-            reward = 1000 - self.step_count
-            done = True
+        if x > room.max_x - 0.5 and x < room.max_x:
+            if z > room.min_z and z < room.max_z:
+                reward = 1 - (self.step_count / self.max_episode_steps)
+                done = True
 
         return obs, reward, done, info
