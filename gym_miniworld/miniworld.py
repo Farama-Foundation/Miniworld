@@ -568,6 +568,6 @@ class MiniWorldEnv(gym.Env):
         # Force execution of queued commands
         glFlush()
 
-        self.window.flip()
+        #self.window.flip()
 
         return None
