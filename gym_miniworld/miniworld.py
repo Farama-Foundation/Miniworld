@@ -2,7 +2,7 @@ import math
 from enum import IntEnum
 import numpy as np
 import gym
-import pybullet
+#import pybullet
 from .random import *
 from .opengl import *
 #from .objmesh import *
@@ -348,7 +348,6 @@ class MiniWorldEnv(gym.Env):
             reward = 0
             return obs, reward, done, {}
 
-        # TODO: reward computation
         reward = 0
         done = False
 
