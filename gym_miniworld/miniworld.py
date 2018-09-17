@@ -253,12 +253,18 @@ class MiniWorldEnv(gym.Env):
         # Frame buffer used for human visualization
         self.vis_fb = FrameBuffer(window_width, window_height, 16)
 
+        # Compute the observation display size
+        self.obs_disp_width = 256
+        self.obs_disp_height = obs_height * (256 / obs_width)
+
         # For displaying text
         self.text_label = pyglet.text.Label(
             font_name="Arial",
             font_size=14,
-            x = 5,
-            y = window_height - 19
+            multiline=True,
+            width=400,
+            x = window_width + 5,
+            y = window_height - (self.obs_disp_height + 19)
         )
 
         # Initialize the state
@@ -473,20 +479,27 @@ class MiniWorldEnv(gym.Env):
                 self.window.close()
             return
 
-        # Render the image
+        # Render the human-view image
         img = self.render_obs(self.vis_fb)
+        img_width = img.shape[1]
+        img_height = img.shape[0]
 
         if mode == 'rgb_array':
             return img
 
-        width = img.shape[1]
-        height = img.shape[0]
+        # Render the neural network view
+        obs = self.render_obs()
+        obs_width = obs.shape[1]
+        obs_height = obs.shape[0]
+
+        window_width = img_width + self.obs_disp_width
+        window_height = img_height
 
         if self.window is None:
-            config = pyglet.gl.Config(double_buffer=False)
+            config = pyglet.gl.Config(double_buffer=True)
             self.window = pyglet.window.Window(
-                width=width,
-                height=height,
+                width=window_width,
+                height=window_height,
                 resizable=False,
                 config=config
             )
@@ -498,32 +511,54 @@ class MiniWorldEnv(gym.Env):
         # Bind the default frame buffer
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        # Clear the color and depth buffers
+        glClearColor(0, 0, 0, 1.0)
+        glClearDepth(1.0)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         # Setup orghogonal projection
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
-        glOrtho(0, width, 0, height, 0, 10)
+        glOrtho(0, window_width, 0, window_height, 0, 10)
 
-        # Draw the image to the rendering window
+        # Draw the human render to the rendering window
         img = np.ascontiguousarray(np.flip(img, axis=0))
         img_data = pyglet.image.ImageData(
-            width,
-            height,
+            img_width,
+            img_height,
             'RGB',
             img.ctypes.data_as(POINTER(GLubyte)),
-            pitch=width * 3,
+            pitch=img_width * 3,
         )
         img_data.blit(
             0,
             0,
             0,
-            width=width,
-            height=height
+            width=img_width,
+            height=img_height
+        )
+
+        # Draw the observation
+        obs = np.ascontiguousarray(np.flip(obs, axis=0))
+        obs_data = pyglet.image.ImageData(
+            obs_width,
+            obs_height,
+            'RGB',
+            obs.ctypes.data_as(POINTER(GLubyte)),
+            pitch=obs_width * 3,
+        )
+        obs_data.blit(
+            img_width,
+            img_height - self.obs_disp_height,
+            0,
+            width=self.obs_disp_width,
+            height=self.obs_disp_height
         )
 
         # Draw the text label in the window
-        self.text_label.text = "pos: (%.2f, %.2f, %.2f), angle: %d, steps: %d" % (
+        self.text_label.text = "pos: (%.2f, %.2f, %.2f)\nangle: %d\nsteps: %d" % (
             *self.agent.position,
             int(self.agent.direction * 180 / math.pi),
             self.step_count
@@ -532,3 +567,7 @@ class MiniWorldEnv(gym.Env):
 
         # Force execution of queued commands
         glFlush()
+
+        self.window.flip()
+
+        return None
