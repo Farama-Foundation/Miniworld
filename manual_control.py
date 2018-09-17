@@ -20,7 +20,9 @@ args = parser.parse_args()
 
 env = gym.make(args.env_name)
 env.reset()
-env.render()
+
+# Create the display window
+env.render('pyglet')
 
 @env.unwrapped.window.event
 def on_key_press(symbol, modifiers):
@@ -32,7 +34,7 @@ def on_key_press(symbol, modifiers):
     if symbol == key.BACKSPACE or symbol == key.SLASH:
         print('RESET')
         env.reset()
-        env.render()
+        env.render('pyglet')
     elif symbol == key.ESCAPE:
         env.close()
         sys.exit(0)
@@ -64,9 +66,9 @@ def update(dt):
     if done:
         print('done!')
         env.reset()
-        env.render()
+        env.render('pyglet')
 
-    env.render()
+    env.render('pyglet')
 
 pyglet.clock.schedule_interval(update, 1 / env.unwrapped.frame_rate)
 

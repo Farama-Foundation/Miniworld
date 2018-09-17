@@ -30,7 +30,7 @@ class HallwayEnv(MiniWorldEnv):
 
         # Place the agent a random distance away from the goal
         self.agent.position = np.array([
-            self.rand.float(room.min_x + 0.5, room.max_x - 1.0),
+            self.rand.float(room.min_x + 0.5, room.max_x - 0.51),
             0,
             self.rand.float(-0.5, 0.5)
         ])

@@ -440,14 +440,6 @@ class MiniWorldEnv(gym.Env):
             0, 1.0, 0.0
         )
 
-
-
-
-
-
-
-
-
         # Call the display list for the static parts of the environment
         glCallList(1)
 
@@ -568,6 +560,9 @@ class MiniWorldEnv(gym.Env):
         # Force execution of queued commands
         glFlush()
 
-        #self.window.flip()
+        # If we are not running the Pyglet event loop,
+        # we have to manually flip the buffers
+        if mode == 'human':
+            self.window.flip()
 
         return None
