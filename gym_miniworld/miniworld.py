@@ -11,6 +11,9 @@ from .entity import *
 # Texture size/density in texels/meter
 TEX_DENSITY = 512
 
+# Blue sky horizon color
+BLUE_SKY_COLOR = np.array([0.45, 0.82, 1])
+
 # Map of color names to RGB values
 COLORS = {
     'red'   : np.array([255, 0, 0]),
@@ -139,6 +142,7 @@ class Room:
         """
 
         glEnable(GL_TEXTURE_2D)
+        glColor3f(1, 1, 1)
 
         # Draw the floor
         self.floor_tex.bind()
@@ -255,7 +259,7 @@ class MiniWorldEnv(gym.Env):
 
         # Compute the observation display size
         self.obs_disp_width = 256
-        self.obs_disp_height = obs_height * (256 / obs_width)
+        self.obs_disp_height = obs_height * (self.obs_disp_width / obs_width)
 
         # For displaying text
         self.text_label = pyglet.text.Label(
@@ -414,7 +418,7 @@ class MiniWorldEnv(gym.Env):
         frame_buffer.bind()
 
         # Clear the color and depth buffers
-        glClearColor(0, 0, 0, 1.0)
+        glClearColor(*BLUE_SKY_COLOR, 1.0)
         glClearDepth(1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

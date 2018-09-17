@@ -1,7 +1,7 @@
 import numpy as np
 import math
 from ..miniworld import MiniWorldEnv, Room
-from ..entity import CeilingLight
+from ..entity import Box
 
 class HallwayEnv(MiniWorldEnv):
     def __init__(self, length=12, **kwargs):
@@ -20,13 +20,7 @@ class HallwayEnv(MiniWorldEnv):
             1 + self.length, 4
         )
 
-        """
-        room.entities.append(CeilingLight(
-            1 + self.length - 2,
-            room.wall_height,
-            0
-        ))
-        """
+        room.entities.append(Box(room.max_x - 0.5, 0, 0, color='red'))
 
         # Place the agent a random distance away from the goal
         self.agent.position = np.array([
@@ -42,10 +36,14 @@ class HallwayEnv(MiniWorldEnv):
 
         room = self.rooms[0]
         x, _, z = self.agent.position
+        dx, _, _ = self.agent.dir_vec
 
         if x > room.max_x - 0.5 and x < room.max_x:
             if z > room.min_z and z < room.max_z:
-                reward = 1 - (self.step_count / self.max_episode_steps)
+                reward += 1 - 0.1 * (self.step_count / self.max_episode_steps)
                 done = True
+
+        if done:
+            reward += 0.5 * dx
 
         return obs, reward, done, info

@@ -54,6 +54,62 @@ class CeilingLight(Entity):
         glVertex3f(x - 0.5, y - 0.05, z - 0.5)
         glEnd(GL_QUADS)
 
+class Box(Entity):
+    """
+    Colored box object
+    """
+
+    def __init__(self, x, y, z, color, angle=0, size=0.5):
+        super().__init__()
+        self.color = color
+        self.size = size
+        self.pos = np.array([x, y, z])
+
+    def is_static(self):
+        return True
+
+    def render(self):
+        """
+        Draw the object
+        """
+
+        from .miniworld import COLORS
+
+        sz = self.size
+        hs = sz / 2
+        x, y, z = self.pos
+
+        glDisable(GL_TEXTURE_2D)
+        glColor3f(*COLORS[self.color])
+
+        glBegin(GL_QUADS)
+        glVertex3f(x - hs, y + sz, z + hs)
+        glVertex3f(x + hs, y + sz, z + hs)
+        glVertex3f(x + hs, y     , z + hs)
+        glVertex3f(x - hs, y     , z + hs)
+
+        glVertex3f(x - hs, y + sz, z - hs)
+        glVertex3f(x + hs, y + sz, z - hs)
+        glVertex3f(x + hs, y     , z - hs)
+        glVertex3f(x - hs, y     , z - hs)
+
+        glVertex3f(x - hs, y + sz, z - hs)
+        glVertex3f(x - hs, y + sz, z + hs)
+        glVertex3f(x - hs, y     , z + hs)
+        glVertex3f(x - hs, y     , z - hs)
+
+        glVertex3f(x + hs, y + sz, z + hs)
+        glVertex3f(x + hs, y + sz, z - hs)
+        glVertex3f(x + hs, y     , z - hs)
+        glVertex3f(x + hs, y     , z + hs)
+
+        glVertex3f(x + hs, y + sz, z + hs)
+        glVertex3f(x + hs, y + sz, z - hs)
+        glVertex3f(x - hs, y + sz, z - hs)
+        glVertex3f(x - hs, y + sz, z + hs)
+
+        glEnd(GL_QUADS)
+
 class Agent(Entity):
     def __init__(self):
         super().__init__()
