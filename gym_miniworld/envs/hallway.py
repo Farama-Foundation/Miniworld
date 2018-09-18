@@ -10,6 +10,8 @@ class HallwayEnv(MiniWorldEnv):
 
         super().__init__(
             max_episode_steps=300,
+            obs_width=32,
+            obs_height=32,
             **kwargs
         )
 
@@ -38,10 +40,10 @@ class HallwayEnv(MiniWorldEnv):
         x, _, z = self.agent.position
         dx, _, _ = self.agent.dir_vec
 
-        reward = max(dx, 0)
 
-        if action == self.actions.move_forward:
-            reward += 0.5
+        dist = abs(room.max_x - x) + abs(z)
+
+        reward = -dist / 10
 
         if x > room.max_x - 0.5 and x < room.max_x:
             if z > room.min_z and z < room.max_z:

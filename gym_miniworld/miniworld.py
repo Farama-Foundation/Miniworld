@@ -186,29 +186,29 @@ class MiniWorldEnv(gym.Env):
 
     # Enumeration of possible actions
     class Actions(IntEnum):
-        do_nothing = 0
-
         # Turn left or right by a small amount
-        turn_left = 1
-        turn_right = 2
+        turn_left = 0
+        turn_right = 1
 
         # Move forward or back by a small amount
-        move_forward = 3
-        move_back = 4
+        move_forward = 2
+        move_back = 3
 
         # Pitch the camera up or down
-        look_up = 5
-        look_down = 6
+        look_up = 4
+        look_down = 5
 
         # Pick up or drop an object being carried
-        pickup = 7
-        drop = 8
+        pickup = 6
+        drop = 7
 
         # Toggle/activate an object
-        toggle = 9
+        toggle = 8
 
         # Done completing task
-        done = 10
+        done = 9
+
+        do_nothing = 10
 
     def __init__(
         self,
@@ -252,7 +252,7 @@ class MiniWorldEnv(gym.Env):
         self.shadow_window = pyglet.window.Window(width=1, height=1, visible=False)
 
         # Frame buffer used to render observations
-        self.obs_fb = FrameBuffer(obs_width, obs_height, 1)
+        self.obs_fb = FrameBuffer(obs_width, obs_height, 8)
 
         # Frame buffer used for human visualization
         self.vis_fb = FrameBuffer(window_width, window_height, 16)
