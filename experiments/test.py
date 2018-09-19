@@ -17,6 +17,7 @@ from torch.autograd import Variable
 
 import gym
 import gym_miniworld
+from gym_miniworld.wrappers import *
 
 from utils import *
 
@@ -26,7 +27,7 @@ class Model(nn.Module):
 
         self.encoder = nn.Sequential(
             #Print(),
-            nn.Conv2d(3, 32, kernel_size=4, stride=2),
+            nn.Conv2d(1, 32, kernel_size=4, stride=2),
 
             #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
@@ -98,7 +99,7 @@ def eval_episode(model, env, seed=0):
 
     return total_reward
 
-def eval_model(model, env, num_episodes=20):
+def eval_model(model, env, num_episodes=25):
     total_reward = 0
 
     for i in range(0, num_episodes):
@@ -107,9 +108,8 @@ def eval_model(model, env, num_episodes=20):
     return total_reward / num_episodes
 
 def visualize(model, env, num_episodes=5):
-    env.seed(0)
-
     for i in range(0, num_episodes):
+        env.seed(i)
         obs = env.reset()
 
         while True:
@@ -135,8 +135,8 @@ if __name__ == "__main__":
     #parser.add_argument('--map-name', required=True)
     #args = parser.parse_args()
 
-
     env = gym.make('MiniWorld-Hallway-v0')
+    env = GreyscaleWrapper(env)
 
     """
     model = Model(env.action_space.n)
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     best_model = None
     best_r = -math.inf
 
-    for i in range(0, 70):
+    for i in range(0, 500):
         #model = Model(env.action_space.n)
         model = Model(3)
         model.cuda()

@@ -5,7 +5,7 @@ import numpy as np
 import gym
 import gym_miniworld
 #from gym_miniworld.envs import HallwayEnv
-#from gym_miniworld.wrappers import PyTorchObsWrapper
+from gym_miniworld.wrappers import PyTorchObsWrapper, GreyscaleWrapper
 
 env = gym.make('MiniWorld-Hallway-v0')
 
