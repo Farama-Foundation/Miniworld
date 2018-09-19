@@ -40,14 +40,12 @@ class HallwayEnv(MiniWorldEnv):
         x, _, z = self.agent.position
         dx, _, _ = self.agent.dir_vec
 
-
-        dist = abs(room.max_x - x) + abs(z)
-
-        reward = -dist / 10
+        #dist = abs(room.max_x - x) + abs(z)
+        #reward = -dist / 10
 
         if x > room.max_x - 0.5 and x < room.max_x:
             if z > room.min_z and z < room.max_z:
-                reward += 1000
+                reward += 1000 - 0.2 * (self.step_count / self.max_episode_steps)
                 done = True
 
         return obs, reward, done, info
