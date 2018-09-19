@@ -83,25 +83,25 @@ class Box(Entity):
         glColor3f(*COLORS[self.color])
 
         glBegin(GL_QUADS)
-        glVertex3f(x - hs, y + sz, z + hs)
         glVertex3f(x + hs, y + sz, z + hs)
-        glVertex3f(x + hs, y     , z + hs)
+        glVertex3f(x - hs, y + sz, z + hs)
         glVertex3f(x - hs, y     , z + hs)
+        glVertex3f(x + hs, y     , z + hs)
 
         glVertex3f(x - hs, y + sz, z - hs)
         glVertex3f(x + hs, y + sz, z - hs)
         glVertex3f(x + hs, y     , z - hs)
         glVertex3f(x - hs, y     , z - hs)
 
-        glVertex3f(x - hs, y + sz, z - hs)
         glVertex3f(x - hs, y + sz, z + hs)
-        glVertex3f(x - hs, y     , z + hs)
+        glVertex3f(x - hs, y + sz, z - hs)
         glVertex3f(x - hs, y     , z - hs)
+        glVertex3f(x - hs, y     , z + hs)
 
-        glVertex3f(x + hs, y + sz, z + hs)
         glVertex3f(x + hs, y + sz, z - hs)
-        glVertex3f(x + hs, y     , z - hs)
+        glVertex3f(x + hs, y + sz, z + hs)
         glVertex3f(x + hs, y     , z + hs)
+        glVertex3f(x + hs, y     , z - hs)
 
         glVertex3f(x + hs, y + sz, z + hs)
         glVertex3f(x + hs, y + sz, z - hs)

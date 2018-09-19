@@ -105,7 +105,8 @@ class Room:
             np.linalg.norm(self.outline[1,:] - self.outline[0,:])
         )
 
-        self.ceil_verts = self.outline + up_vec
+        # Flip the ceiling vertex order because of backface culling
+        self.ceil_verts = np.flip(self.outline, axis=0) + up_vec
         self.ceil_texcs = gen_tex_coords(
             self.ceil_tex,
             np.linalg.norm(self.outline[2,:] - self.outline[1,:]),
@@ -250,6 +251,10 @@ class MiniWorldEnv(gym.Env):
 
         # Invisible window to render into (shadow OpenGL context)
         self.shadow_window = pyglet.window.Window(width=1, height=1, visible=False)
+
+        # Enable depth testing and backface culling
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_CULL_FACE)
 
         # Frame buffer used to render observations
         self.obs_fb = FrameBuffer(obs_width, obs_height, 8)
