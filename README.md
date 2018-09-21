@@ -81,7 +81,6 @@ And on Fedora:
 
 ```
 sudo dnf install freeglut-devel
-
 ```
 
 ### NoSuchDisplayException: Cannot connect to "None"
