@@ -29,7 +29,6 @@ Requirements:
 - NumPy
 - PyYAML
 - Pyglet (3D graphics)
-- PyBullet (physics simulation)
 
 You can install all the dependencies with `pip3`:
 
