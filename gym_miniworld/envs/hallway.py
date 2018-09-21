@@ -42,7 +42,7 @@ class HallwayEnv(MiniWorldEnv):
 
         if x > room.max_x - 0.5 and x < room.max_x:
             if z > room.min_z and z < room.max_z:
-                print(self.step_count, self.max_episode_steps, self.step_count/self.max_episode_steps)
+                #print(self.step_count, self.max_episode_steps, self.step_count/self.max_episode_steps)
                 reward += 1.0 - 0.2 * (self.step_count / self.max_episode_steps)
                 done = True
 
