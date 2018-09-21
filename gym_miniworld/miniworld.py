@@ -331,16 +331,16 @@ class MiniWorldEnv(gym.Env):
         delta_time = 1 / self.frame_rate
 
         if action == self.actions.move_forward:
-            self.agent.position = self.agent.position + self.agent.dir_vec * 0.1
+            self.agent.position = self.agent.position + self.agent.dir_vec * 0.18
 
         elif action == self.actions.move_back:
-            self.agent.position = self.agent.position - self.agent.dir_vec * 0.1
+            self.agent.position = self.agent.position - self.agent.dir_vec * 0.18
 
         elif action == self.actions.turn_left:
-            self.agent.direction += math.pi * 0.03
+            self.agent.direction += math.pi * 0.04
 
         elif action == self.actions.turn_right:
-            self.agent.direction -= math.pi * 0.03
+            self.agent.direction -= math.pi * 0.04
 
         # TODO: update the world state, objects, etc.
 
