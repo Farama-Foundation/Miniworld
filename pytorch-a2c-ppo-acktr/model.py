@@ -130,8 +130,17 @@ class NNBase(nn.Module):
         return x, hxs
 
 
+class Print(nn.Module):
+    def __init__(self):
+        super(Print, self).__init__()
+
+    def forward(self, x):
+        print('layer input:', x.shape)
+        return x
+
+
 class CNNBase(NNBase):
-    def __init__(self, num_inputs, recurrent=False, hidden_size=512):
+    def __init__(self, num_inputs, recurrent=False, hidden_size=256):
         super(CNNBase, self).__init__(recurrent, hidden_size, hidden_size)
 
         init_ = lambda m: init(m,
@@ -140,16 +149,40 @@ class CNNBase(NNBase):
             nn.init.calculate_gain('relu'))
 
         self.main = nn.Sequential(
-            init_(nn.Conv2d(num_inputs, 32, 8, stride=4)),
+            init_(nn.Conv2d(num_inputs, 32, kernel_size=4, stride=2)),
             nn.ReLU(),
-            init_(nn.Conv2d(32, 64, 4, stride=2)),
+
+            init_(nn.Conv2d(32, 32, kernel_size=4, stride=2)),
             nn.ReLU(),
-            init_(nn.Conv2d(64, 32, 3, stride=1)),
-            nn.ReLU(),
+
+            #Print(),
             Flatten(),
-            init_(nn.Linear(32 * 7 * 7, hidden_size)),
+            #Print(),
+
+            init_(nn.Linear(32 * 6 * 6, hidden_size)),
             nn.ReLU()
         )
+
+
+        """
+        self.main = nn.Sequential(
+            init_(nn.Conv2d(num_inputs, 32, kernel_size=6, stride=3)),
+            nn.ReLU(),
+
+            init_(nn.Conv2d(32, 32, kernel_size=5, stride=2)),
+            nn.ReLU(),
+
+            init_(nn.Conv2d(32, 32, kernel_size=4, stride=2)),
+            nn.ReLU(),
+
+            Print(),
+            Flatten(),
+            #Print(),
+
+            init_(nn.Linear(32 * 4 * 3, hidden_size)),
+            nn.ReLU()
+        )
+        """
 
         init_ = lambda m: init(m,
             nn.init.orthogonal_,
@@ -160,7 +193,13 @@ class CNNBase(NNBase):
         self.train()
 
     def forward(self, inputs, rnn_hxs, masks):
-        x = self.main(inputs / 255.0)
+        #print(inputs.size())
+
+        x = inputs / 255.0
+        #print(x.size())
+
+        x = self.main(x)
+        #print(x.size())
 
         if self.is_recurrent:
             x, rnn_hxs = self._forward_gru(x, rnn_hxs, masks)

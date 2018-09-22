@@ -2,6 +2,7 @@ import copy
 import glob
 import os
 import time
+import types
 from collections import deque
 
 import gym
@@ -16,7 +17,6 @@ from arguments import get_args
 from envs import make_vec_envs
 from model import Policy
 from storage import RolloutStorage
-from utils import get_vec_normalize
 from visualize import visdom_plot
 
 args = get_args()
@@ -107,8 +107,7 @@ def main():
                     episode_rewards.append(info['episode']['r'])
 
             # If done then clean the history of observations.
-            masks = torch.FloatTensor([[0.0] if done_ else [1.0]
-                                       for done_ in done])
+            masks = torch.FloatTensor([[0.0] if done_ else [1.0] for done_ in done])
             rollouts.insert(obs, recurrent_hidden_states, action, action_log_prob, value, reward, masks)
 
         with torch.no_grad():
@@ -135,7 +134,7 @@ def main():
                 save_model = copy.deepcopy(actor_critic).cpu()
 
             save_model = [save_model,
-                          getattr(get_vec_normalize(envs), 'ob_rms', None)]
+                            hasattr(envs.venv, 'ob_rms') and envs.venv.ob_rms or None]
 
             torch.save(save_model, os.path.join(save_path, args.env_name + ".pt"))
 
@@ -143,7 +142,7 @@ def main():
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             end = time.time()
-            print("Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.1f}/{:.1f}, min/max reward {:.1f}/{:.1f}\n".
+            print("Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.2f}/{:.2f}, min/max reward {:.2f}/{:.2f}\n".
                 format(j, total_num_steps,
                        int(total_num_steps / (end - start)),
                        len(episode_rewards),
@@ -153,17 +152,22 @@ def main():
                        np.max(episode_rewards), dist_entropy,
                        value_loss, action_loss))
 
-        if (args.eval_interval is not None
-                and len(episode_rewards) > 1
-                and j % args.eval_interval == 0):
-            eval_envs = make_vec_envs(
-                args.env_name, args.seed + args.num_processes, args.num_processes,
-                args.gamma, eval_log_dir, args.add_timestep, device, True)
+        if args.eval_interval is not None and len(episode_rewards) > 1 and j % args.eval_interval == 0:
+            eval_envs = make_vec_envs(args.env_name, args.seed + args.num_processes, args.num_processes,
+                                args.gamma, eval_log_dir, args.add_timestep, device, True)
 
-            vec_norm = get_vec_normalize(eval_envs)
-            if vec_norm is not None:
-                vec_norm.eval()
-                vec_norm.ob_rms = get_vec_normalize(envs).ob_rms
+            if eval_envs.venv.__class__.__name__ == "VecNormalize":
+                eval_envs.venv.ob_rms = envs.venv.ob_rms
+
+                # An ugly hack to remove updates
+                def _obfilt(self, obs):
+                    if self.ob_rms:
+                        obs = np.clip((obs - self.ob_rms.mean) / np.sqrt(self.ob_rms.var + self.epsilon), -self.clipob, self.clipob)
+                        return obs
+                    else:
+                        return obs
+
+                eval_envs.venv._obfilt = types.MethodType(_obfilt, envs.venv)
 
             eval_episode_rewards = []
 
@@ -179,9 +183,7 @@ def main():
 
                 # Obser reward and next obs
                 obs, reward, done, infos = eval_envs.step(action)
-
-                eval_masks = torch.FloatTensor([[0.0] if done_ else [1.0]
-                                                for done_ in done])
+                eval_masks = torch.FloatTensor([[0.0] if done_ else [1.0] for done_ in done])
                 for info in infos:
                     if 'episode' in info.keys():
                         eval_episode_rewards.append(info['episode']['r'])

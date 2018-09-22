@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 
-from envs import VecNormalize
+#from envs import VecNormalize
 
 
 # Get a render function
@@ -15,7 +15,7 @@ def get_render_func(venv):
 
     return None
 
-
+"""
 def get_vec_normalize(venv):
     if isinstance(venv, VecNormalize):
         return venv
@@ -23,7 +23,7 @@ def get_vec_normalize(venv):
         return get_vec_normalize(venv.venv)
 
     return None
-
+"""
 
 # Necessary for my KFAC implementation.
 class AddBias(nn.Module):
