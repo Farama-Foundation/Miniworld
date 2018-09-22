@@ -5,8 +5,8 @@ import types
 import numpy as np
 import torch
 
-from baselines.common.vec_env.dummy_vec_env import DummyVecEnv
-from baselines.common.vec_env.vec_normalize import VecNormalize
+from vec_env.dummy_vec_env import DummyVecEnv
+#from vec_env.vec_normalize import VecNormalize
 from envs import VecPyTorch, make_vec_envs
 
 parser = argparse.ArgumentParser(description='RL')
@@ -43,6 +43,7 @@ while True:
 actor_critic, ob_rms = \
             torch.load(os.path.join(args.load_dir, args.env_name + ".pt"))
 
+"""
 if isinstance(env.venv, VecNormalize):
     env.venv.ob_rms = ob_rms
 
@@ -55,6 +56,7 @@ if isinstance(env.venv, VecNormalize):
             return obs
 
     env.venv._obfilt = types.MethodType(_obfilt, env.venv)
+"""
 
 recurrent_hidden_states = torch.zeros(1, actor_critic.recurrent_hidden_state_size)
 masks = torch.zeros(1, 1)

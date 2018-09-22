@@ -5,7 +5,6 @@ import numpy as np
 import torch
 from gym.spaces.box import Box
 
-from baselines import bench
 from vec_env import VecEnvWrapper
 from vec_env.dummy_vec_env import DummyVecEnv
 from vec_env.subproc_vec_env import SubprocVecEnv
@@ -33,15 +32,7 @@ except ImportError:
 
 def make_env(env_id, seed, rank, log_dir, add_timestep, allow_early_resets):
     def _thunk():
-        if env_id.startswith("dm"):
-            _, domain, task = env_id.split('.')
-            env = dm_control2gym.make(domain_name=domain, task_name=task)
-        else:
-            env = gym.make(env_id)
-        #is_atari = hasattr(gym.envs, 'atari') and isinstance(
-        #    env.unwrapped, gym.envs.atari.atari_env.AtariEnv)
-        #if is_atari:
-        #    env = make_atari(env_id)
+        env = gym.make(env_id)
         env.seed(seed + rank)
 
         obs_shape = env.observation_space.shape
@@ -50,12 +41,9 @@ def make_env(env_id, seed, rank, log_dir, add_timestep, allow_early_resets):
                 obs_shape) == 1 and str(env).find('TimeLimit') > -1:
             env = AddTimestep(env)
 
-        if log_dir is not None:
-            env = bench.Monitor(env, os.path.join(log_dir, str(rank)),
-                                allow_early_resets=allow_early_resets)
-
-        #if is_atari:
-        #    env = wrap_deepmind(env)
+        #if log_dir is not None:
+        #    env = bench.Monitor(env, os.path.join(log_dir, str(rank)),
+        #                        allow_early_resets=allow_early_resets)
 
         # If the input has shape (W,H,3), wrap for PyTorch convolutions
         obs_shape = env.observation_space.shape
@@ -67,19 +55,12 @@ def make_env(env_id, seed, rank, log_dir, add_timestep, allow_early_resets):
     return _thunk
 
 def make_vec_envs(env_name, seed, num_processes, gamma, log_dir, add_timestep, device, allow_early_resets):
-    envs = [make_env(env_name, seed, i, log_dir, add_timestep, allow_early_resets)
-                for i in range(num_processes)]
+    envs = [make_env(env_name, seed, i, log_dir, add_timestep, allow_early_resets) for i in range(num_processes)]
 
     if len(envs) > 1:
         envs = SubprocVecEnv(envs)
     else:
         envs = DummyVecEnv(envs)
-
-    #if len(envs.observation_space.shape) == 1:
-    #    if gamma is None:
-    #        envs = VecNormalize(envs, ret=False)
-    #    else:
-    #        envs = VecNormalize(envs, gamma=gamma)
 
     envs = VecPyTorch(envs, device)
 

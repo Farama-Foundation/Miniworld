@@ -17,7 +17,7 @@ from arguments import get_args
 from envs import make_vec_envs
 from model import Policy
 from storage import RolloutStorage
-from visualize import visdom_plot
+#from visualize import visdom_plot
 
 args = get_args()
 
@@ -53,10 +53,12 @@ def main():
     torch.set_num_threads(1)
     device = torch.device("cuda:0" if args.cuda else "cpu")
 
+    """
     if args.vis:
         from visdom import Visdom
         viz = Visdom(port=args.port)
         win = None
+    """
 
     envs = make_vec_envs(args.env_name, args.seed, args.num_processes,
                         args.gamma, args.log_dir, args.add_timestep, device, False)
@@ -64,6 +66,7 @@ def main():
     actor_critic = Policy(envs.observation_space.shape, envs.action_space,
         base_kwargs={'recurrent': args.recurrent_policy})
     actor_critic.to(device)
+
 
     if args.algo == 'a2c':
         agent = algo.A2C_ACKTR(actor_critic, args.value_loss_coef,
@@ -102,9 +105,17 @@ def main():
             # Obser reward and next obs
             obs, reward, done, infos = envs.step(action)
 
+            """
             for info in infos:
                 if 'episode' in info.keys():
+                    print(reward)
                     episode_rewards.append(info['episode']['r'])
+            """
+
+            # FIXME: works only for environments with sparse rewards
+            for idx, eps_done in enumerate(done):
+                if eps_done:
+                    episode_rewards.append(reward[idx])
 
             # If done then clean the history of observations.
             masks = torch.FloatTensor([[0.0] if done_ else [1.0] for done_ in done])
@@ -133,8 +144,7 @@ def main():
             if args.cuda:
                 save_model = copy.deepcopy(actor_critic).cpu()
 
-            save_model = [save_model,
-                            hasattr(envs.venv, 'ob_rms') and envs.venv.ob_rms or None]
+            save_model = [save_model, hasattr(envs.venv, 'ob_rms') and envs.venv.ob_rms or None]
 
             torch.save(save_model, os.path.join(save_path, args.env_name + ".pt"))
 
@@ -190,9 +200,10 @@ def main():
 
             eval_envs.close()
 
-            print(" Evaluation using {} episodes: mean reward {:.5f}\n".
-                format(len(eval_episode_rewards),
-                       np.mean(eval_episode_rewards)))
+            print(" Evaluation using {} episodes: mean reward {:.5f}\n".format(
+                len(eval_episode_rewards),
+                np.mean(eval_episode_rewards)
+            ))
 
         if args.vis and j % args.vis_interval == 0:
             try:
