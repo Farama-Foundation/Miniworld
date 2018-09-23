@@ -10,7 +10,7 @@ Please use this bibtex if you want to cite this repository in your publications:
 
 ```
 @misc{gym_miniworld,
-  author = {Maxime Chevalier-Boisvert},
+  author = {Chevalier-Boisvert, Maxime},
   title = {gym-miniworld environment for OpenAI Gym},
   year = {2018},
   publisher = {GitHub},
