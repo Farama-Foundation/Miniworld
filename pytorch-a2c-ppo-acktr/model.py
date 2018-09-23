@@ -148,6 +148,8 @@ class CNNBase(NNBase):
             lambda x: nn.init.constant_(x, 0),
             nn.init.calculate_gain('relu'))
 
+        """
+        # For 32x32 input
         self.main = nn.Sequential(
             init_(nn.Conv2d(num_inputs, 32, kernel_size=4, stride=2)),
             nn.ReLU(),
@@ -162,11 +164,11 @@ class CNNBase(NNBase):
             init_(nn.Linear(32 * 6 * 6, hidden_size)),
             nn.ReLU()
         )
-
-
         """
+
+        # For 80x60 input
         self.main = nn.Sequential(
-            init_(nn.Conv2d(num_inputs, 32, kernel_size=6, stride=3)),
+            init_(nn.Conv2d(num_inputs, 32, kernel_size=5, stride=2)),
             nn.ReLU(),
 
             init_(nn.Conv2d(32, 32, kernel_size=5, stride=2)),
@@ -175,14 +177,12 @@ class CNNBase(NNBase):
             init_(nn.Conv2d(32, 32, kernel_size=4, stride=2)),
             nn.ReLU(),
 
-            Print(),
-            Flatten(),
             #Print(),
+            Flatten(),
 
-            init_(nn.Linear(32 * 4 * 3, hidden_size)),
+            init_(nn.Linear(32 * 7 * 5, hidden_size)),
             nn.ReLU()
         )
-        """
 
         init_ = lambda m: init(m,
             nn.init.orthogonal_,

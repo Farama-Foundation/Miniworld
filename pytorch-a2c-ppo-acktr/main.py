@@ -90,7 +90,7 @@ def main():
     rollouts.obs[0].copy_(obs)
     rollouts.to(device)
 
-    episode_rewards = deque(maxlen=10)
+    episode_rewards = deque(maxlen=100)
 
     start = time.time()
     for j in range(num_updates):

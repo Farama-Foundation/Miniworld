@@ -64,7 +64,7 @@ def update(dt):
     #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
 
     if done:
-        print('done!')
+        print('done! reward={:.2f}'.format(reward))
         env.reset()
         env.render('pyglet')
 
