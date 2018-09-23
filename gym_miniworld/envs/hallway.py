@@ -4,22 +4,22 @@ from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 
 class HallwayEnv(MiniWorldEnv):
-    def __init__(self, length=12, **kwargs):
-        assert length >= 1
+    def __init__(self, length=25, **kwargs):
+        assert length >= 2
         self.length = length
 
         super().__init__(
-            max_episode_steps=240,
+            max_episode_steps=250,
             #obs_width=32,
             #obs_height=32,
             **kwargs
         )
 
     def _gen_world(self):
-
+        # Create a long rectangular room
         room = self.create_rect_room(
             -1, -2,
-            1 + self.length, 4
+            self.length, 4
         )
 
         room.entities.append(Box(room.max_x - 0.5, 0, 0, color='red'))
