@@ -10,8 +10,6 @@ class HallwayEnv(MiniWorldEnv):
 
         super().__init__(
             max_episode_steps=250,
-            #obs_width=32,
-            #obs_height=32,
             **kwargs
         )
 
@@ -22,22 +20,22 @@ class HallwayEnv(MiniWorldEnv):
             self.length, 4
         )
 
-        room.entities.append(Box(room.max_x - 0.5, 0, 0, color='red'))
+        room.entities.append(Box([room.max_x - 0.5, 0, 0], 0, color='red'))
 
         # Place the agent a random distance away from the goal
-        self.agent.position = np.array([
+        self.agent.pos = np.array([
             self.rand.float(room.min_x + 0.5, room.max_x - 0.51),
             0,
             self.rand.float(-0.5, 0.5)
         ])
 
-        self.agent.direction = self.rand.float(-math.pi/4, math.pi/4)
+        self.agent.angle = self.rand.float(-math.pi/4, math.pi/4)
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
         room = self.rooms[0]
-        x, _, z = self.agent.position
+        x, _, z = self.agent.pos
 
         if x > room.max_x - 0.5 and x < room.max_x:
             if z > room.min_z and z < room.max_z:

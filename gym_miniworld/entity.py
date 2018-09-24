@@ -2,8 +2,13 @@ import numpy as np
 from .objmesh import *
 
 class Entity:
-    def __init__(self):
-        pass
+    def __init__(self, pos, dir):
+        # World position
+        # Note: for most entities, the position is at floor level
+        self.pos = np.array(pos)
+
+        # Direction/orientation angle in radians
+        self.dir = dir
 
     def render(self):
         """
@@ -28,11 +33,11 @@ class Entity:
 class CeilingLight(Entity):
     """
     Ceiling light object
+    Note: the position is at ceiling level
     """
 
-    def __init__(self, x, y, z):
-        super().__init__()
-        self.pos = np.array([x, y, z])
+    def __init__(self, pos, dir):
+        super().__init__(pos, dir)
 
     def is_static(self):
         return True
@@ -59,11 +64,10 @@ class Box(Entity):
     Colored box object
     """
 
-    def __init__(self, x, y, z, color, angle=0, size=0.5):
-        super().__init__()
+    def __init__(self, pos, dir, color, size=0.5):
+        super().__init__(pos, dir)
         self.color = color
         self.size = size
-        self.pos = np.array([x, y, z])
 
     def is_static(self):
         return True
@@ -111,15 +115,8 @@ class Box(Entity):
         glEnd(GL_QUADS)
 
 class Agent(Entity):
-    def __init__(self):
-        super().__init__()
-
-        # Position of the agent (at floor level)
-        self.position = np.array([0, 0, 0])
-
-        # Direction angle in radians
-        # Angle zero points towards the positive X axis
-        self.direction = 0
+    def __init__(self, pos, dir):
+        super().__init__(pos, dir)
 
         # Distance between the camera and the floor
         self.cam_height = 1.5
@@ -127,7 +124,7 @@ class Agent(Entity):
         # Camera up/down angle
         self.cam_angle = 0
 
-        # Vertical field of view
+        # Vertical field of view in degrees
         self.cam_fov_y = 60
 
     @property
@@ -136,8 +133,8 @@ class Agent(Entity):
         Vector pointing in the direction of forward movement
         """
 
-        x = math.cos(self.direction)
-        z = -math.sin(self.direction)
+        x = math.cos(self.dir)
+        z = -math.sin(self.dir)
         return np.array([x, 0, z])
 
     @property
@@ -146,13 +143,13 @@ class Agent(Entity):
         Vector pointing to the right of the agent
         """
 
-        x = math.sin(self.direction)
-        z = math.cos(self.direction)
+        x = math.sin(self.dir)
+        z = math.cos(self.dir)
         return np.array([x, 0, z])
 
     @property
     def cam_pos(self):
-        return self.position + np.array([0, self.cam_height, 0])
+        return self.pos + np.array([0, self.cam_height, 0])
 
     @property
     def cam_dir(self):

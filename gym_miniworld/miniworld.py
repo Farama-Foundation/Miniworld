@@ -297,7 +297,7 @@ class MiniWorldEnv(gym.Env):
         self.step_count = 0
 
         # Create the agent
-        self.agent = Agent()
+        self.agent = Agent([0, 0, 0], 0)
 
         # List of rooms in the world
         self.rooms = []
@@ -331,16 +331,16 @@ class MiniWorldEnv(gym.Env):
         delta_time = 1 / self.frame_rate
 
         if action == self.actions.move_forward:
-            self.agent.position = self.agent.position + self.agent.dir_vec * 0.18
+            self.agent.pos = self.agent.pos + self.agent.dir_vec * 0.18
 
         elif action == self.actions.move_back:
-            self.agent.position = self.agent.position - self.agent.dir_vec * 0.18
+            self.agent.pos = self.agent.pos - self.agent.dir_vec * 0.18
 
         elif action == self.actions.turn_left:
-            self.agent.direction += math.pi * 0.04
+            self.agent.dir += math.pi * 0.04
 
         elif action == self.actions.turn_right:
-            self.agent.direction -= math.pi * 0.04
+            self.agent.dir -= math.pi * 0.04
 
         # TODO: update the world state, objects, etc.
 
@@ -559,8 +559,8 @@ class MiniWorldEnv(gym.Env):
 
         # Draw the text label in the window
         self.text_label.text = "pos: (%.2f, %.2f, %.2f)\nangle: %d\nsteps: %d" % (
-            *self.agent.position,
-            int(self.agent.direction * 180 / math.pi),
+            *self.agent.pos,
+            int(self.agent.dir * 180 / math.pi),
             self.step_count
         )
         self.text_label.draw()
