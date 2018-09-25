@@ -19,6 +19,13 @@ from model import Policy
 from storage import RolloutStorage
 #from visualize import visdom_plot
 
+
+import csv
+csv_file = open('out.csv', "w")
+csv_out = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+csv_out.writerow(['updates', 'mean reward'])
+
+
 args = get_args()
 
 assert args.algo in ['a2c', 'ppo', 'acktr']
@@ -161,6 +168,9 @@ def main():
                        np.min(episode_rewards),
                        np.max(episode_rewards), dist_entropy,
                        value_loss, action_loss))
+
+            csv_out.writerow([j, np.mean(episode_rewards)])
+            csv_file.flush()
 
         if args.eval_interval is not None and len(episode_rewards) > 1 and j % args.eval_interval == 0:
             eval_envs = make_vec_envs(args.env_name, args.seed + args.num_processes, args.num_processes,
