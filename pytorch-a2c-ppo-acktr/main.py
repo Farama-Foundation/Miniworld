@@ -20,10 +20,12 @@ from storage import RolloutStorage
 #from visualize import visdom_plot
 
 
+import time
 import csv
+start_time = time.time()
 csv_file = open('out.csv', "w")
 csv_out = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-csv_out.writerow(['updates', 'mean reward'])
+csv_out.writerow(['seconds', 'updates', 'mean reward'])
 
 
 args = get_args()
@@ -169,7 +171,8 @@ def main():
                        np.max(episode_rewards), dist_entropy,
                        value_loss, action_loss))
 
-            csv_out.writerow([j, np.mean(episode_rewards)])
+            cur_time = int(time.time() - start_time)
+            csv_out.writerow([cur_time, j, np.mean(episode_rewards)])
             csv_file.flush()
 
         if args.eval_interval is not None and len(episode_rewards) > 1 and j % args.eval_interval == 0:

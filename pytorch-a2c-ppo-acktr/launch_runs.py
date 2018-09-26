@@ -7,7 +7,7 @@ import random
 import subprocess
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--num-runs', type=int, default=30)
+parser.add_argument('--num-runs', type=int, default=40)
 args = parser.parse_args()
 
 """
@@ -28,7 +28,7 @@ def gen_params():
     return {
         'seed': random.randint(1, 100),
         'lr': random.choice([1e-6, 5e-6, 1e-5, 5e-5, 1e-4, 5e-4]),
-        'max-grad-norm': 0.5,
+        'max-grad-norm': random.choice([0.2, 0.3, 0.4, 0.5]),
     }
 
 def launch_run(params, run_no):
