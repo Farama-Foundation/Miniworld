@@ -50,7 +50,7 @@ def launch_run(params, run_no):
     full_cmd = cmd + param_args
     print(' '.join(full_cmd))
 
-    #subprocess.check_call(full_cmd)
+    subprocess.check_call(full_cmd)
     print(' ')
 
     # Read the output and add the parameter values
