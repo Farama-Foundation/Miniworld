@@ -19,16 +19,16 @@ from model import Policy
 from storage import RolloutStorage
 #from visualize import visdom_plot
 
+args = get_args()
+
 
 import time
 import csv
 start_time = time.time()
-csv_file = open('out.csv', "w")
+csv_file = open(args.csv_out_file, "w")
 csv_out = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 csv_out.writerow(['seconds', 'updates', 'mean reward'])
 
-
-args = get_args()
 
 assert args.algo in ['a2c', 'ppo', 'acktr']
 if args.recurrent_policy:

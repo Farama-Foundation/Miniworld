@@ -32,13 +32,17 @@ def gen_params():
     }
 
 def launch_run(params, run_no):
+    hostname = socket.gethostname()
+    csv_file_name = 'out_{}_{}.csv'.format(hostname, run_no)
+
     cmd = [
         'python3', 'main.py',
+        '--csv-out-file', csv_file_name,
         '--env-name', 'MiniWorld-Hallway-v0',
         '--algo', 'ppo',
         '--num-frames', '5000000',
         '--num-processes', '16',
-        '--num-steps', '80'
+        '--num-steps', '80',
     ]
 
     param_args = []
@@ -54,7 +58,7 @@ def launch_run(params, run_no):
     print(' ')
 
     # Read the output and add the parameter values
-    with open('out.csv', newline='') as csvfile:
+    with open(csv_file_name, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         rows = list(reader)
         for name in sorted(params.keys()):
@@ -63,8 +67,7 @@ def launch_run(params, run_no):
             rows[1] += [arg_val]
 
     # Write the new output file
-    hostname = socket.gethostname()
-    with open('out_{}_{}.csv'.format(hostname, run_no), 'w', newline='') as f:
+    with open(csv_file_name, 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerows(rows)
 
