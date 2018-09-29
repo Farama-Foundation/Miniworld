@@ -29,7 +29,7 @@ class HallwayEnv(MiniWorldEnv):
             self.rand.float(-0.5, 0.5)
         ])
 
-        self.agent.angle = self.rand.float(-math.pi/4, math.pi/4)
+        self.agent.dir = self.rand.float(-math.pi/4, math.pi/4)
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
