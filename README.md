@@ -57,7 +57,7 @@ There is also a script to run automated tests (`run_tests.py`) and a script to g
 
 ### Reinforcement Learning
 
-To train a reinforcement learning agent, you can use the code provided under [/pytorch-a2c-ppo-acktr](/pytorch-a2c-ppo-acktr). This code is a modified version of the RL code found in [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr). I recommend using the PPO algorithm. A sample command to launch training is:
+To train a reinforcement learning agent, you can use the code provided under [/pytorch-a2c-ppo-acktr](/pytorch-a2c-ppo-acktr). This code is a modified version of the RL code found in [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr). I recommend using the PPO algorithm and 16 processes or more. A sample command to launch training is:
 
 ```
 python3 main.py --algo ppo --num-frames 5000000 --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
