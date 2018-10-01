@@ -1,4 +1,4 @@
-# gym-miniworld
+# MiniWorld (gym-miniworld)
 
 MiniWorld is a minimalistic 3D interior environment simulator for reinforcement
 learning &amp; robotics research. It can be used to simulate environments with
@@ -45,11 +45,31 @@ repository to let us know something is wrong.
 
 ## Usage
 
-TODO
+### Testing
+
+There is a simple UI application which allows you to control the simulation or real robot manually. The `manual_control.py` application will launch the Gym environment, display camera images and send actions (keyboard commands) back to the simulator or robot.
+
+```
+./manual_control.py --env-name MiniWorld-Hallway-v0
+```
+
+There is also a script to run automated tests (`run_tests.py`) and a script to gather performance metrics (`benchmark.py`).
+
+### Reinforcement Learning
+
+To train a reinforcement learning agent, you can use the code provided under [/pytorch-a2c-ppo-acktr](/pytorch-a2c-ppo-acktr). This code is a modified version of the RL code found in [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr). I recommend using the PPO algorithm. A sample command to launch training is:
+
+```
+python3 main.py --algo ppo --num-frames 5000000 --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
+```
+
+Then, to visualize the results of training, you can run the following command. Note that you can do this while the training process is still running. Also note that if you are running this through SSH, you will need to enable X forwarding to get a display:
+
+```
+python3 enjoy.py --env-name MiniWorld-Hallway-v0 --load-dir trained_models/ppo
+```
 
 ## Design
-
-TODO
 
 ### Observations
 
