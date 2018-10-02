@@ -23,6 +23,26 @@ class Entity:
         pass
 
     @property
+    def dir_vec(self):
+        """
+        Vector pointing in the direction of forward movement
+        """
+
+        x = math.cos(self.dir)
+        z = -math.sin(self.dir)
+        return np.array([x, 0, z])
+
+    @property
+    def right_vec(self):
+        """
+        Vector pointing to the right of the agent
+        """
+
+        x = math.sin(self.dir)
+        z = math.cos(self.dir)
+        return np.array([x, 0, z])
+
+    @property
     def is_static(self):
         """
         True for objects that cannot move or animate
@@ -126,26 +146,6 @@ class Agent(Entity):
 
         # Vertical field of view in degrees
         self.cam_fov_y = 60
-
-    @property
-    def dir_vec(self):
-        """
-        Vector pointing in the direction of forward movement
-        """
-
-        x = math.cos(self.dir)
-        z = -math.sin(self.dir)
-        return np.array([x, 0, z])
-
-    @property
-    def right_vec(self):
-        """
-        Vector pointing to the right of the agent
-        """
-
-        x = math.sin(self.dir)
-        z = math.cos(self.dir)
-        return np.array([x, 0, z])
 
     @property
     def cam_pos(self):
