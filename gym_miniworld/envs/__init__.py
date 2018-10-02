@@ -1,6 +1,7 @@
 import gym
 
 from .hallway import *
+from .junction import *
 
 def register_envs():
     module_name = __name__

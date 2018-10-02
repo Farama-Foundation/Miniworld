@@ -27,16 +27,27 @@ COLORS = {
 # List of color names, sorted alphabetically
 COLOR_NAMES = sorted(list(COLORS.keys()))
 
-def gen_tex_coords(tex, width, height):
-    w = width * (TEX_DENSITY / tex.width)
-    h = height * (TEX_DENSITY / tex.height)
+def gen_tex_coords(
+    tex,
+    min_x,
+    min_y,
+    width,
+    height
+):
+    xc = (TEX_DENSITY / tex.width)
+    yc = (TEX_DENSITY / tex.height)
+
+    min_u = (min_x) * xc
+    max_u = (min_x + width) * xc
+    min_v = (min_y) * yc
+    max_v = (min_y + height) * yc
 
     return np.array(
         [
-            [0, 0],
-            [0, h],
-            [w, h],
-            [w, 0],
+            [min_u, min_v],
+            [min_u, max_v],
+            [max_u, max_v],
+            [max_u, min_v],
         ],
         dtype=np.float32
     )
@@ -78,8 +89,8 @@ class Room:
         self.floor_tex = Texture.get('floor_tiles_bw')
         self.ceil_tex = Texture.get('concrete_tiles')
 
-        # List of portals
-        self.portals = []
+        # Lists of portals, indexed by wall/edge index
+        self.portals = [[] for i in range(self.num_walls)]
 
         # List of neighbor rooms
         # Same length as list of portals
@@ -87,6 +98,36 @@ class Room:
 
         # List of entities contained
         self.entities = []
+
+    def make_portal(
+        self,
+        edge_idx,
+        start_pos,
+        width,
+        min_y=0,
+        max_y=None
+
+    ):
+        """
+        Create a new portal/opening in a wall of this room
+        """
+
+        if max_y == None:
+            max_y = self.wall_height
+
+        assert edge_idx <= self.num_walls
+        assert width > 0
+        assert max_y > min_y
+
+        # TODO: make sure portals remain sorted by start position
+        # use sort function
+
+        self.portals[edge_idx].append({
+            'start_pos': start_pos,
+            'width': width,
+            'min_y': min_y,
+            'max_y': max_y
+        })
 
     def _gen_polys(self):
         """
@@ -97,18 +138,25 @@ class Room:
         """
 
         up_vec = np.array([0, self.wall_height, 0])
+        y_vec = np.array([0, 1, 0])
 
+        # Generate the floor vertices
         self.floor_verts = self.outline
         self.floor_texcs = gen_tex_coords(
             self.floor_tex,
+            0,
+            0,
             np.linalg.norm(self.outline[2,:] - self.outline[1,:]),
             np.linalg.norm(self.outline[1,:] - self.outline[0,:])
         )
 
+        # Generate the ceiling vertices
         # Flip the ceiling vertex order because of backface culling
         self.ceil_verts = np.flip(self.outline, axis=0) + up_vec
         self.ceil_texcs = gen_tex_coords(
             self.ceil_tex,
+            0,
+            0,
             np.linalg.norm(self.outline[2,:] - self.outline[1,:]),
             np.linalg.norm(self.outline[1,:] - self.outline[0,:])
         )
@@ -116,23 +164,105 @@ class Room:
         self.wall_verts = []
         self.wall_texcs = []
 
-        for i in range(self.num_walls):
-            p0 = self.outline[i, :]
-            p1 = self.outline[(i+1) % self.num_walls, :]
-            side_vec = p1 - p0
-            wall_width = np.linalg.norm(side_vec)
+        def gen_seg_poly(
+            edge_p0,
+            side_vec,
+            seg_start,
+            seg_width,
+            min_y,
+            max_y
+        ):
+            if seg_width == 0:
+                return
 
-            self.wall_verts.append(p0)
-            self.wall_verts.append(p0+up_vec)
-            self.wall_verts.append(p1+up_vec)
-            self.wall_verts.append(p1)
+            if min_y == max_y:
+                return
 
+            s_p0 = edge_p0 + seg_start * side_vec
+            s_p1 = edge_p0 + (seg_start + seg_width) * side_vec
+
+            # Generate the vertices
+            # Vertices are listed in counter-clockwise order
+            self.wall_verts.append(s_p0 + min_y * y_vec)
+            self.wall_verts.append(s_p0 + max_y * y_vec)
+            self.wall_verts.append(s_p1 + max_y * y_vec)
+            self.wall_verts.append(s_p1 + min_y * y_vec)
+
+            # Generate the texture coordinates
             texcs = gen_tex_coords(
                 self.wall_tex,
-                wall_width,
-                self.wall_height
+                seg_start,
+                min_y,
+                seg_width,
+                max_y - min_y
             )
             self.wall_texcs.append(texcs)
+
+        # For each wall
+        for wall_idx in range(self.num_walls):
+            edge_p0 = self.outline[wall_idx, :]
+            edge_p1 = self.outline[(wall_idx+1) % self.num_walls, :]
+            wall_width = np.linalg.norm(edge_p1 - edge_p0)
+            side_vec = (edge_p1 - edge_p0) / wall_width
+
+            if len(self.portals[wall_idx]) > 0:
+                seg_width = self.portals[wall_idx][0]['start_pos']
+            else:
+                seg_width = wall_width
+
+            # Generate the first polygon (going up to the first portal)
+            gen_seg_poly(
+                edge_p0,
+                side_vec,
+                0,
+                seg_width,
+                0,
+                self.wall_height
+            )
+
+            # For each portal in this wall
+            for portal_idx, portal in enumerate(self.portals[wall_idx]):
+                portal = self.portals[wall_idx][portal_idx]
+                start_pos = portal['start_pos']
+                width = portal['width']
+                min_y = portal['min_y']
+                max_y = portal['max_y']
+
+                # Generate the bottom polygon
+                gen_seg_poly(
+                    edge_p0,
+                    side_vec,
+                    start_pos,
+                    width,
+                    0,
+                    min_y
+                )
+
+                # Generate the top polygon
+                gen_seg_poly(
+                    edge_p0,
+                    side_vec,
+                    start_pos,
+                    width,
+                    max_y,
+                    self.wall_height
+                )
+
+                if portal_idx < len(self.portals[wall_idx]) - 1:
+                    next_portal = self.portals[wall_idx][portal_idx+1]
+                    next_portal_start = next_portal['start_pos']
+                else:
+                    next_portal_start = wall_width
+
+                # Generate the polygon going up to the next portal
+                gen_seg_poly(
+                    edge_p0,
+                    side_vec,
+                    start_pos + width,
+                    next_portal_start - (start_pos + width),
+                    0,
+                    self.wall_height
+                )
 
         self.wall_verts = np.array(self.wall_verts)
         self.wall_texcs = np.concatenate(self.wall_texcs)
@@ -367,12 +497,17 @@ class MiniWorldEnv(gym.Env):
         Create a rectangular room
         """
 
-        # 2D outline coordinates of the room
+        # 2D outline coordinates of the room,
+        # listed in counter-clockwise order when viewed from the top
         outline = np.array([
-            [min_x          , min_z],
-            [min_x          , min_z + size_z],
-            [min_x + size_x , min_z + size_z],
-            [min_x + size_x , min_z]
+            # East wall
+            [min_x + size_x, min_z + size_z],
+            # North wall
+            [min_x + size_x, min_z],
+            # West wall
+            [min_x         , min_z],
+            # South wall
+            [min_x         , min_z + size_z],
         ])
 
         room = Room(outline)

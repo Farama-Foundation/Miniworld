@@ -7,7 +7,7 @@ import gym_miniworld
 
 # Benchmark loading time
 st = time.time()
-env = gym.make('MiniWorld-Hallway-v0')
+env = gym.make('MiniWorld-Junction-v0')
 env.seed(0)
 env.reset()
 load_time = 1000 * (time.time() - st)
