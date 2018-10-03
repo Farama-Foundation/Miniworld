@@ -129,9 +129,9 @@ class Room:
             'max_y': max_y
         })
 
-    def _gen_polys(self):
+    def _gen_static_data(self):
         """
-        Generate polygons for this room
+        Generate polygons and static data for this room
         Needed for rendering and collision detection
         Note: the wall polygons are quads, but the floor and
               ceiling can be arbitrary n-gons
@@ -438,9 +438,9 @@ class MiniWorldEnv(gym.Env):
         # Generate the world
         self._gen_world()
 
-        # Generate the polygons for each room
+        # Generate the static data for each room
         for room in self.rooms:
-            room._gen_polys()
+            room._gen_static_data()
 
         # Pre-compile static parts of the environment into a display list
         self._render_static()
