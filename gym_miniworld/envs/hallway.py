@@ -16,8 +16,8 @@ class HallwayEnv(MiniWorldEnv):
     def _gen_world(self):
         # Create a long rectangular room
         room = self.add_rect_room(
-            -1, -2,
-            self.length, 4
+            min_x=-1, max_x=-1 + self.length,
+            min_z=-2, max_z=2
         )
 
         room.entities.append(Box([room.max_x - 0.5, 0, 0], 0, color='red'))

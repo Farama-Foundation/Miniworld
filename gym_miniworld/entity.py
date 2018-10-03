@@ -154,6 +154,8 @@ class Agent(Entity):
     @property
     def cam_dir(self):
         # FIXME: take cam_angle into account
+        # NOTE: this is useful even if just for slight domain
+        # randomization of camera angle
         return self.dir_vec
 
     def step(self, delta_time):

@@ -12,12 +12,12 @@ class JunctionEnv(MiniWorldEnv):
 
     def _gen_world(self):
         room1 = self.add_rect_room(
-            -1, -2,
-            10,  4
+            -1, 10,
+            -2, 2
         )
         room2 = self.add_rect_room(
-            9, -10,
-            4, 20
+            10, 14,
+            -10, 10
         )
 
         room1.add_portal(0, 0, 4)

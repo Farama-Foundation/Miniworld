@@ -101,7 +101,7 @@ class Room:
 
     def add_portal(
         self,
-        edge_idx,
+        edge,
         start_pos,
         width,
         min_y=0,
@@ -115,14 +115,14 @@ class Room:
         if max_y == None:
             max_y = self.wall_height
 
-        assert edge_idx <= self.num_walls
+        assert edge <= self.num_walls
         assert width > 0
         assert max_y > min_y
 
         # TODO: make sure portals remain sorted by start position
         # use sort function
 
-        self.portals[edge_idx].append({
+        self.portals[edge].append({
             'start_pos': start_pos,
             'width': width,
             'min_y': min_y,
@@ -490,8 +490,8 @@ class MiniWorldEnv(gym.Env):
 
     def add_rect_room(
         self,
-        min_x, min_z,
-        size_x, size_z
+        min_x, max_x,
+        min_z, max_z
     ):
         """
         Create a rectangular room
@@ -501,13 +501,13 @@ class MiniWorldEnv(gym.Env):
         # listed in counter-clockwise order when viewed from the top
         outline = np.array([
             # East wall
-            [min_x + size_x, min_z + size_z],
+            [max_x, max_z],
             # North wall
-            [min_x + size_x, min_z],
+            [max_x, min_z],
             # West wall
-            [min_x         , min_z],
+            [min_x, min_z],
             # South wall
-            [min_x         , min_z + size_z],
+            [min_x, max_z],
         ])
 
         room = Room(outline)
