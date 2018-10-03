@@ -15,7 +15,7 @@ class HallwayEnv(MiniWorldEnv):
 
     def _gen_world(self):
         # Create a long rectangular room
-        room = self.create_rect_room(
+        room = self.add_rect_room(
             -1, -2,
             self.length, 4
         )

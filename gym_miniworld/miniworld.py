@@ -99,7 +99,7 @@ class Room:
         # List of entities contained
         self.entities = []
 
-    def make_portal(
+    def add_portal(
         self,
         edge_idx,
         start_pos,
@@ -488,7 +488,7 @@ class MiniWorldEnv(gym.Env):
 
         return obs, reward, done, {}
 
-    def create_rect_room(
+    def add_rect_room(
         self,
         min_x, min_z,
         size_x, size_z

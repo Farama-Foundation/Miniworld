@@ -11,17 +11,17 @@ class JunctionEnv(MiniWorldEnv):
         )
 
     def _gen_world(self):
-        room1 = self.create_rect_room(
+        room1 = self.add_rect_room(
             -1, -2,
             10,  4
         )
-        room2 = self.create_rect_room(
+        room2 = self.add_rect_room(
             9, -10,
             4, 20
         )
 
-        room1.make_portal(0, 0, 4)
-        room2.make_portal(2, 8, 4)
+        room1.add_portal(0, 0, 4)
+        room2.add_portal(2, 8, 4)
 
         self.agent.dir = self.rand.float(-math.pi/4, math.pi/4)
 
