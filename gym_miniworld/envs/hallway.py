@@ -4,7 +4,7 @@ from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 
 class HallwayEnv(MiniWorldEnv):
-    def __init__(self, length=25, **kwargs):
+    def __init__(self, length=12, **kwargs):
         assert length >= 2
         self.length = length
 

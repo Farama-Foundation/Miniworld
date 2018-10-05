@@ -344,12 +344,14 @@ class MiniWorldEnv(gym.Env):
     def __init__(
         self,
         max_episode_steps=1500,
+        forward_speed=2.5,
+        turn_speed=90,
         frame_rate=30,
         obs_width=80,
         obs_height=60,
         window_width=800,
         window_height=600,
-        domain_rand=True
+        domain_rand=False
     ):
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions
@@ -375,6 +377,12 @@ class MiniWorldEnv(gym.Env):
 
         # Flag to enable/disable domain randomization
         self.domain_rand = domain_rand
+
+        # Robot forward speed in meters/second
+        self.forward_speed = forward_speed
+
+        # Robot turning speed in degrees/second
+        self.turn_speed = turn_speed
 
         # Window for displaying the environment to humans
         self.window = None
@@ -434,6 +442,7 @@ class MiniWorldEnv(gym.Env):
 
         # TODO: randomize elements of the world
         # Perform domain-randomization
+        # May want a params class with some accessor for param names
 
         # Generate the world
         self._gen_world()
@@ -458,21 +467,25 @@ class MiniWorldEnv(gym.Env):
 
         self.step_count += 1
 
+        # Compute the delta time and forward/turn movement magnitudes
         delta_time = 1 / self.frame_rate
+        d_fwd = self.forward_speed * delta_time
+        d_rot = self.turn_speed * delta_time * (math.pi / 180)
 
         if action == self.actions.move_forward:
-            self.agent.pos = self.agent.pos + self.agent.dir_vec * 0.18
+            self.agent.pos = self.agent.pos + self.agent.dir_vec * d_fwd
 
         elif action == self.actions.move_back:
-            self.agent.pos = self.agent.pos - self.agent.dir_vec * 0.18
+            self.agent.pos = self.agent.pos - self.agent.dir_vec * d_fwd
 
         elif action == self.actions.turn_left:
-            self.agent.dir += math.pi * 0.04
+            self.agent.dir += d_rot
 
         elif action == self.actions.turn_right:
-            self.agent.dir -= math.pi * 0.04
+            self.agent.dir -= d_rot
 
         # TODO: update the world state, objects, etc.
+        # take delta_time into account
 
         # Generate the current camera image
         obs = self.render_obs()
