@@ -163,6 +163,7 @@ class Room:
 
         self.wall_verts = []
         self.wall_texcs = []
+        self.wall_segs = []
 
         def gen_seg_poly(
             edge_p0,
@@ -180,6 +181,10 @@ class Room:
 
             s_p0 = edge_p0 + seg_start * side_vec
             s_p1 = edge_p0 + (seg_start + seg_width) * side_vec
+
+            # If this polygon starts at ground level, add a collidable segment
+            if min_y == 0:
+                self.wall_segs.append(np.array([s_p1, s_p0]))
 
             # Generate the vertices
             # Vertices are listed in counter-clockwise order
@@ -266,6 +271,7 @@ class Room:
 
         self.wall_verts = np.array(self.wall_verts)
         self.wall_texcs = np.concatenate(self.wall_texcs)
+        self.wall_segs = np.array(self.wall_segs)
 
     def _render(self):
         """

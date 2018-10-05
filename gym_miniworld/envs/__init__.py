@@ -3,6 +3,9 @@ import gym
 from .hallway import *
 from .junction import *
 
+# Registered environment ids
+env_ids = []
+
 def register_envs():
     module_name = __name__
     global_vars = globals()
@@ -23,6 +26,8 @@ def register_envs():
             id=gym_id,
             entry_point=entry_point,
         )
+
+        env_ids.append(gym_id)
 
         print('Registered env:', gym_id)
 
