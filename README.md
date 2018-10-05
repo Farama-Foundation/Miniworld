@@ -104,7 +104,7 @@ sudo dnf install freeglut-devel
 
 ### NoSuchDisplayException: Cannot connect to "None"
 
-If you are connected through SSH, or running the simulator in a Docker image, you will need to use xvfb to create a virtual display in order to run the simulator. See the "Running Headless" subsection below.
+If you are connected through SSH, or running the simulator in a Docker image, you will need to use `xvfb-run` to create a virtual frame buffer (virtual display) in order to run the simulator. See the "Running Headless" subsection below.
 
 ### Running headless and training in a cloud based environment (AWS)
 
@@ -121,16 +121,8 @@ sudo nvidia-uninstall -y
 # Sanity check to make sure you still have CUDA driver and its version
 nvcc --version
 
-# Start xvfb
-Xvfb :1 -screen 0 1024x768x24 -ac +extension GLX +render -noreset &> xvfb.log &
-
-# Export your display id
-export DISPLAY=:1
-
-# Check if your display settings are valid
-glxinfo
-
-# You are now ready to train
+# Run your training command using xvfb-run to create a virtual display, for example:
+xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python3 main.py --algo ppo --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
 ```
 
 ### Poor performance, low frame rate
