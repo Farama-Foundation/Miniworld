@@ -351,7 +351,7 @@ class MiniWorldEnv(gym.Env):
         self,
         max_episode_steps=1500,
         forward_speed=2.5,
-        turn_speed=90,
+        turn_speed=120,
         frame_rate=30,
         obs_width=80,
         obs_height=60,
@@ -453,9 +453,15 @@ class MiniWorldEnv(gym.Env):
         # Generate the world
         self._gen_world()
 
+        # Wall segments for collision detection
+        self.wall_segs = []
+
         # Generate the static data for each room
         for room in self.rooms:
             room._gen_static_data()
+            self.wall_segs.append(room.wall_segs)
+
+        self.wall_segs = np.concatenate(self.wall_segs)
 
         # Pre-compile static parts of the environment into a display list
         self._render_static()
@@ -478,18 +484,14 @@ class MiniWorldEnv(gym.Env):
         d_fwd = self.forward_speed * delta_time
         d_rot = self.turn_speed * delta_time * (math.pi / 180)
 
-        r = self._intersect(self.agent.pos, 0.4)
-        if r:
-            print('intersection!')
-
         if action == self.actions.move_forward:
             next_pos = self.agent.pos + self.agent.dir_vec * d_fwd
-            if not self._intersect(next_pos, 0.4):
+            if not self._intersect(next_pos, self.agent.radius):
                 self.agent.pos = next_pos
 
         elif action == self.actions.move_back:
             next_pos = self.agent.pos - self.agent.dir_vec * d_fwd
-            if not self._intersect(next_pos, 0.4):
+            if not self._intersect(next_pos, self.agent.radius):
                 self.agent.pos = next_pos
 
         elif action == self.actions.turn_left:
@@ -546,29 +548,29 @@ class MiniWorldEnv(gym.Env):
         Test if a circle intersects with any walls in the floorplan
         """
 
-        # TODO: once implemented, may want to move into new colldet.py file
+        # TODO: once finished, may want to move into new colldet.py file
 
-        for room in self.rooms:
-            for seg_idx in range(room.wall_segs.shape[0]):
-                seg = room.wall_segs[seg_idx, :, :]
+        a = self.wall_segs[:, 0, :]
+        b = self.wall_segs[:, 1, :]
+        ab = b - a
+        ap = point - a
 
-                a = seg[0, :]
-                b = seg[1, :]
-                ab = b - a
-                ap = point - a
+        dotAPAB = np.sum(ap * ab, axis=1)
+        dotABAB = np.sum(ab * ab, axis=1)
 
-                dotAPAB = np.dot(ap, ab)
-                dotABAB = np.dot(ab, ab)
+        proj_dist = dotAPAB / dotABAB
+        proj_dist = np.clip(proj_dist, 0, 1)
+        proj_dist = np.expand_dims(proj_dist, axis=1)
 
-                proj_dist = dotAPAB / dotABAB
-                proj_dist = min(proj_dist, 1)
-                proj_dist = max(proj_dist, 0)
+        # Compute the closest point on the segment
+        c = a + proj_dist * ab
 
-                c = a + proj_dist * ab
-                dist = np.linalg.norm(c - point)
+        # Check if any distances are within the radius
+        dist = np.linalg.norm(c - point, axis=1)
+        dist_lt_rad = np.less(dist, radius)
 
-                if dist < radius:
-                    return True
+        if np.any(dist_lt_rad):
+            return True
 
         # No intersection
         return None
