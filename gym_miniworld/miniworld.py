@@ -8,9 +8,6 @@ from .opengl import *
 #from .objmesh import *
 from .entity import *
 
-# Texture size/density in texels/meter
-TEX_DENSITY = 512
-
 # Blue sky horizon color
 BLUE_SKY_COLOR = np.array([0.45, 0.82, 1])
 
@@ -26,6 +23,10 @@ COLORS = {
 
 # List of color names, sorted alphabetically
 COLOR_NAMES = sorted(list(COLORS.keys()))
+
+# TODO: make this a param to gen_tex_coords?
+# Texture size/density in texels/meter
+TEX_DENSITY = 512
 
 def gen_tex_coords(
     tex,
@@ -81,6 +82,10 @@ class Room:
         self.max_x = self.outline[:, 0].max()
         self.min_z = self.outline[:, 2].min()
         self.max_z = self.outline[:, 2].max()
+
+        # Compute midpoint coordinates
+        self.mid_x = (self.max_x + self.min_x) / 2
+        self.mid_z = (self.max_z + self.min_z) / 2
 
         # Height of the room walls
         self.wall_height = wall_height

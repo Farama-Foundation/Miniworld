@@ -1,7 +1,7 @@
 import gym
 
 from .hallway import *
-from .junction import *
+from .tmaze import *
 
 # Registered environment ids
 env_ids = []
