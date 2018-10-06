@@ -490,6 +490,16 @@ class MiniWorldEnv(gym.Env):
         elif action == self.actions.turn_right:
             self.agent.dir -= d_rot
 
+
+
+        # TODO: basic collision detection
+        # use new position, conditional update
+        self._intersect(self.agent.pos, 0.4)
+
+
+
+
+
         # TODO: update the world state, objects, etc.
         # take delta_time into account
 
@@ -532,6 +542,45 @@ class MiniWorldEnv(gym.Env):
         room = Room(outline)
         self.rooms.append(room)
         return room
+
+    def _intersect(self, point, radius):
+        """
+        Test if a circle intersects with any walls in the floorplan
+        """
+
+        # TODO: once implemented, may want to move into new colldet.py file
+
+        for room in self.rooms:
+            for seg_idx in range(room.wall_segs.shape[0]):
+                seg = room.wall_segs[seg_idx, :, :]
+
+                a = seg[0, :]
+                b = seg[1, :]
+                ab = b - a
+                ap = point - a
+
+                dotAPAB = np.dot(ap, ab)
+                dotABAB = np.dot(ab, ab)
+
+                # Point outside of segment
+                if dotAPAB < 0:
+                    continue
+
+                proj_dist = dotAPAB / dotABAB
+
+                # Point outside of segment
+                if proj_dist > 1:
+                    continue
+
+                c = a + proj_dist * ab
+
+                dist = np.linalg.norm(c - point)
+
+                if dist < radius:
+                    return True
+
+        # No intersection
+        return None
 
     def _gen_world(self):
         """

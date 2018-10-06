@@ -25,12 +25,6 @@ second_obs, _, _, _ = env.step([0.0, 0.0])
 assert first_obs.shape == env.observation_space.shape
 assert first_obs.shape == second_obs.shape
 
-# Try loading each of the available environments
-for env_id in gym_miniworld.envs.env_ids:
-    print('Loading "' + env_id + '"')
-    env = gym.make(env_id)
-    env.reset()
-
 """
 # Test the PyTorch observation wrapper
 env = PyTorchObsWrapper(env)
@@ -39,3 +33,10 @@ second_obs, _, _, _ = env.step([0, 0])
 assert first_obs.shape == env.observation_space.shape
 assert first_obs.shape == second_obs.shape
 """
+
+# Try loading each of the available environments
+for env_id in gym_miniworld.envs.env_ids:
+    print('Loading "' + env_id + '"')
+    env = gym.make(env_id)
+    env.reset()
+    env.step(0)
