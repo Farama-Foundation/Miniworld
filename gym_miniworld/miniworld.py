@@ -478,27 +478,25 @@ class MiniWorldEnv(gym.Env):
         d_fwd = self.forward_speed * delta_time
         d_rot = self.turn_speed * delta_time * (math.pi / 180)
 
+        r = self._intersect(self.agent.pos, 0.4)
+        if r:
+            print('intersection!')
+
         if action == self.actions.move_forward:
-            self.agent.pos = self.agent.pos + self.agent.dir_vec * d_fwd
+            next_pos = self.agent.pos + self.agent.dir_vec * d_fwd
+            if not self._intersect(next_pos, 0.4):
+                self.agent.pos = next_pos
 
         elif action == self.actions.move_back:
-            self.agent.pos = self.agent.pos - self.agent.dir_vec * d_fwd
+            next_pos = self.agent.pos - self.agent.dir_vec * d_fwd
+            if not self._intersect(next_pos, 0.4):
+                self.agent.pos = next_pos
 
         elif action == self.actions.turn_left:
             self.agent.dir += d_rot
 
         elif action == self.actions.turn_right:
             self.agent.dir -= d_rot
-
-
-
-        # TODO: basic collision detection
-        # use new position, conditional update
-        self._intersect(self.agent.pos, 0.4)
-
-
-
-
 
         # TODO: update the world state, objects, etc.
         # take delta_time into account
@@ -562,18 +560,11 @@ class MiniWorldEnv(gym.Env):
                 dotAPAB = np.dot(ap, ab)
                 dotABAB = np.dot(ab, ab)
 
-                # Point outside of segment
-                if dotAPAB < 0:
-                    continue
-
                 proj_dist = dotAPAB / dotABAB
-
-                # Point outside of segment
-                if proj_dist > 1:
-                    continue
+                proj_dist = min(proj_dist, 1)
+                proj_dist = max(proj_dist, 0)
 
                 c = a + proj_dist * ab
-
                 dist = np.linalg.norm(c - point)
 
                 if dist < radius:
