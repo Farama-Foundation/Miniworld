@@ -2,7 +2,7 @@
 
 MiniWorld is a minimalistic 3D interior environment simulator for reinforcement
 learning &amp; robotics research. It can be used to simulate environments with
-rooms, doors, hallways and various objects (eg: office and home environments).
+rooms, doors, hallways and various objects (eg: office and home environments, mazes).
 MiniWorld can be seen as an alternative to VizDoom or DMLab. It is written
 100% in Python and designed to be easily modified or extended.
 
