@@ -598,6 +598,27 @@ class MiniWorldEnv(gym.Env):
         glDeleteLists(1, 1);
         glNewList(1, GL_COMPILE);
 
+        """
+        light_pos = [4, 4, 4]
+
+        # Background/always on
+        ambient = [0, 0, 0]
+        #ambient = [0.80, 0.80, 0.80]
+
+        # Diffuse material color
+        diffuse = [1, 1, 1]
+
+        glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat*4)(*light_pos))
+        glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat*4)(*ambient))
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, (GLfloat*4)(*diffuse))
+
+        glShadeModel(GL_SMOOTH)
+        glEnable(GL_LIGHT0)
+        glEnable(GL_LIGHTING)
+        glEnable(GL_COLOR_MATERIAL)
+        glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
+        """
+
         for room in self.rooms:
             room._render()
 
