@@ -10,8 +10,8 @@ class TMazeEnv(MiniWorldEnv):
 
     def __init__(self, **kwargs):
         super().__init__(
-            max_episode_steps=150,
-            frame_rate=8,
+            max_episode_steps=140,
+            frame_rate=6,
             **kwargs
         )
 
@@ -29,7 +29,7 @@ class TMazeEnv(MiniWorldEnv):
 
         # Add a box at a random end of the hallway
         z_pos = self.rand.elem([room2.min_z + 0.5, room2.max_z - 0.5])
-        self.box = Box([room2.mid_x, 0, z_pos], 0, color='red')
+        self.box = Box([room2.mid_x, 0, z_pos], 0, size=0.8, color='red')
         room2.entities.append(self.box)
 
         # TODO: need method to place_agent and avoid wall/object intersections
