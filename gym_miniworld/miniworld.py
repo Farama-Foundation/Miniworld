@@ -167,6 +167,7 @@ class Room:
         )
 
         self.wall_verts = []
+        self.wall_norms = []
         self.wall_texcs = []
         self.wall_segs = []
 
@@ -197,6 +198,12 @@ class Room:
             self.wall_verts.append(s_p0 + max_y * y_vec)
             self.wall_verts.append(s_p1 + max_y * y_vec)
             self.wall_verts.append(s_p1 + min_y * y_vec)
+
+            # Compute the normal for the polygon
+            normal = np.cross(s_p1 - s_p0, y_vec)
+            normal = -normal / np.linalg.norm(normal)
+            for i in range(4):
+                self.wall_norms.append(normal)
 
             # Generate the texture coordinates
             texcs = gen_tex_coords(
@@ -275,6 +282,7 @@ class Room:
                 )
 
         self.wall_verts = np.array(self.wall_verts)
+        self.wall_norms = np.array(self.wall_norms)
         self.wall_texcs = np.concatenate(self.wall_texcs)
         self.wall_segs = np.array(self.wall_segs)
 
@@ -289,6 +297,7 @@ class Room:
         # Draw the floor
         self.floor_tex.bind()
         glBegin(GL_POLYGON)
+        glNormal3f(0, 1, 0)
         for i in range(self.floor_verts.shape[0]):
             glTexCoord2f(*self.floor_texcs[i, :])
             glVertex3f(*self.floor_verts[i, :])
@@ -297,6 +306,7 @@ class Room:
         # Draw the ceiling
         self.ceil_tex.bind()
         glBegin(GL_POLYGON)
+        glNormal3f(0, -1, 0)
         for i in range(self.ceil_verts.shape[0]):
             glTexCoord2f(*self.ceil_texcs[i, :])
             glVertex3f(*self.ceil_verts[i, :])
@@ -306,6 +316,7 @@ class Room:
         self.wall_tex.bind()
         glBegin(GL_QUADS)
         for i in range(self.wall_verts.shape[0]):
+            glNormal3f(*self.wall_norms[i, :])
             glTexCoord2f(*self.wall_texcs[i, :])
             glVertex3f(*self.wall_verts[i, :])
         glEnd()
@@ -454,6 +465,8 @@ class MiniWorldEnv(gym.Env):
         # TODO: randomize elements of the world
         # Perform domain-randomization
         # May want a params class with some accessor for param names
+        # params.randomize(seed)
+        # params.val_name
 
         # Generate the world
         self._gen_world()
@@ -598,26 +611,44 @@ class MiniWorldEnv(gym.Env):
         glDeleteLists(1, 1);
         glNewList(1, GL_COMPILE);
 
-        """
-        light_pos = [4, 4, 4]
 
-        # Background/always on
-        ambient = [0, 0, 0]
+
+
+
+        light_pos = [0, 2.5, 0, 1]
+
+        # Background/minimum light level
+        ambient = [0.45, 0.45, 0.45, 1]
         #ambient = [0.80, 0.80, 0.80]
 
         # Diffuse material color
-        diffuse = [1, 1, 1]
+        diffuse = [1, 1, 1, 1]
 
         glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat*4)(*light_pos))
         glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat*4)(*ambient))
         glLightfv(GL_LIGHT0, GL_DIFFUSE, (GLfloat*4)(*diffuse))
 
-        glShadeModel(GL_SMOOTH)
-        glEnable(GL_LIGHT0)
+        #glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180)
+        #glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 0)
+        #glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0)
+        #glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0)
+        #glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0)
+
         glEnable(GL_LIGHTING)
+        glEnable(GL_LIGHT0)
+
+        glShadeModel(GL_SMOOTH)
+        #glDisable(GL_COLOR_MATERIAL);
+
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
-        """
+
+
+
+
+
+
+
 
         for room in self.rooms:
             room._render()
