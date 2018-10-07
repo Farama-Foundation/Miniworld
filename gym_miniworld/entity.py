@@ -111,8 +111,6 @@ class Box(Entity):
         glDisable(GL_TEXTURE_2D)
         glColor3f(*COLORS[self.color])
 
-        print(*COLORS[self.color])
-
         glBegin(GL_QUADS)
         glNormal3f(0, 0, 1)
         glVertex3f(x + hs, y + sz, z + hs)
