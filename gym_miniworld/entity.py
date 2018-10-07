@@ -82,6 +82,8 @@ class CeilingLight(Entity):
         glVertex3f(x - 0.5, y - 0.05, z - 0.5)
         glEnd(GL_QUADS)
 
+        glEnable(GL_LIGHTING)
+
 class Box(Entity):
     """
     Colored box object
@@ -109,27 +111,34 @@ class Box(Entity):
         glDisable(GL_TEXTURE_2D)
         glColor3f(*COLORS[self.color])
 
+        print(*COLORS[self.color])
+
         glBegin(GL_QUADS)
+        glNormal3f(0, 0, 1)
         glVertex3f(x + hs, y + sz, z + hs)
         glVertex3f(x - hs, y + sz, z + hs)
         glVertex3f(x - hs, y     , z + hs)
         glVertex3f(x + hs, y     , z + hs)
 
+        glNormal3f(0, 0, -1)
         glVertex3f(x - hs, y + sz, z - hs)
         glVertex3f(x + hs, y + sz, z - hs)
         glVertex3f(x + hs, y     , z - hs)
         glVertex3f(x - hs, y     , z - hs)
 
+        glNormal3f(-1, 0, 0)
         glVertex3f(x - hs, y + sz, z + hs)
         glVertex3f(x - hs, y + sz, z - hs)
         glVertex3f(x - hs, y     , z - hs)
         glVertex3f(x - hs, y     , z + hs)
 
+        glNormal3f(1, 0, 0)
         glVertex3f(x + hs, y + sz, z - hs)
         glVertex3f(x + hs, y + sz, z + hs)
         glVertex3f(x + hs, y     , z + hs)
         glVertex3f(x + hs, y     , z - hs)
 
+        glNormal3f(0, 1, 0)
         glVertex3f(x + hs, y + sz, z + hs)
         glVertex3f(x + hs, y + sz, z - hs)
         glVertex3f(x - hs, y + sz, z - hs)

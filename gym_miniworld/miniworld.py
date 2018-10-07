@@ -13,12 +13,12 @@ BLUE_SKY_COLOR = np.array([0.45, 0.82, 1])
 
 # Map of color names to RGB values
 COLORS = {
-    'red'   : np.array([255, 0, 0]),
-    'green' : np.array([0, 255, 0]),
-    'blue'  : np.array([0, 0, 255]),
-    'purple': np.array([112, 39, 195]),
-    'yellow': np.array([255, 255, 0]),
-    'grey'  : np.array([100, 100, 100])
+    'red'   : np.array([1, 0, 0]),
+    'green' : np.array([0, 1, 0]),
+    'blue'  : np.array([0, 0, 1]),
+    'purple': np.array([0.44, 0.15, 0.76]),
+    'yellow': np.array([1, 1, 0]),
+    'grey'  : np.array([0.39, 0.39, 0.39])
 }
 
 # List of color names, sorted alphabetically
@@ -611,15 +611,10 @@ class MiniWorldEnv(gym.Env):
         glDeleteLists(1, 1);
         glNewList(1, GL_COMPILE);
 
-
-
-
-
         light_pos = [0, 2.5, 0, 1]
 
         # Background/minimum light level
         ambient = [0.45, 0.45, 0.45, 1]
-        #ambient = [0.80, 0.80, 0.80]
 
         # Diffuse material color
         diffuse = [1, 1, 1, 1]
@@ -638,17 +633,8 @@ class MiniWorldEnv(gym.Env):
         glEnable(GL_LIGHT0)
 
         glShadeModel(GL_SMOOTH)
-        #glDisable(GL_COLOR_MATERIAL);
-
         glEnable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
-
-
-
-
-
-
-
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
         for room in self.rooms:
             room._render()
