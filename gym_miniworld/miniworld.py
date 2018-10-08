@@ -8,35 +8,47 @@ from .opengl import *
 #from .objmesh import *
 from .entity import *
 
-# Texture size/density in texels/meter
-TEX_DENSITY = 512
-
 # Blue sky horizon color
 BLUE_SKY_COLOR = np.array([0.45, 0.82, 1])
 
 # Map of color names to RGB values
 COLORS = {
-    'red'   : np.array([255, 0, 0]),
-    'green' : np.array([0, 255, 0]),
-    'blue'  : np.array([0, 0, 255]),
-    'purple': np.array([112, 39, 195]),
-    'yellow': np.array([255, 255, 0]),
-    'grey'  : np.array([100, 100, 100])
+    'red'   : np.array([1, 0, 0]),
+    'green' : np.array([0, 1, 0]),
+    'blue'  : np.array([0, 0, 1]),
+    'purple': np.array([0.44, 0.15, 0.76]),
+    'yellow': np.array([1, 1, 0]),
+    'grey'  : np.array([0.39, 0.39, 0.39])
 }
 
 # List of color names, sorted alphabetically
 COLOR_NAMES = sorted(list(COLORS.keys()))
 
-def gen_tex_coords(tex, width, height):
-    w = width * (TEX_DENSITY / tex.width)
-    h = height * (TEX_DENSITY / tex.height)
+# TODO: make this a param to gen_tex_coords?
+# Texture size/density in texels/meter
+TEX_DENSITY = 512
+
+def gen_tex_coords(
+    tex,
+    min_x,
+    min_y,
+    width,
+    height
+):
+    xc = (TEX_DENSITY / tex.width)
+    yc = (TEX_DENSITY / tex.height)
+
+    min_u = (min_x) * xc
+    max_u = (min_x + width) * xc
+    min_v = (min_y) * yc
+    max_v = (min_y + height) * yc
 
     return np.array(
         [
-            [0, 0],
-            [0, h],
-            [w, h],
-            [w, 0],
+            [min_u, min_v],
+            [min_u, max_v],
+            [max_u, max_v],
+            [max_u, min_v],
         ],
         dtype=np.float32
     )
@@ -71,6 +83,10 @@ class Room:
         self.min_z = self.outline[:, 2].min()
         self.max_z = self.outline[:, 2].max()
 
+        # Compute midpoint coordinates
+        self.mid_x = (self.max_x + self.min_x) / 2
+        self.mid_z = (self.max_z + self.min_z) / 2
+
         # Height of the room walls
         self.wall_height = wall_height
 
@@ -78,8 +94,8 @@ class Room:
         self.floor_tex = Texture.get('floor_tiles_bw')
         self.ceil_tex = Texture.get('concrete_tiles')
 
-        # List of portals
-        self.portals = []
+        # Lists of portals, indexed by wall/edge index
+        self.portals = [[] for i in range(self.num_walls)]
 
         # List of neighbor rooms
         # Same length as list of portals
@@ -88,54 +104,187 @@ class Room:
         # List of entities contained
         self.entities = []
 
-    def _gen_polys(self):
+    def add_portal(
+        self,
+        edge,
+        start_pos,
+        width,
+        min_y=0,
+        max_y=None
+
+    ):
         """
-        Generate polygons for this room
+        Create a new portal/opening in a wall of this room
+        """
+
+        if max_y == None:
+            max_y = self.wall_height
+
+        assert edge <= self.num_walls
+        assert width > 0
+        assert max_y > min_y
+
+        # TODO: make sure portals remain sorted by start position
+        # use sort function
+
+        self.portals[edge].append({
+            'start_pos': start_pos,
+            'width': width,
+            'min_y': min_y,
+            'max_y': max_y
+        })
+
+    def _gen_static_data(self):
+        """
+        Generate polygons and static data for this room
         Needed for rendering and collision detection
         Note: the wall polygons are quads, but the floor and
               ceiling can be arbitrary n-gons
         """
 
         up_vec = np.array([0, self.wall_height, 0])
+        y_vec = np.array([0, 1, 0])
 
+        # Generate the floor vertices
         self.floor_verts = self.outline
         self.floor_texcs = gen_tex_coords(
             self.floor_tex,
+            0,
+            0,
             np.linalg.norm(self.outline[2,:] - self.outline[1,:]),
             np.linalg.norm(self.outline[1,:] - self.outline[0,:])
         )
 
+        # Generate the ceiling vertices
         # Flip the ceiling vertex order because of backface culling
         self.ceil_verts = np.flip(self.outline, axis=0) + up_vec
         self.ceil_texcs = gen_tex_coords(
             self.ceil_tex,
+            0,
+            0,
             np.linalg.norm(self.outline[2,:] - self.outline[1,:]),
             np.linalg.norm(self.outline[1,:] - self.outline[0,:])
         )
 
         self.wall_verts = []
+        self.wall_norms = []
         self.wall_texcs = []
+        self.wall_segs = []
 
-        for i in range(self.num_walls):
-            p0 = self.outline[i, :]
-            p1 = self.outline[(i+1) % self.num_walls, :]
-            side_vec = p1 - p0
-            wall_width = np.linalg.norm(side_vec)
+        def gen_seg_poly(
+            edge_p0,
+            side_vec,
+            seg_start,
+            seg_width,
+            min_y,
+            max_y
+        ):
+            if seg_width == 0:
+                return
 
-            self.wall_verts.append(p0)
-            self.wall_verts.append(p0+up_vec)
-            self.wall_verts.append(p1+up_vec)
-            self.wall_verts.append(p1)
+            if min_y == max_y:
+                return
 
+            s_p0 = edge_p0 + seg_start * side_vec
+            s_p1 = edge_p0 + (seg_start + seg_width) * side_vec
+
+            # If this polygon starts at ground level, add a collidable segment
+            if min_y == 0:
+                self.wall_segs.append(np.array([s_p1, s_p0]))
+
+            # Generate the vertices
+            # Vertices are listed in counter-clockwise order
+            self.wall_verts.append(s_p0 + min_y * y_vec)
+            self.wall_verts.append(s_p0 + max_y * y_vec)
+            self.wall_verts.append(s_p1 + max_y * y_vec)
+            self.wall_verts.append(s_p1 + min_y * y_vec)
+
+            # Compute the normal for the polygon
+            normal = np.cross(s_p1 - s_p0, y_vec)
+            normal = -normal / np.linalg.norm(normal)
+            for i in range(4):
+                self.wall_norms.append(normal)
+
+            # Generate the texture coordinates
             texcs = gen_tex_coords(
                 self.wall_tex,
-                wall_width,
-                self.wall_height
+                seg_start,
+                min_y,
+                seg_width,
+                max_y - min_y
             )
             self.wall_texcs.append(texcs)
 
+        # For each wall
+        for wall_idx in range(self.num_walls):
+            edge_p0 = self.outline[wall_idx, :]
+            edge_p1 = self.outline[(wall_idx+1) % self.num_walls, :]
+            wall_width = np.linalg.norm(edge_p1 - edge_p0)
+            side_vec = (edge_p1 - edge_p0) / wall_width
+
+            if len(self.portals[wall_idx]) > 0:
+                seg_width = self.portals[wall_idx][0]['start_pos']
+            else:
+                seg_width = wall_width
+
+            # Generate the first polygon (going up to the first portal)
+            gen_seg_poly(
+                edge_p0,
+                side_vec,
+                0,
+                seg_width,
+                0,
+                self.wall_height
+            )
+
+            # For each portal in this wall
+            for portal_idx, portal in enumerate(self.portals[wall_idx]):
+                portal = self.portals[wall_idx][portal_idx]
+                start_pos = portal['start_pos']
+                width = portal['width']
+                min_y = portal['min_y']
+                max_y = portal['max_y']
+
+                # Generate the bottom polygon
+                gen_seg_poly(
+                    edge_p0,
+                    side_vec,
+                    start_pos,
+                    width,
+                    0,
+                    min_y
+                )
+
+                # Generate the top polygon
+                gen_seg_poly(
+                    edge_p0,
+                    side_vec,
+                    start_pos,
+                    width,
+                    max_y,
+                    self.wall_height
+                )
+
+                if portal_idx < len(self.portals[wall_idx]) - 1:
+                    next_portal = self.portals[wall_idx][portal_idx+1]
+                    next_portal_start = next_portal['start_pos']
+                else:
+                    next_portal_start = wall_width
+
+                # Generate the polygon going up to the next portal
+                gen_seg_poly(
+                    edge_p0,
+                    side_vec,
+                    start_pos + width,
+                    next_portal_start - (start_pos + width),
+                    0,
+                    self.wall_height
+                )
+
         self.wall_verts = np.array(self.wall_verts)
+        self.wall_norms = np.array(self.wall_norms)
         self.wall_texcs = np.concatenate(self.wall_texcs)
+        self.wall_segs = np.array(self.wall_segs)
 
     def _render(self):
         """
@@ -148,6 +297,7 @@ class Room:
         # Draw the floor
         self.floor_tex.bind()
         glBegin(GL_POLYGON)
+        glNormal3f(0, 1, 0)
         for i in range(self.floor_verts.shape[0]):
             glTexCoord2f(*self.floor_texcs[i, :])
             glVertex3f(*self.floor_verts[i, :])
@@ -156,6 +306,7 @@ class Room:
         # Draw the ceiling
         self.ceil_tex.bind()
         glBegin(GL_POLYGON)
+        glNormal3f(0, -1, 0)
         for i in range(self.ceil_verts.shape[0]):
             glTexCoord2f(*self.ceil_texcs[i, :])
             glVertex3f(*self.ceil_verts[i, :])
@@ -165,6 +316,7 @@ class Room:
         self.wall_tex.bind()
         glBegin(GL_QUADS)
         for i in range(self.wall_verts.shape[0]):
+            glNormal3f(*self.wall_norms[i, :])
             glTexCoord2f(*self.wall_texcs[i, :])
             glVertex3f(*self.wall_verts[i, :])
         glEnd()
@@ -214,12 +366,14 @@ class MiniWorldEnv(gym.Env):
     def __init__(
         self,
         max_episode_steps=1500,
+        forward_speed=2.5,
+        turn_speed=120,
         frame_rate=30,
         obs_width=80,
         obs_height=60,
         window_width=800,
         window_height=600,
-        domain_rand=True
+        domain_rand=False
     ):
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions
@@ -245,6 +399,12 @@ class MiniWorldEnv(gym.Env):
 
         # Flag to enable/disable domain randomization
         self.domain_rand = domain_rand
+
+        # Robot forward speed in meters/second
+        self.forward_speed = forward_speed
+
+        # Robot turning speed in degrees/second
+        self.turn_speed = turn_speed
 
         # Window for displaying the environment to humans
         self.window = None
@@ -304,13 +464,22 @@ class MiniWorldEnv(gym.Env):
 
         # TODO: randomize elements of the world
         # Perform domain-randomization
+        # May want a params class with some accessor for param names
+        # params.randomize(seed)
+        # params.val_name
 
         # Generate the world
         self._gen_world()
 
-        # Generate the polygons for each room
+        # Wall segments for collision detection
+        self.wall_segs = []
+
+        # Generate the static data for each room
         for room in self.rooms:
-            room._gen_polys()
+            room._gen_static_data()
+            self.wall_segs.append(room.wall_segs)
+
+        self.wall_segs = np.concatenate(self.wall_segs)
 
         # Pre-compile static parts of the environment into a display list
         self._render_static()
@@ -328,21 +497,29 @@ class MiniWorldEnv(gym.Env):
 
         self.step_count += 1
 
+        # Compute the delta time and forward/turn movement magnitudes
         delta_time = 1 / self.frame_rate
+        d_fwd = self.forward_speed * delta_time
+        d_rot = self.turn_speed * delta_time * (math.pi / 180)
 
         if action == self.actions.move_forward:
-            self.agent.pos = self.agent.pos + self.agent.dir_vec * 0.18
+            next_pos = self.agent.pos + self.agent.dir_vec * d_fwd
+            if not self._intersect(next_pos, self.agent.radius):
+                self.agent.pos = next_pos
 
         elif action == self.actions.move_back:
-            self.agent.pos = self.agent.pos - self.agent.dir_vec * 0.18
+            next_pos = self.agent.pos - self.agent.dir_vec * d_fwd
+            if not self._intersect(next_pos, self.agent.radius):
+                self.agent.pos = next_pos
 
         elif action == self.actions.turn_left:
-            self.agent.dir += math.pi * 0.04
+            self.agent.dir += d_rot
 
         elif action == self.actions.turn_right:
-            self.agent.dir -= math.pi * 0.04
+            self.agent.dir -= d_rot
 
         # TODO: update the world state, objects, etc.
+        # take delta_time into account
 
         # Generate the current camera image
         obs = self.render_obs()
@@ -358,26 +535,63 @@ class MiniWorldEnv(gym.Env):
 
         return obs, reward, done, {}
 
-    def create_rect_room(
+    def add_rect_room(
         self,
-        min_x, min_z,
-        size_x, size_z
+        min_x, max_x,
+        min_z, max_z
     ):
         """
         Create a rectangular room
         """
 
-        # 2D outline coordinates of the room
+        # 2D outline coordinates of the room,
+        # listed in counter-clockwise order when viewed from the top
         outline = np.array([
-            [min_x          , min_z],
-            [min_x          , min_z + size_z],
-            [min_x + size_x , min_z + size_z],
-            [min_x + size_x , min_z]
+            # East wall
+            [max_x, max_z],
+            # North wall
+            [max_x, min_z],
+            # West wall
+            [min_x, min_z],
+            # South wall
+            [min_x, max_z],
         ])
 
         room = Room(outline)
         self.rooms.append(room)
         return room
+
+    def _intersect(self, point, radius):
+        """
+        Test if a circle intersects with any walls in the floorplan
+        """
+
+        # TODO: once finished, may want to move into new colldet.py file
+
+        a = self.wall_segs[:, 0, :]
+        b = self.wall_segs[:, 1, :]
+        ab = b - a
+        ap = point - a
+
+        dotAPAB = np.sum(ap * ab, axis=1)
+        dotABAB = np.sum(ab * ab, axis=1)
+
+        proj_dist = dotAPAB / dotABAB
+        proj_dist = np.clip(proj_dist, 0, 1)
+        proj_dist = np.expand_dims(proj_dist, axis=1)
+
+        # Compute the closest point on the segment
+        c = a + proj_dist * ab
+
+        # Check if any distances are within the radius
+        dist = np.linalg.norm(c - point, axis=1)
+        dist_lt_rad = np.less(dist, radius)
+
+        if np.any(dist_lt_rad):
+            return True
+
+        # No intersection
+        return None
 
     def _gen_world(self):
         """
@@ -396,6 +610,31 @@ class MiniWorldEnv(gym.Env):
         # glIsList
         glDeleteLists(1, 1);
         glNewList(1, GL_COMPILE);
+
+        light_pos = [0, 2.5, 0, 1]
+
+        # Background/minimum light level
+        ambient = [0.45, 0.45, 0.45, 1]
+
+        # Diffuse material color
+        diffuse = [1, 1, 1, 1]
+
+        glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat*4)(*light_pos))
+        glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat*4)(*ambient))
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, (GLfloat*4)(*diffuse))
+
+        #glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180)
+        #glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 0)
+        #glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0)
+        #glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0)
+        #glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0)
+
+        glEnable(GL_LIGHTING)
+        glEnable(GL_LIGHT0)
+
+        glShadeModel(GL_SMOOTH)
+        glEnable(GL_COLOR_MATERIAL)
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
         for room in self.rooms:
             room._render()

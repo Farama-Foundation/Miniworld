@@ -142,6 +142,9 @@ def main():
         rollouts.after_update()
 
         if j % args.save_interval == 0 and args.save_dir != "":
+            print('Saving model')
+            print()
+
             save_path = os.path.join(args.save_dir, args.algo)
             try:
                 os.makedirs(save_path)

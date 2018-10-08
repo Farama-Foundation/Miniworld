@@ -4,7 +4,6 @@ import os
 import numpy as np
 import gym
 import gym_miniworld
-#from gym_miniworld.envs import HallwayEnv
 from gym_miniworld.wrappers import PyTorchObsWrapper, GreyscaleWrapper
 
 env = gym.make('MiniWorld-Hallway-v0')
@@ -34,3 +33,10 @@ second_obs, _, _, _ = env.step([0, 0])
 assert first_obs.shape == env.observation_space.shape
 assert first_obs.shape == second_obs.shape
 """
+
+# Try loading each of the available environments
+for env_id in gym_miniworld.envs.env_ids:
+    print('Loading "' + env_id + '"')
+    env = gym.make(env_id)
+    env.reset()
+    env.step(0)

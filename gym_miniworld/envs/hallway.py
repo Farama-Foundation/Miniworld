@@ -4,7 +4,7 @@ from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 
 class HallwayEnv(MiniWorldEnv):
-    def __init__(self, length=25, **kwargs):
+    def __init__(self, length=12, **kwargs):
         assert length >= 2
         self.length = length
 
@@ -15,9 +15,9 @@ class HallwayEnv(MiniWorldEnv):
 
     def _gen_world(self):
         # Create a long rectangular room
-        room = self.create_rect_room(
-            -1, -2,
-            self.length, 4
+        room = self.add_rect_room(
+            min_x=-1, max_x=-1 + self.length,
+            min_z=-2, max_z=2
         )
 
         room.entities.append(Box([room.max_x - 0.5, 0, 0], 0, color='red'))
@@ -29,7 +29,7 @@ class HallwayEnv(MiniWorldEnv):
             self.rand.float(-0.5, 0.5)
         ])
 
-        self.agent.angle = self.rand.float(-math.pi/4, math.pi/4)
+        self.agent.dir = self.rand.float(-math.pi/4, math.pi/4)
 
     def step(self, action):
         obs, reward, done, info = super().step(action)

@@ -2,13 +2,16 @@ import numpy as np
 from .objmesh import *
 
 class Entity:
-    def __init__(self, pos, dir):
+    def __init__(self, pos, dir, radius=None):
         # World position
         # Note: for most entities, the position is at floor level
         self.pos = np.array(pos)
 
         # Direction/orientation angle in radians
         self.dir = dir
+
+        # Radius for bounding circle/cylinder
+        self.radius = radius
 
     def render(self):
         """
@@ -79,6 +82,8 @@ class CeilingLight(Entity):
         glVertex3f(x - 0.5, y - 0.05, z - 0.5)
         glEnd(GL_QUADS)
 
+        glEnable(GL_LIGHTING)
+
 class Box(Entity):
     """
     Colored box object
@@ -107,26 +112,31 @@ class Box(Entity):
         glColor3f(*COLORS[self.color])
 
         glBegin(GL_QUADS)
+        glNormal3f(0, 0, 1)
         glVertex3f(x + hs, y + sz, z + hs)
         glVertex3f(x - hs, y + sz, z + hs)
         glVertex3f(x - hs, y     , z + hs)
         glVertex3f(x + hs, y     , z + hs)
 
+        glNormal3f(0, 0, -1)
         glVertex3f(x - hs, y + sz, z - hs)
         glVertex3f(x + hs, y + sz, z - hs)
         glVertex3f(x + hs, y     , z - hs)
         glVertex3f(x - hs, y     , z - hs)
 
+        glNormal3f(-1, 0, 0)
         glVertex3f(x - hs, y + sz, z + hs)
         glVertex3f(x - hs, y + sz, z - hs)
         glVertex3f(x - hs, y     , z - hs)
         glVertex3f(x - hs, y     , z + hs)
 
+        glNormal3f(1, 0, 0)
         glVertex3f(x + hs, y + sz, z - hs)
         glVertex3f(x + hs, y + sz, z + hs)
         glVertex3f(x + hs, y     , z + hs)
         glVertex3f(x + hs, y     , z - hs)
 
+        glNormal3f(0, 1, 0)
         glVertex3f(x + hs, y + sz, z + hs)
         glVertex3f(x + hs, y + sz, z - hs)
         glVertex3f(x - hs, y + sz, z - hs)
@@ -136,7 +146,7 @@ class Box(Entity):
 
 class Agent(Entity):
     def __init__(self, pos, dir):
-        super().__init__(pos, dir)
+        super().__init__(pos, dir, radius=0.4)
 
         # Distance between the camera and the floor
         self.cam_height = 1.5
@@ -154,6 +164,8 @@ class Agent(Entity):
     @property
     def cam_dir(self):
         # FIXME: take cam_angle into account
+        # NOTE: this is useful even if just for slight domain
+        # randomization of camera angle
         return self.dir_vec
 
     def step(self, delta_time):
