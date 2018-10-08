@@ -1,39 +1,34 @@
 #!/usr/bin/env python3
 
-import socket
+import os
+import math
 import csv
 import argparse
 import random
 import subprocess
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--num-runs', type=int, default=40)
+parser.add_argument('--num-runs', type=int, default=1)
 args = parser.parse_args()
-
-"""
---lr
---num-steps
---use-gae
---max-grad-norm
-parser.add_argument('--tau', type=float, default=0.95,
-                    help='gae parameter (default: 0.95)')
-parser.add_argument('--ppo-epoch', type=int, default=4,
-                    help='number of ppo epochs (default: 4)')
-parser.add_argument('--num-mini-batch', type=int, default=32,
-"""
 
 def gen_params():
     """Generate a random set of parameters"""
 
+    lr_min = 0.000003
+    lr_max = 0.0003
+    lr_exp = random.uniform(math.log(lr_min), math.log(lr_max))
+    lr = math.exp(lr_exp)
+
     return {
-        'seed': random.randint(1, 100),
-        'lr': random.choice([1e-6, 5e-6, 1e-5, 5e-5, 1e-4, 5e-4]),
-        'max-grad-norm': random.choice([0.2, 0.3, 0.4, 0.5]),
+        'seed': random.randint(1, 500),
+        'lr': lr,
+        'recurrent-policy': random.choice([True, False]),
+        'max-grad-norm': 0.5,
     }
 
 def launch_run(params, run_no):
-    hostname = socket.gethostname()
-    csv_file_name = 'out_{}_{}.csv'.format(hostname, run_no)
+    jobid = os.getenv('SBATCH_JOBID', 'noid')
+    csv_file_name = 'out_{}_{}.csv'.format(jobid, run_no)
 
     cmd = [
         'python3', 'main.py',
@@ -48,8 +43,15 @@ def launch_run(params, run_no):
     param_args = []
     for name in sorted(params.keys()):
         arg_name = '--' + name
-        arg_val = str(params[name])
-        param_args += [arg_name, arg_val]
+        arg_val = params[name]
+
+        if arg_val == True:
+            param_args += [arg_name]
+        elif arg_val == False:
+            continue
+        else:
+            arg_val = str(params[name])
+            param_args += [arg_name, arg_val]
 
     full_cmd = cmd + param_args
     print(' '.join(full_cmd))
