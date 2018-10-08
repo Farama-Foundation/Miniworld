@@ -27,10 +27,11 @@ def gen_params():
     }
 
 def launch_run(params, run_no):
-    jobid = os.getenv('SBATCH_JOBID', 'noid')
+    jobid = os.getenv('SLURM_JOBID', 'noid')
     csv_file_name = 'out_{}_{}.csv'.format(jobid, run_no)
 
     cmd = [
+        'xvfb-run', '-a', '-s', '"-screen 0 1024x768x24 -ac +extension GLX +render -noreset"',
         'python3', 'main.py',
         '--csv-out-file', csv_file_name,
         '--env-name', 'MiniWorld-Hallway-v0',
@@ -56,8 +57,8 @@ def launch_run(params, run_no):
     full_cmd = cmd + param_args
     print(' '.join(full_cmd))
 
-    subprocess.check_call(full_cmd)
-    print(' ')
+    #subprocess.check_call(full_cmd)
+    #print(' ')
 
     # Read the output and add the parameter values
     with open(csv_file_name, newline='') as csvfile:
