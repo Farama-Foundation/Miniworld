@@ -73,8 +73,6 @@ def launch_run(params, run_no):
                 arg_val = str(params[name])
                 rows[0] += [name]
                 rows[1] += [arg_val]
-
-            print(rows)
             writer.writerows(rows)
 
         # Launch the training
