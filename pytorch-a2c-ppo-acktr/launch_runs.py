@@ -34,7 +34,7 @@ def launch_run(params, run_no):
 
     print('hostname:', hostname)
 
-    csv_file_name = 'out_{}_{}.csv'.format(jobid, run_no)
+    csv_file_name = 'logs/out_{}_{}.csv'.format(jobid, run_no)
     server_num = str(random.randint(2000, 64000))
 
     cmd = [
@@ -65,6 +65,9 @@ def launch_run(params, run_no):
     print(' '.join(full_cmd))
 
     if not args.test:
+        if not os.path.exists('logs')
+            os.mkdir('logs')
+
         # Write the parameter values
         with open(csv_file_name, 'w') as csvfile:
             writer = csv.writer(csvfile)

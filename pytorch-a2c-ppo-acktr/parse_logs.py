@@ -4,9 +4,26 @@ import os
 import csv
 import math
 
-runs = []
+def get_params(rows):
+    p = {}
+    for idx, key in enumerate(rows[0]):
+        p[key] = rows[1][idx]
+    return p
+
+def get_lr(rows):
+    p = get_params(rows)
+    return float(p['lr'])
+
+def success_frames(run, success_r=0.93):
+    run = run[4:]
+    for row in run:
+        frames = int(row[1])
+        r = float(row[2])
+        if r > success_r:
+            return frames
 
 # Load all runs
+runs = []
 for root, dirs, files in os.walk("logs"):
     for name in files:
         file_path = os.path.join(root, name)
@@ -16,54 +33,47 @@ for root, dirs, files in os.walk("logs"):
             runs += [rows]
 
 # Filter out incomplete runs
-runs = list(filter(lambda r: len(r) == 391, runs))
+runs = list(filter(lambda r: len(r) >= 394, runs))
+print('num runs:', len(runs))
 
-num_succeed = 0
+# Find the maximum reward obtained
+max_r = float(max(map(lambda r: r[-1][-1], runs)))
+print('max r:', max_r)
 
-count_lr = {}
-count_mgd = {}
-count_pair = {}
-
-num_succeed_mgd = {}
-num_succeed_lr = {}
-num_succeed_pair = {}
+succeed = 0
+mean_lr = 0
 
 for run in runs:
-    lr = float(run[1][3])
-    mgd = float(run[1][4])
+    params = get_params(run)
     last_r = float(run[-1][-1])
+    lr = float(params['lr'])
 
-    count_lr[lr] = count_lr.get(lr, 0) + 1
-    count_mgd[mgd] = count_mgd.get(mgd, 0) + 1
-    count_pair[(lr,mgd)] = count_pair.get((lr,mgd), 0) + 1
+    if last_r >= 0.92:
+        succeed += 1
+        mean_lr += lr
 
-    if last_r >= 0.93:
-        num_succeed += 1
-        num_succeed_lr[lr] = num_succeed_lr.get(lr, 0) + 1
-        num_succeed_mgd[mgd] = num_succeed_mgd.get(mgd, 0) + 1
-        num_succeed_pair[(lr,mgd)] = num_succeed_pair.get((lr,mgd), 0) + 1
+# Mean lr for successful runs
+mean_lr /= succeed
 
-print('num runs:', len(runs))
-print('num_succeed', num_succeed)
-print()
+print('succeed:', succeed)
+print('mean success lr: ', mean_lr)
 
-for lr in sorted(count_lr.keys()):
-    s = num_succeed_lr.get(lr, 0)
-    c = count_lr[lr]
-    percent = 100 * s / c
-    print('%g: %.1f%% (%d)' % (lr, percent, c))
-print()
+bucket = list(filter(lambda r: get_lr(r) > 2e-5 and get_lr(r) < 6e-5, runs))
 
-for mgd in sorted(count_mgd.keys()):
-    s = num_succeed_mgd.get(mgd, 0)
-    c = count_mgd[mgd]
-    percent = 100 * s / c
-    print('%s: %.1f%% (%d)' % (mgd, percent, c))
-print()
+count_bucket = len(bucket)
+success_bucket = 0
+mean_success_frames = 0
 
+for run in bucket:
+    last_r = float(run[-1][-1])
+    lr = get_lr(run)
+    if last_r >= 0.92:
+        success_bucket += 1
+        mean_success_frames += success_frames(run)
 
-for lr, mgd in sorted(count_pair.keys()):
-    s = num_succeed_pair.get((lr,mgd), 0)
-    c = count_pair[(lr,mgd)]
-    percent = 100 * s / c
-    print('%.g, %s: %.1f%% (%d)' % (lr, mgd, percent, c))
+mean_success_frames = int(mean_success_frames / success_bucket)
+
+print('count bucket:', count_bucket)
+print('success bucket: ', success_bucket)
+print('percent: {:.1f}%'.format(100 * success_bucket / count_bucket))
+print('mean success frames:', mean_success_frames)
