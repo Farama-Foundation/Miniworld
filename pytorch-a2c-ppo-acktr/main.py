@@ -25,9 +25,9 @@ args = get_args()
 import time
 import csv
 start_time = time.time()
-csv_file = open(args.csv_out_file, "w")
+csv_file = open(args.csv_out_file, "a")
 csv_out = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-csv_out.writerow(['seconds', 'updates', 'mean reward'])
+csv_out.writerow(['seconds', 'frames', 'mean reward'])
 
 
 assert args.algo in ['a2c', 'ppo', 'acktr']
@@ -175,7 +175,7 @@ def main():
                        value_loss, action_loss))
 
             cur_time = int(time.time() - start_time)
-            csv_out.writerow([cur_time, j, np.mean(episode_rewards)])
+            csv_out.writerow([cur_time, total_num_steps, np.mean(episode_rewards)])
             csv_file.flush()
 
         if args.eval_interval is not None and len(episode_rewards) > 1 and j % args.eval_interval == 0:
