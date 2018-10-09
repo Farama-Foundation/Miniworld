@@ -17,15 +17,15 @@ class TMazeEnv(MiniWorldEnv):
 
     def _gen_world(self):
         room1 = self.add_rect_room(
-            -1, 8,
-            -2, 2
+            min_x=-1, max_x=8,
+            min_z=-2, max_z=2
         )
         room2 = self.add_rect_room(
-            8, 12,
-            -8, 8
+            min_x=8, max_x=12,
+            min_z=-8, max_z=8
         )
-        room1.add_portal(0, 0, 4)
-        room2.add_portal(2, 6, 4)
+        room1.add_portal(0, min_z=-2, max_z=2)
+        room2.add_portal(2, min_z=-2, max_z=2)
 
         # Add a box at a random end of the hallway
         z_pos = self.rand.elem([room2.min_z + 0.5, room2.max_z - 0.5])

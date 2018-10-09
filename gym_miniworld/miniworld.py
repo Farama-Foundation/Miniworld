@@ -107,8 +107,12 @@ class Room:
     def add_portal(
         self,
         edge,
-        start_pos,
-        width,
+        start_pos=None,
+        end_pos=None,
+        min_x=None,
+        max_x=None,
+        min_z=None,
+        max_z=None,
         min_y=0,
         max_y=None
 
@@ -121,15 +125,58 @@ class Room:
             max_y = self.wall_height
 
         assert edge <= self.num_walls
-        assert width > 0
         assert max_y > min_y
+
+        # Get the edge points, compute the direction vector
+        e_p0 = self.outline[edge]
+        e_p1 = self.outline[(edge+1) % self.num_walls]
+        e_len = np.linalg.norm(e_p1 - e_p0)
+        e_dir = (e_p1 - e_p0) / e_len
+        x0, _, z0 = e_p0
+        x1, _, z1 = e_p1
+        dx, _, dz = e_dir
+
+        # If the portal extents are specified by x coordinates
+        if min_x != None:
+            assert min_z == None and max_z == None
+            assert start_pos == None and end_pos == None
+            assert x0 != x1
+
+            m0 = (min_x - x0) / dx
+            m1 = (max_x - x0) / dx
+
+            if m1 < m0:
+                m0, m1 = m1, m0
+
+            start_pos, end_pos = m0, m1
+
+        # If the portal extents are specified by z coordinates
+        elif min_z != None:
+            assert min_x == None and max_x == None
+            assert start_pos == None and end_pos == None
+            assert z0 != z1
+
+            m0 = (min_z - z0) / dz
+            m1 = (max_z - z0) / dz
+
+            if m1 < m0:
+                m0, m1 = m1, m0
+
+            start_pos, end_pos = m0, m1
+
+        else:
+            assert min_x == None and max_x == None
+            assert min_z == None and max_z == None
+
+        assert end_pos > start_pos
+        assert end_pos - start_pos <= e_len
 
         # TODO: make sure portals remain sorted by start position
         # use sort function
 
         self.portals[edge].append({
             'start_pos': start_pos,
-            'width': width,
+            'end_pos': end_pos,
             'min_y': min_y,
             'max_y': max_y
         })
@@ -175,18 +222,18 @@ class Room:
             edge_p0,
             side_vec,
             seg_start,
-            seg_width,
+            seg_end,
             min_y,
             max_y
         ):
-            if seg_width == 0:
+            if seg_end == seg_start:
                 return
 
             if min_y == max_y:
                 return
 
             s_p0 = edge_p0 + seg_start * side_vec
-            s_p1 = edge_p0 + (seg_start + seg_width) * side_vec
+            s_p1 = edge_p0 + seg_end * side_vec
 
             # If this polygon starts at ground level, add a collidable segment
             if min_y == 0:
@@ -210,7 +257,7 @@ class Room:
                 self.wall_tex,
                 seg_start,
                 min_y,
-                seg_width,
+                seg_end - seg_start,
                 max_y - min_y
             )
             self.wall_texcs.append(texcs)
@@ -223,16 +270,16 @@ class Room:
             side_vec = (edge_p1 - edge_p0) / wall_width
 
             if len(self.portals[wall_idx]) > 0:
-                seg_width = self.portals[wall_idx][0]['start_pos']
+                seg_end = self.portals[wall_idx][0]['start_pos']
             else:
-                seg_width = wall_width
+                seg_end = wall_width
 
             # Generate the first polygon (going up to the first portal)
             gen_seg_poly(
                 edge_p0,
                 side_vec,
                 0,
-                seg_width,
+                seg_end,
                 0,
                 self.wall_height
             )
@@ -241,7 +288,7 @@ class Room:
             for portal_idx, portal in enumerate(self.portals[wall_idx]):
                 portal = self.portals[wall_idx][portal_idx]
                 start_pos = portal['start_pos']
-                width = portal['width']
+                end_pos = portal['end_pos']
                 min_y = portal['min_y']
                 max_y = portal['max_y']
 
@@ -250,7 +297,7 @@ class Room:
                     edge_p0,
                     side_vec,
                     start_pos,
-                    width,
+                    end_pos,
                     0,
                     min_y
                 )
@@ -260,7 +307,7 @@ class Room:
                     edge_p0,
                     side_vec,
                     start_pos,
-                    width,
+                    end_pos,
                     max_y,
                     self.wall_height
                 )
@@ -275,8 +322,8 @@ class Room:
                 gen_seg_poly(
                     edge_p0,
                     side_vec,
-                    start_pos + width,
-                    next_portal_start - (start_pos + width),
+                    end_pos,
+                    next_portal_start,
                     0,
                     self.wall_height
                 )
