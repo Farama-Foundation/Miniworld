@@ -593,6 +593,13 @@ class MiniWorldEnv(gym.Env):
         # No intersection
         return None
 
+    def _reward(self):
+        """
+        Default sparse reward computation
+        """
+
+        return 1.0 - 0.2 * (self.step_count / self.max_episode_steps)
+
     def _gen_world(self):
         """
         Generate the world. Derived classes must implement this method.

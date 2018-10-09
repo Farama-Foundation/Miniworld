@@ -57,7 +57,7 @@ class TMazeEnv(MiniWorldEnv):
         # Entity.pos_inside(p)?
         dist = np.linalg.norm(self.agent.pos - self.box.pos)
         if dist < self.box.size:
-            reward += 1.0 - 0.2 * (self.step_count / self.max_episode_steps)
+            reward += self._reward()
             done = True
 
         return obs, reward, done, info
