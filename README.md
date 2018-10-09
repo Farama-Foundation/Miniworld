@@ -6,6 +6,18 @@ rooms, doors, hallways and various objects (eg: office and home environments, ma
 MiniWorld can be seen as an alternative to VizDoom or DMLab. It is written
 100% in Python and designed to be easily modified or extended.
 
+Advantages of MiniWorld:
+- Compatible with OpenAI Gym
+- Few dependencies, less likely to break, easy to install
+- Easy to modify, customize or extend
+- Good performance, high frame rate, support for multiple processes
+- Lightweight, small download, low memory requirements
+- Software provided under a permissive MIT license
+
+Limitations:
+- Graphics are basic, nowhere near photorealism
+- Physics are very basic, not sufficient for robot arms/etc
+
 Please use this bibtex if you want to cite this repository in your publications:
 
 ```
