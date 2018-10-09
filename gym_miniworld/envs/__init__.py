@@ -2,6 +2,7 @@ import gym
 
 from .hallway import *
 from .tmaze import *
+from .fourrooms import *
 
 # Registered environment ids
 env_ids = []

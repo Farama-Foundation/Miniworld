@@ -24,6 +24,9 @@ COLORS = {
 # List of color names, sorted alphabetically
 COLOR_NAMES = sorted(list(COLORS.keys()))
 
+# Default wall height for room
+DEFAULT_WALL_HEIGHT=2.74
+
 # TODO: make this a param to gen_tex_coords?
 # Texture size/density in texels/meter
 TEX_DENSITY = 512
@@ -61,14 +64,14 @@ class Room:
     def __init__(
         self,
         outline,
-        wall_height=2.74
+        wall_height=DEFAULT_WALL_HEIGHT
     ):
         # The outlien should have shape Nx2
         assert len(outline.shape) == 2
         assert outline.shape[1] == 2
 
         # Add a Y coordinate to the outline points
-        outline = np.insert(outline, 1, 0,axis=1)
+        outline = np.insert(outline, 1, 0, axis=1)
 
         # Number of outline vertices / walls
         self.num_walls = outline.shape[0]
@@ -169,7 +172,8 @@ class Room:
             assert min_z == None and max_z == None
 
         assert end_pos > start_pos
-        assert end_pos - start_pos <= e_len
+        assert start_pos >= 0, "portal outside of wall extents"
+        assert end_pos <= e_len, "portal outside of wall extents"
 
         # TODO: make sure portals remain sorted by start position
         # use sort function
@@ -585,7 +589,8 @@ class MiniWorldEnv(gym.Env):
     def add_rect_room(
         self,
         min_x, max_x,
-        min_z, max_z
+        min_z, max_z,
+        wall_height=DEFAULT_WALL_HEIGHT
     ):
         """
         Create a rectangular room
@@ -604,8 +609,12 @@ class MiniWorldEnv(gym.Env):
             [min_x, max_z],
         ])
 
-        room = Room(outline)
+        room = Room(
+            outline,
+            wall_height=wall_height
+        )
         self.rooms.append(room)
+
         return room
 
     def _intersect(self, point, radius):
