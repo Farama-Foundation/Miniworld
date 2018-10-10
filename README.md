@@ -83,6 +83,10 @@ python3 enjoy.py --env-name MiniWorld-Hallway-v0 --load-dir trained_models/ppo
 
 ## Design
 
+### Coordinate System
+
+MiniWorld uses OpenGL's right-handed coordinate system. The ground plane lies along the X and Z axes, and the Y axis points up. When direction angles are specified, a positive angle corresponds to a counter-clockwise (leftward) rotation. Angles are in degrees for ease of hand-editing. By convention, angle zero points towards the positive X axis.
+
 ### Observations
 
 The observations are single camera images, as numpy arrays of size (80, 60, 3). These arrays contain unsigned 8-bit integer values in the [0, 255] range. It is possible to change the observation image size by directly instantiating the environment class and setting the appropriate
@@ -116,11 +120,11 @@ sudo dnf install freeglut-devel
 
 ### NoSuchDisplayException: Cannot connect to "None"
 
-If you are connected through SSH, or running the simulator in a Docker image, you will need to use `xvfb-run` to create a virtual frame buffer (virtual display) in order to run the simulator. See the "Running Headless" subsection below.
+If you are connected through SSH, or running the simulator in a Docker image, you will need to use `xvfb-run` to create a virtual frame buffer (virtual display) in order to run the simulator. See the "running headless" section.
 
 ### Running headless and training in a cloud based environment (AWS)
 
-We recommend using the Ubuntu-based [Deep Learning AMI](https://aws.amazon.com/marketplace/pp/B077GCH38C) to provision your server which comes with all the deep learning libraries.
+We recommend using the Ubuntu-based [Deep Learning AMI](https://aws.amazon.com/marketplace/pp/B077GCH38C) to provision your server which comes with all the deep learning libraries. To begin with, you will want to install xvfb and mesa. You may also need to uninstall the Nvidia display drivers in order for OpenGL/GLX to work properly:
 
 ```
 # Install xvfb
@@ -130,10 +134,14 @@ sudo apt-get install xvfb mesa-utils -y
 # This is necessary as nvidia display doesn't play well with xvfb
 sudo nvidia-uninstall -y
 
-# Sanity check to make sure you still have CUDA driver and its version
+# Sanity check to make sure you still have CUDA driver installed
 nvcc --version
+```
 
-# Run your training command using xvfb-run to create a virtual display, for example:
+Once this is done, you should be able to run training code through `xvfb-run`, for example:
+
+```
+cd pytorch-a2c-ppo-acktr
 xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python3 main.py --algo ppo --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
 ```
 
