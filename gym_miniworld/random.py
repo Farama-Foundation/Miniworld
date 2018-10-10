@@ -16,12 +16,12 @@ class RandGen:
 
         return self.np_random.randint(low, high)
 
-    def float(self, low, high):
+    def float(self, low, high, shape=None):
         """
         Generate random float in [low,high[
         """
 
-        return self.np_random.uniform(low, high)
+        return self.np_random.uniform(low, high, size=shape)
 
     def bool(self):
         """

@@ -2,11 +2,11 @@ import math
 from enum import IntEnum
 import numpy as np
 import gym
-#import pybullet
 from .random import *
 from .opengl import *
-#from .objmesh import *
+from .objmesh import *
 from .entity import *
+from .physics import *
 
 # Blue sky horizon color
 BLUE_SKY_COLOR = np.array([0.45, 0.82, 1])
@@ -69,6 +69,7 @@ class Room:
         # The outlien should have shape Nx2
         assert len(outline.shape) == 2
         assert outline.shape[1] == 2
+        assert outline.shape[0] >= 3
 
         # Add a Y coordinate to the outline points
         outline = np.insert(outline, 1, 0, axis=1)
@@ -519,11 +520,11 @@ class MiniWorldEnv(gym.Env):
         # params.randomize(seed)
         # params.val_name
 
-        # Generate the world
-        self._gen_world()
-
         # Wall segments for collision detection
         self.wall_segs = []
+
+        # Generate the world
+        self._gen_world()
 
         # Generate the static data for each room
         for room in self.rooms:
@@ -555,12 +556,12 @@ class MiniWorldEnv(gym.Env):
 
         if action == self.actions.move_forward:
             next_pos = self.agent.pos + self.agent.dir_vec * d_fwd
-            if not self._intersect(next_pos, self.agent.radius):
+            if not intersect_circle_segs(next_pos, self.agent.radius, self.wall_segs):
                 self.agent.pos = next_pos
 
         elif action == self.actions.move_back:
             next_pos = self.agent.pos - self.agent.dir_vec * d_fwd
-            if not self._intersect(next_pos, self.agent.radius):
+            if not intersect_circle_segs(next_pos, self.agent.radius, self.wall_segs):
                 self.agent.pos = next_pos
 
         elif action == self.actions.turn_left:
@@ -617,37 +618,31 @@ class MiniWorldEnv(gym.Env):
 
         return room
 
-    def _intersect(self, point, radius):
+    def place_agent(self, room=None):
         """
-        Test if a circle intersects with any walls in the floorplan
+        Place the agent in the environment at a random position
+        and orientation
         """
 
-        # TODO: once finished, may want to move into new colldet.py file
+        if room == None:
+            room = self.rand.elem(self.rooms)
 
-        a = self.wall_segs[:, 0, :]
-        b = self.wall_segs[:, 1, :]
-        ab = b - a
-        ap = point - a
+        while True:
+            # Sample a point using random barycentric coordinates
+            coords = self.rand.float(0, 1, len(room.outline))
+            coords /= coords.sum()
+            coords = np.expand_dims(coords, axis=1)
+            pos = np.sum(coords * room.outline, axis=0)
 
-        dotAPAB = np.sum(ap * ab, axis=1)
-        dotABAB = np.sum(ab * ab, axis=1)
+            #if intersect_circle_segs(pos, self.agent.radius, room.wall_segs):
+            #    continue
 
-        proj_dist = dotAPAB / dotABAB
-        proj_dist = np.clip(proj_dist, 0, 1)
-        proj_dist = np.expand_dims(proj_dist, axis=1)
+            break
 
-        # Compute the closest point on the segment
-        c = a + proj_dist * ab
+        # TODO: random orientation
 
-        # Check if any distances are within the radius
-        dist = np.linalg.norm(c - point, axis=1)
-        dist_lt_rad = np.less(dist, radius)
 
-        if np.any(dist_lt_rad):
-            return True
-
-        # No intersection
-        return None
+        return pos
 
     def _reward(self):
         """
