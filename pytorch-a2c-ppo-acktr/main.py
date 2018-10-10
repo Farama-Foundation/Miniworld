@@ -155,15 +155,18 @@ def main():
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             end = time.time()
-            print("Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.2f}/{:.2f}, min/max reward {:.2f}/{:.2f}\n".
-                format(j, total_num_steps,
-                       int(total_num_steps / (end - start)),
-                       len(episode_rewards),
-                       np.mean(episode_rewards),
-                       np.median(episode_rewards),
-                       np.min(episode_rewards),
-                       np.max(episode_rewards), dist_entropy,
-                       value_loss, action_loss))
+            print("Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.2f}/{:.2f}, min/max reward {:.2f}/{:.2f}, success rate {:.2f}\n".
+                format(
+                    j, total_num_steps,
+                    int(total_num_steps / (end - start)),
+                    len(episode_rewards),
+                    np.mean(episode_rewards),
+                    np.median(episode_rewards),
+                    np.min(episode_rewards),
+                    np.max(episode_rewards),
+                    np.count_nonzero(episode_rewards) / len(episode_rewards)
+                )
+            )
 
         if args.eval_interval is not None and len(episode_rewards) > 1 and j % args.eval_interval == 0:
             eval_envs = make_vec_envs(args.env_name, args.seed + args.num_processes, args.num_processes,
