@@ -124,9 +124,7 @@ If you are connected through SSH, or running the simulator in a Docker image, yo
 
 ### Running headless and training in a cloud based environment (AWS)
 
-We recommend using the Ubuntu-based [Deep Learning AMI](https://aws.amazon.com/marketplace/pp/B077GCH38C) to provision your server which comes with all the deep learning libraries.
-
-To begin with, you will want to install xvfb and mesa. You may also need to uninstall the Nvidia display drivers in order for OpenGL/GLX to work properly:
+We recommend using the Ubuntu-based [Deep Learning AMI](https://aws.amazon.com/marketplace/pp/B077GCH38C) to provision your server which comes with all the deep learning libraries. To begin with, you will want to install xvfb and mesa. You may also need to uninstall the Nvidia display drivers in order for OpenGL/GLX to work properly:
 
 ```
 # Install xvfb
