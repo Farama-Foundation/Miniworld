@@ -27,7 +27,7 @@ COLOR_NAMES = sorted(list(COLORS.keys()))
 # Default wall height for room
 DEFAULT_WALL_HEIGHT=2.74
 
-# TODO: make this a param to gen_tex_coords?
+# TODO: make this a param to gen_tex_coords
 # Texture size/density in texels/meter
 TEX_DENSITY = 512
 
@@ -594,6 +594,8 @@ class MiniWorldEnv(gym.Env):
         Create a rectangular room
         """
 
+        assert len(self.wall_segs) == 0, "cannot add rooms after static data is generated"
+
         # 2D outline coordinates of the room,
         # listed in counter-clockwise order when viewed from the top
         outline = np.array([
@@ -615,13 +617,13 @@ class MiniWorldEnv(gym.Env):
 
         return room
 
-    def place_agent(self, room=None):
+    def place_entity(self, ent, room=None, dir=None):
         """
-        Place the agent in the environment at a random position
-        and orientation
+        Place an entity/object in the world
         """
 
-        assert len(self.rooms) > 0, "create and connect rooms before calling place_agent"
+        assert len(self.rooms) > 0, "create and connect rooms before calling place_entity"
+        assert ent.radius != None, "entity must have physical size defined"
 
         # Generate collision detection data
         if len(self.wall_segs) == 0:
@@ -630,6 +632,9 @@ class MiniWorldEnv(gym.Env):
         # TODO: sample rooms proportionally to floor surface area?
         if room == None:
             room = self.rand.elem(self.rooms)
+
+        if dir == None:
+            dir = self.rand.float(-math.pi, math.pi)
 
         while True:
             # Sample a point using random barycentric coordinates
@@ -643,12 +648,18 @@ class MiniWorldEnv(gym.Env):
                 continue
 
             self.agent.pos = pos
+            self.agent.dir = dir
             break
 
-        # Pick a random orientation
-        self.agent.dir = self.rand.float(-math.pi, math.pi)
-
         return pos
+
+    def place_agent(self, room=None):
+        """
+        Place the agent in the environment at a random position
+        and orientation
+        """
+
+        return self.place_entity(self.agent, room)
 
     def _gen_static_data(self):
         """
