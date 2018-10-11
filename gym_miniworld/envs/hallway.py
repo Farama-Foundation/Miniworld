@@ -23,12 +23,8 @@ class HallwayEnv(MiniWorldEnv):
         room.entities.append(Box([room.max_x - 0.5, 0, 0], 0, color='red'))
 
         # Place the agent a random distance away from the goal
-        self.agent.pos = np.array([
-            self.rand.float(room.min_x + 0.5, room.max_x - 0.51),
-            0,
-            self.rand.float(-0.5, 0.5)
-        ])
-
+        self.agent.pos[0] = self.rand.float(room.min_x + 0.5, room.max_x - 0.51)
+        self.agent.pos[2] = self.rand.float(-0.5, 0.5)
         self.agent.dir = self.rand.float(-math.pi/4, math.pi/4)
 
     def step(self, action):

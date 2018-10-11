@@ -77,9 +77,6 @@ class FourRoomsEnv(MiniWorldEnv):
         c3.add_portal(0, min_z=-5, max_z=-3)
         c3.add_portal(2, min_z=-5, max_z=-3)
 
-        self.agent.pos[0] = -4
-        self.agent.pos[2] = -4
-
         self.place_agent()
 
     def step(self, action):

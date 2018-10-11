@@ -526,12 +526,9 @@ class MiniWorldEnv(gym.Env):
         # Generate the world
         self._gen_world()
 
-        # Generate the static data for each room
-        for room in self.rooms:
-            room._gen_static_data()
-            self.wall_segs.append(room.wall_segs)
-
-        self.wall_segs = np.concatenate(self.wall_segs)
+        # Generate static data
+        if len(self.wall_segs) == 0:
+            self._gen_static_data()
 
         # Pre-compile static parts of the environment into a display list
         self._render_static()
@@ -624,6 +621,13 @@ class MiniWorldEnv(gym.Env):
         and orientation
         """
 
+        assert len(self.rooms) > 0, "create and connect rooms before calling place_agent"
+
+        # Generate collision detection data
+        if len(self.wall_segs) == 0:
+            self._gen_static_data()
+
+        # TODO: sample rooms proportionally to floor surface area?
         if room == None:
             room = self.rand.elem(self.rooms)
 
@@ -634,22 +638,29 @@ class MiniWorldEnv(gym.Env):
             coords = np.expand_dims(coords, axis=1)
             pos = np.sum(coords * room.outline, axis=0)
 
-            #if intersect_circle_segs(pos, self.agent.radius, room.wall_segs):
-            #    continue
+            # Make sure the position doesn't intersect with walls
+            if intersect_circle_segs(pos, self.agent.radius, room.wall_segs):
+                continue
 
+            self.agent.pos = pos
             break
 
-        # TODO: random orientation
-
+        # Pick a random orientation
+        self.agent.dir = self.rand.float(-math.pi, math.pi)
 
         return pos
 
-    def _reward(self):
+    def _gen_static_data(self):
         """
-        Default sparse reward computation
+        Generate static data needed for rendering and collision detection
         """
 
-        return 1.0 - 0.2 * (self.step_count / self.max_episode_steps)
+        # Generate the static data for each room
+        for room in self.rooms:
+            room._gen_static_data()
+            self.wall_segs.append(room.wall_segs)
+
+        self.wall_segs = np.concatenate(self.wall_segs)
 
     def _gen_world(self):
         """
@@ -657,6 +668,13 @@ class MiniWorldEnv(gym.Env):
         """
 
         raise NotImplementedError
+
+    def _reward(self):
+        """
+        Default sparse reward computation
+        """
+
+        return 1.0 - 0.2 * (self.step_count / self.max_episode_steps)
 
     def _render_static(self):
         """
