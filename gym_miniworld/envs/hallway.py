@@ -20,12 +20,17 @@ class HallwayEnv(MiniWorldEnv):
             min_z=-2, max_z=2
         )
 
-        room.entities.append(Box([room.max_x - 0.5, 0, 0], 0, color='red'))
+        # Place the box at the end of the hallway
+        self.place_entity(
+            Box(color='red'),
+            min_x=room.max_x - 2
+        )
 
         # Place the agent a random distance away from the goal
-        self.agent.pos[0] = self.rand.float(room.min_x + 0.5, room.max_x - 0.51)
-        self.agent.pos[2] = self.rand.float(-0.5, 0.5)
-        self.agent.dir = self.rand.float(-math.pi/4, math.pi/4)
+        self.place_agent(
+            dir=self.rand.float(-math.pi/4, math.pi/4),
+            max_x=room.max_x - 2
+        )
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
@@ -33,9 +38,8 @@ class HallwayEnv(MiniWorldEnv):
         room = self.rooms[0]
         x, _, z = self.agent.pos
 
-        if x > room.max_x - 0.5 and x < room.max_x:
-            if z > room.min_z and z < room.max_z:
-                reward += self._reward()
-                done = True
+        if x > room.max_x - 2.5:
+            reward += self._reward()
+            done = True
 
         return obs, reward, done, info

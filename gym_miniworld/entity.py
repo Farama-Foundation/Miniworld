@@ -2,13 +2,13 @@ import numpy as np
 from .objmesh import *
 
 class Entity:
-    def __init__(self, pos, dir, radius=None):
+    def __init__(self, radius=None):
         # World position
         # Note: for most entities, the position is at floor level
-        self.pos = np.array(pos)
+        self.pos = None
 
         # Direction/orientation angle in radians
-        self.dir = dir
+        self.dir = None
 
         # Radius for bounding circle/cylinder
         self.radius = radius
@@ -89,8 +89,8 @@ class Box(Entity):
     Colored box object
     """
 
-    def __init__(self, pos, dir, color, size=0.5):
-        super().__init__(pos, dir)
+    def __init__(self, color, size=0.8):
+        super().__init__(radius=1.41 * (size/2))
         self.color = color
         self.size = size
 
@@ -145,8 +145,8 @@ class Box(Entity):
         glEnd(GL_QUADS)
 
 class Agent(Entity):
-    def __init__(self, pos, dir):
-        super().__init__(pos, dir, radius=0.4)
+    def __init__(self):
+        super().__init__(radius=0.4)
 
         # Distance between the camera and the floor
         self.cam_height = 1.5

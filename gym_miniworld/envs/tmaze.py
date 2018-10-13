@@ -28,35 +28,27 @@ class TMazeEnv(MiniWorldEnv):
         room2.add_portal(2, min_z=-2, max_z=2)
 
         # Add a box at a random end of the hallway
-        z_pos = self.rand.elem([room2.min_z + 0.5, room2.max_z - 0.5])
-        self.box = Box([room2.mid_x, 0, z_pos], 0, size=0.8, color='red')
+        self.box = Box(color='red')
+        if self.rand.bool():
+            self.place_entity(self.box, room=room2, min_z=room2.max_z - 2)
+        else:
+            self.place_entity(self.box, room=room2, max_z=room2.min_z + 2)
+
         room2.entities.append(self.box)
 
-        # TODO: need method to place_agent and avoid wall/object intersections
-
-        # Choose a random room and position to spawn in
-        if self.rand.bool():
-            self.agent.pos = np.array([
-                self.rand.float(room1.min_x + 0.5, room1.max_x - 0.5),
-                0,
-                self.rand.float(room1.min_z + 0.5, room1.max_z - 0.5)
-            ])
-            self.agent.dir = self.rand.float(-math.pi/3, math.pi/3)
-        else:
-            self.agent.pos = np.array([
-                self.rand.float(room2.min_x + 0.5, room2.max_x - 0.5),
-                0,
-                self.rand.float(room2.min_z + 1.5, room2.max_z - 1.5)
-            ])
-            self.agent.dir = self.rand.float(-math.pi/2, math.pi/2)
+        # Choose a random room and position to spawn at
+        self.place_agent(
+            dir=self.rand.float(-math.pi/4, math.pi/4),
+            room=room1
+        )
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
-        # TODO: proper intersection test method for entities
-        # Entity.pos_inside(p)?
         dist = np.linalg.norm(self.agent.pos - self.box.pos)
-        if dist < self.box.size:
+
+        # TODO: use forward movement step size once defined
+        if dist < 1.5 * (self.agent.radius + self.box.radius):
             reward += self._reward()
             done = True
 

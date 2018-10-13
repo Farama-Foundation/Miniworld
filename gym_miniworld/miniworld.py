@@ -375,7 +375,7 @@ class Room:
 
         # Render the static entities
         for ent in self.entities:
-            if ent.is_static():
+            if ent.is_static:
                 ent.render()
 
 class MiniWorldEnv(gym.Env):
@@ -509,7 +509,7 @@ class MiniWorldEnv(gym.Env):
         self.step_count = 0
 
         # Create the agent
-        self.agent = Agent([0, 0, 0], 0)
+        self.agent = Agent()
 
         # List of rooms in the world
         self.rooms = []
@@ -553,12 +553,12 @@ class MiniWorldEnv(gym.Env):
 
         if action == self.actions.move_forward:
             next_pos = self.agent.pos + self.agent.dir_vec * d_fwd
-            if not intersect_circle_segs(next_pos, self.agent.radius, self.wall_segs):
+            if not self.intersect(self.agent, next_pos, self.agent.radius):
                 self.agent.pos = next_pos
 
         elif action == self.actions.move_back:
             next_pos = self.agent.pos - self.agent.dir_vec * d_fwd
-            if not intersect_circle_segs(next_pos, self.agent.radius, self.wall_segs):
+            if not self.intersect(self.agent, next_pos, self.agent.radius):
                 self.agent.pos = next_pos
 
         elif action == self.actions.turn_left:
@@ -566,9 +566,6 @@ class MiniWorldEnv(gym.Env):
 
         elif action == self.actions.turn_right:
             self.agent.dir -= d_rot
-
-        # TODO: update the world state, objects, etc.
-        # take delta_time into account
 
         # Generate the current camera image
         obs = self.render_obs()
@@ -586,8 +583,10 @@ class MiniWorldEnv(gym.Env):
 
     def add_rect_room(
         self,
-        min_x, max_x,
-        min_z, max_z,
+        min_x,
+        max_x,
+        min_z,
+        max_z,
         wall_height=DEFAULT_WALL_HEIGHT
     ):
         """
@@ -617,49 +616,104 @@ class MiniWorldEnv(gym.Env):
 
         return room
 
-    def place_entity(self, ent, room=None, dir=None):
+    def place_entity(
+        self,
+        ent,
+        room=None,
+        dir=None,
+        min_x=-math.inf,
+        max_x=math.inf,
+        min_z=-math.inf,
+        max_z=math.inf
+    ):
         """
         Place an entity/object in the world
         """
 
-        assert len(self.rooms) > 0, "create and connect rooms before calling place_entity"
+        assert len(self.rooms) > 0, "create rooms before calling place_entity"
         assert ent.radius != None, "entity must have physical size defined"
 
         # Generate collision detection data
         if len(self.wall_segs) == 0:
             self._gen_static_data()
 
-        # TODO: sample rooms proportionally to floor surface area?
-        if room == None:
-            room = self.rand.elem(self.rooms)
-
-        if dir == None:
-            dir = self.rand.float(-math.pi, math.pi)
-
         while True:
+            # TODO: sample rooms proportionally to floor surface area?
+            # Pick a room
+            r = room if room else self.rand.elem(self.rooms)
+
             # Sample a point using random barycentric coordinates
-            coords = self.rand.float(0, 1, len(room.outline))
+            coords = self.rand.float(0, 1, len(r.outline))
             coords /= coords.sum()
             coords = np.expand_dims(coords, axis=1)
-            pos = np.sum(coords * room.outline, axis=0)
+            pos = np.sum(coords * r.outline, axis=0)
+            x, _, z = pos
 
-            # Make sure the position doesn't intersect with walls
-            if intersect_circle_segs(pos, self.agent.radius, room.wall_segs):
+            # Make sure the position is within bounds
+            if x - ent.radius < min_x or x + ent.radius > max_x:
+                continue
+            if z - ent.radius < min_z or z + ent.radius > max_z:
                 continue
 
-            self.agent.pos = pos
-            self.agent.dir = dir
+            # Make sure the position doesn't intersect with walls
+            if self.intersect(ent, pos, ent.radius):
+                continue
+
+            # Pick a direction
+            d = dir if dir else self.rand.float(-math.pi, math.pi)
+
+            ent.pos = pos
+            ent.dir = d
             break
+
+        r.entities.append(ent)
 
         return pos
 
-    def place_agent(self, room=None):
+    def place_agent(
+        self,
+        room=None,
+        dir=None,
+        min_x=-math.inf,
+        max_x=math.inf,
+        min_z=-math.inf,
+        max_z=math.inf
+    ):
         """
         Place the agent in the environment at a random position
         and orientation
         """
 
-        return self.place_entity(self.agent, room)
+        return self.place_entity(
+            self.agent,
+            room=room,
+            dir=dir,
+            min_x=min_x,
+            max_x=max_x,
+            min_z=min_z,
+            max_z=max_z
+        )
+
+    def intersect(self, ent, pos, radius):
+        """
+        Check if an entity intersects with the world
+        """
+
+        # Check for intersection with walls
+        if intersect_circle_segs(pos, radius, self.wall_segs):
+            return True
+
+        # Check for entity intersection
+        for room in self.rooms:
+            for ent2 in room.entities:
+                if ent2 is ent:
+                    continue
+
+                d = np.linalg.norm(ent2.pos - pos)
+                if d < radius + ent2.radius:
+                    return True
+
+        return False
 
     def _gen_static_data(self):
         """
