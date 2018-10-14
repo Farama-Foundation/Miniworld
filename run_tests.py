@@ -37,6 +37,10 @@ assert first_obs.shape == second_obs.shape
 # Try loading each of the available environments
 for env_id in gym_miniworld.envs.env_ids:
     print('Loading "' + env_id + '"')
+
     env = gym.make(env_id)
-    env.reset()
-    env.step(0)
+
+    for i in range(0, 20):
+        env.reset()
+        assert not env.intersect(env.agent, env.agent.pos, env.agent.radius)
+        env.step(0)
