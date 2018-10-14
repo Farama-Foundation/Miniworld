@@ -34,8 +34,6 @@ class TMazeEnv(MiniWorldEnv):
         else:
             self.place_entity(self.box, room=room2, max_z=room2.min_z + 2)
 
-        room2.entities.append(self.box)
-
         # Choose a random room and position to spawn at
         self.place_agent(
             dir=self.rand.float(-math.pi/4, math.pi/4),

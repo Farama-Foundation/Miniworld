@@ -105,9 +105,6 @@ class Room:
         # Same length as list of portals
         self.neighbors = []
 
-        # List of entities contained
-        self.entities = []
-
     def add_portal(
         self,
         edge,
@@ -373,11 +370,6 @@ class Room:
             glVertex3f(*self.wall_verts[i, :])
         glEnd()
 
-        # Render the static entities
-        for ent in self.entities:
-            if ent.is_static:
-                ent.render()
-
 class MiniWorldEnv(gym.Env):
     """
     Base class for MiniWorld environments. Implements the procedural
@@ -510,6 +502,9 @@ class MiniWorldEnv(gym.Env):
 
         # Create the agent
         self.agent = Agent()
+
+        # List of entities contained
+        self.entities = []
 
         # List of rooms in the world
         self.rooms = []
@@ -666,7 +661,7 @@ class MiniWorldEnv(gym.Env):
             ent.dir = d
             break
 
-        r.entities.append(ent)
+        self.entities.append(ent)
 
         return pos
 
@@ -704,14 +699,13 @@ class MiniWorldEnv(gym.Env):
             return True
 
         # Check for entity intersection
-        for room in self.rooms:
-            for ent2 in room.entities:
-                if ent2 is ent:
-                    continue
+        for ent2 in self.entities:
+            if ent2 is ent:
+                continue
 
-                d = np.linalg.norm(ent2.pos - pos)
-                if d < radius + ent2.radius:
-                    return True
+            d = np.linalg.norm(ent2.pos - pos)
+            if d < radius + ent2.radius:
+                return True
 
         return False
 
@@ -777,8 +771,14 @@ class MiniWorldEnv(gym.Env):
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
+        # Render the rooms
         for room in self.rooms:
             room._render()
+
+        # Render the static entities
+        for ent in self.entities:
+            if ent.is_static:
+                ent.render()
 
         glEndList()
 
