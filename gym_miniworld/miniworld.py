@@ -394,21 +394,15 @@ class MiniWorldEnv(gym.Env):
         move_forward = 2
         move_back = 3
 
-        # Pitch the camera up or down
-        look_up = 4
-        look_down = 5
-
         # Pick up or drop an object being carried
-        pickup = 6
-        drop = 7
+        pickup = 4
+        drop = 5
 
         # Toggle/activate an object
-        toggle = 8
+        toggle = 6
 
         # Done completing task
-        done = 9
-
-        do_nothing = 10
+        done = 7
 
     def __init__(
         self,
