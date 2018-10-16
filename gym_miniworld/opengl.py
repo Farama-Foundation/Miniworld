@@ -272,6 +272,8 @@ class FrameBuffer:
         # Flip the image because OpenGL maps (0,0) to the lower-left corner
         # Note: this is necessary for gym.wrappers.Monitor to record videos
         # properly, otherwise they are vertically inverted.
-        self.img_array = np.ascontiguousarray(np.flip(self.img_array, axis=0))
+        # Note: ascontiguousarray operates in constant time because it
+        # does not copy the data
+        img = np.ascontiguousarray(np.flip(self.img_array, axis=0))
 
-        return self.img_array
+        return img
