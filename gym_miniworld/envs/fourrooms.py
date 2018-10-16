@@ -11,7 +11,6 @@ class FourRoomsEnv(MiniWorldEnv):
     def __init__(self, **kwargs):
         super().__init__(
             max_episode_steps=500,
-            frame_rate=6,
             **kwargs
         )
 

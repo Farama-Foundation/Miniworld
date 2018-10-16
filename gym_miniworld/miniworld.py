@@ -413,9 +413,8 @@ class MiniWorldEnv(gym.Env):
     def __init__(
         self,
         max_episode_steps=1500,
-        forward_speed=2.5,
-        turn_speed=120,
-        frame_rate=30,
+        forward_step=0.15,
+        turn_step=15,
         obs_width=80,
         obs_height=60,
         window_width=800,
@@ -441,17 +440,14 @@ class MiniWorldEnv(gym.Env):
         # Maximum number of steps per episode
         self.max_episode_steps = max_episode_steps
 
-        # Frame rate to run at
-        self.frame_rate = frame_rate
-
         # Flag to enable/disable domain randomization
         self.domain_rand = domain_rand
 
-        # Robot forward speed in meters/second
-        self.forward_speed = forward_speed
+        # Robot forward movement step size in meters
+        self.forward_step = forward_step
 
-        # Robot turning speed in degrees/second
-        self.turn_speed = turn_speed
+        # Robot turn step size in degrees
+        self.turn_step = turn_step
 
         # Window for displaying the environment to humans
         self.window = None
@@ -544,26 +540,21 @@ class MiniWorldEnv(gym.Env):
 
         self.step_count += 1
 
-        # Compute the delta time and forward/turn movement magnitudes
-        delta_time = 1 / self.frame_rate
-        d_fwd = self.forward_speed * delta_time
-        d_rot = self.turn_speed * delta_time * (math.pi / 180)
-
         if action == self.actions.move_forward:
-            next_pos = self.agent.pos + self.agent.dir_vec * d_fwd
+            next_pos = self.agent.pos + self.agent.dir_vec * self.forward_step
             if not self.intersect(self.agent, next_pos, self.agent.radius):
                 self.agent.pos = next_pos
 
         elif action == self.actions.move_back:
-            next_pos = self.agent.pos - self.agent.dir_vec * d_fwd
+            next_pos = self.agent.pos - self.agent.dir_vec * self.forward_step
             if not self.intersect(self.agent, next_pos, self.agent.radius):
                 self.agent.pos = next_pos
 
         elif action == self.actions.turn_left:
-            self.agent.dir += d_rot
+            self.agent.dir += self.turn_step * (math.pi / 180)
 
         elif action == self.actions.turn_right:
-            self.agent.dir -= d_rot
+            self.agent.dir -= self.turn_step * (math.pi / 180)
 
         # Generate the current camera image
         obs = self.render_obs()
