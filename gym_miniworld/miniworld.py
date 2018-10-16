@@ -656,7 +656,7 @@ class MiniWorldEnv(gym.Env):
 
         self.entities.append(ent)
 
-        return pos
+        return ent
 
     def place_agent(
         self,
@@ -701,6 +701,14 @@ class MiniWorldEnv(gym.Env):
                 return True
 
         return False
+
+    def near(self, ent):
+        """
+        Test if the agent is near to an entity. Used for "go to" type tasks
+        """
+
+        dist = np.linalg.norm(self.agent.pos - ent.pos)
+        return dist < self.agent.radius + ent.radius + 1.1 * self.forward_step
 
     def _gen_static_data(self):
         """

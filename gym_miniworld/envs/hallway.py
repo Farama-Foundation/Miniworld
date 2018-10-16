@@ -21,7 +21,7 @@ class HallwayEnv(MiniWorldEnv):
         )
 
         # Place the box at the end of the hallway
-        self.place_entity(
+        self.box = self.place_entity(
             Box(color='red'),
             min_x=room.max_x - 2
         )
@@ -35,10 +35,7 @@ class HallwayEnv(MiniWorldEnv):
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
-        room = self.rooms[0]
-        x, _, z = self.agent.pos
-
-        if x > room.max_x - 2.5:
+        if self.near(self.box):
             reward += self._reward()
             done = True
 

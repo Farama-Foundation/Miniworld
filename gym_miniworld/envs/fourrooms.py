@@ -76,12 +76,16 @@ class FourRoomsEnv(MiniWorldEnv):
         c3.add_portal(0, min_z=-5, max_z=-3)
         c3.add_portal(2, min_z=-5, max_z=-3)
 
-        self.place_entity(Box(color='red'))
+        self.box = self.place_entity(Box(color='red'))
         self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))
 
         self.place_agent()
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
+
+        if self.near(self.box):
+            reward += self._reward()
+            done = True
 
         return obs, reward, done, info

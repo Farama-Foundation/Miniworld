@@ -42,10 +42,7 @@ class TMazeEnv(MiniWorldEnv):
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
-        dist = np.linalg.norm(self.agent.pos - self.box.pos)
-
-        # TODO: use forward movement step size once defined
-        if dist < 1.5 * (self.agent.radius + self.box.radius):
+        if self.near(self.box):
             reward += self._reward()
             done = True
 

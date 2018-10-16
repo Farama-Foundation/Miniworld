@@ -63,7 +63,6 @@ def on_key_press(symbol, modifiers):
         if done:
             print('done! reward={:.2f}'.format(reward))
             env.reset()
-            env.render('pyglet')
 
         env.render('pyglet')
 
