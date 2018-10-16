@@ -30,14 +30,13 @@ class RandGen:
 
         return (self.np_random.randint(0, 2) == 0)
 
-    def elem(self, iterable):
+    def choice(self, iterable, probs=None):
         """
         Pick a random element in a list
         """
 
         lst = list(iterable)
-        idx = self.int(0, len(lst))
-        return lst[idx]
+        return self.np_random.choice(lst, p=probs)
 
     def color(self):
         """
@@ -45,7 +44,7 @@ class RandGen:
         """
 
         from .miniworld import COLOR_NAMES
-        return self.elem(COLOR_NAMES)
+        return self.choice(COLOR_NAMES)
 
     def subset(self, iterable, num_elems):
         """
@@ -58,7 +57,7 @@ class RandGen:
         out = []
 
         while len(out) < num_elems:
-            elem = self.elem(lst)
+            elem = self.choice(lst)
             lst.remove(elem)
             out.append(elem)
 

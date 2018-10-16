@@ -91,6 +91,9 @@ class Room:
         self.mid_x = (self.max_x + self.min_x) / 2
         self.mid_z = (self.max_z + self.min_z) / 2
 
+        # Compute approximate surface area
+        self.area = (self.max_x - self.min_x) * (self.max_z - self.min_z)
+
         # Height of the room walls
         self.wall_height = wall_height
 
@@ -633,9 +636,8 @@ class MiniWorldEnv(gym.Env):
             self._gen_static_data()
 
         while True:
-            # TODO: sample rooms proportionally to floor surface area?
-            # Pick a room
-            r = room if room else self.rand.elem(self.rooms)
+            # Pick a room, sample rooms proportionally to floor surface area
+            r = room if room else self.rand.choice(self.rooms, probs=self.room_probs)
 
             # Sample a point using random barycentric coordinates
             coords = self.rand.float(0, 1, len(r.outline))
@@ -717,9 +719,13 @@ class MiniWorldEnv(gym.Env):
         # Generate the static data for each room
         for room in self.rooms:
             room._gen_static_data()
-            self.wall_segs.append(room.wall_segs)
 
-        self.wall_segs = np.concatenate(self.wall_segs)
+        # Concatenate the wall segments
+        self.wall_segs = np.concatenate([r.wall_segs for r in self.rooms])
+
+        # Room selection probabilities
+        self.room_probs = np.array([r.area for r in self.rooms], dtype=float)
+        self.room_probs /= np.sum(self.room_probs)
 
     def _gen_world(self):
         """
