@@ -94,11 +94,20 @@ parameters in the constructor.
 
 ### Actions
 
-TODO
+For simplicity, actions are discrete. The available actions are:
+- turn_left
+- turn_right
+- move_forward
+- move_back
+- pickup
+- drop
+- toggle
+
+The turn and move actions will rotate or move the agent by a small fixed interval. The simulator assumes that the agent is a differential drive robot.
 
 ### Reward Function
 
-TODO
+By default, rewards are sparse and in the [0, 1] range, with a small penalty being given based on the number of time steps needed to complete the task. If the task is not completed within `max_episode_steps`, a reward of 0 is produced. See the `_reward()` method of `MiniWorldEnv`.
 
 ## Troubleshooting
 
