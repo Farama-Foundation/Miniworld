@@ -77,6 +77,7 @@ class FourRoomsEnv(MiniWorldEnv):
         c3.add_portal(2, min_z=-5, max_z=-3)
 
         self.place_entity(Box(color='red'))
+        self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))
 
         self.place_agent()
 

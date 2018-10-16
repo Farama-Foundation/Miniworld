@@ -90,7 +90,10 @@ class Box(Entity):
     """
 
     def __init__(self, color, size=0.8):
-        super().__init__(radius=1.41 * (size/2))
+        if type(size) is int or type(size) is float:
+            size = np.array([size, size, size])
+        size = np.array(size)
+        super().__init__(radius=1.41 * np.linalg.norm(size) / 2)
         self.color = color
         self.size = size
 
@@ -104,8 +107,9 @@ class Box(Entity):
 
         from .miniworld import COLORS
 
-        sz = self.size
-        hs = sz / 2
+        sx, sy, sz = self.size
+        hx = sx / 2
+        hz = sz / 2
         x, y, z = self.pos
 
         glDisable(GL_TEXTURE_2D)
@@ -113,34 +117,34 @@ class Box(Entity):
 
         glBegin(GL_QUADS)
         glNormal3f(0, 0, 1)
-        glVertex3f(x + hs, y + sz, z + hs)
-        glVertex3f(x - hs, y + sz, z + hs)
-        glVertex3f(x - hs, y     , z + hs)
-        glVertex3f(x + hs, y     , z + hs)
+        glVertex3f(x + hx, y + sy, z + hz)
+        glVertex3f(x - hx, y + sy, z + hz)
+        glVertex3f(x - hx, y     , z + hz)
+        glVertex3f(x + hx, y     , z + hz)
 
         glNormal3f(0, 0, -1)
-        glVertex3f(x - hs, y + sz, z - hs)
-        glVertex3f(x + hs, y + sz, z - hs)
-        glVertex3f(x + hs, y     , z - hs)
-        glVertex3f(x - hs, y     , z - hs)
+        glVertex3f(x - hx, y + sy, z - hz)
+        glVertex3f(x + hx, y + sy, z - hz)
+        glVertex3f(x + hx, y     , z - hz)
+        glVertex3f(x - hx, y     , z - hz)
 
         glNormal3f(-1, 0, 0)
-        glVertex3f(x - hs, y + sz, z + hs)
-        glVertex3f(x - hs, y + sz, z - hs)
-        glVertex3f(x - hs, y     , z - hs)
-        glVertex3f(x - hs, y     , z + hs)
+        glVertex3f(x - hx, y + sy, z + hz)
+        glVertex3f(x - hx, y + sy, z - hz)
+        glVertex3f(x - hx, y     , z - hz)
+        glVertex3f(x - hx, y     , z + hz)
 
         glNormal3f(1, 0, 0)
-        glVertex3f(x + hs, y + sz, z - hs)
-        glVertex3f(x + hs, y + sz, z + hs)
-        glVertex3f(x + hs, y     , z + hs)
-        glVertex3f(x + hs, y     , z - hs)
+        glVertex3f(x + hx, y + sy, z - hz)
+        glVertex3f(x + hx, y + sy, z + hz)
+        glVertex3f(x + hx, y     , z + hz)
+        glVertex3f(x + hx, y     , z - hz)
 
         glNormal3f(0, 1, 0)
-        glVertex3f(x + hs, y + sz, z + hs)
-        glVertex3f(x + hs, y + sz, z - hs)
-        glVertex3f(x - hs, y + sz, z - hs)
-        glVertex3f(x - hs, y + sz, z + hs)
+        glVertex3f(x + hx, y + sy, z + hz)
+        glVertex3f(x + hx, y + sy, z - hz)
+        glVertex3f(x - hx, y + sy, z - hz)
+        glVertex3f(x - hx, y + sy, z + hz)
 
         glEnd(GL_QUADS)
 
