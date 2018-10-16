@@ -44,42 +44,32 @@ def on_key_press(symbol, modifiers):
         print('RESET')
         env.reset()
         env.render('pyglet')
-    elif symbol == key.ESCAPE:
+        return
+
+    if symbol == key.ESCAPE:
         env.close()
         sys.exit(0)
 
-# Register a keyboard handler
-key_handler = key.KeyStateHandler()
-env.unwrapped.window.push_handlers(key_handler)
-
-def update(dt):
-    """
-    This function is called at every frame to handle
-    movement/stepping and redrawing
-    """
-
-    action = env.actions.do_nothing
-
-    if key_handler[key.UP]:
-        action = env.actions.move_forward
-    if key_handler[key.DOWN]:
-        action = env.actions.move_back
-    if key_handler[key.LEFT]:
+    action = None
+    if symbol == key.LEFT:
         action = env.actions.turn_left
-    if key_handler[key.RIGHT]:
+    elif symbol == key.RIGHT:
         action = env.actions.turn_right
+    elif symbol == key.UP:
+        action = env.actions.move_forward
+    elif symbol == key.DOWN:
+        action = env.actions.move_back
 
-    obs, reward, done, info = env.step(action)
-    #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
+    if action != None:
+        obs, reward, done, info = env.step(action)
+        #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
 
-    if done:
-        print('done! reward={:.2f}'.format(reward))
-        env.reset()
+        if done:
+            print('done! reward={:.2f}'.format(reward))
+            env.reset()
+            env.render('pyglet')
+
         env.render('pyglet')
-
-    env.render('pyglet')
-
-pyglet.clock.schedule_interval(update, 1 / env.unwrapped.frame_rate)
 
 # Enter main event loop
 pyglet.app.run()
