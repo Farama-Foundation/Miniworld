@@ -2,6 +2,7 @@ import math
 from enum import IntEnum
 import numpy as np
 import gym
+from gym import spaces
 from .random import *
 from .opengl import *
 from .objmesh import *
@@ -419,10 +420,10 @@ class MiniWorldEnv(gym.Env):
         self.actions = MiniWorldEnv.Actions
 
         # Actions are discrete integer values
-        self.action_space = gym.spaces.Discrete(len(self.actions))
+        self.action_space = spaces.Discrete(len(self.actions))
 
         # Observations are RGB images with pixels in [0, 255]
-        self.observation_space = gym.spaces.Box(
+        self.observation_space = spaces.Box(
             low=0,
             high=255,
             shape=(obs_height, obs_width, 3),
