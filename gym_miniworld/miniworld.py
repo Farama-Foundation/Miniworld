@@ -9,6 +9,9 @@ from .objmesh import *
 from .entity import *
 from .physics import *
 
+# Y-axis vector
+Y_VEC = np.array([0, 1, 0])
+
 # Blue sky horizon color
 BLUE_SKY_COLOR = np.array([0.45, 0.82, 1])
 
@@ -187,6 +190,31 @@ class Room:
             'max_y': max_y
         })
 
+    def point_inside(self, p):
+        """
+        Test if a point is inside the room
+        """
+
+        # TODO: may want to precompute normals
+
+        # Compute edge vectors (p1 - p0)
+        # For the first point, p0 is the last
+        # For the last point, p0 is p_n-1
+        next_pts = np.concatenate([self.outline[1:], np.expand_dims(self.outline[0], axis=0)], axis=0)
+        edge_vecs = next_pts - self.outline
+
+        # Compute edge normals
+        normals = -np.cross(edge_vecs, Y_VEC)
+
+        # Vector from edge start to test point
+        ap = p - self.outline
+
+        # Compute the dot products of normals to AP vectors
+        dotNAP = np.sum(normals * ap, axis=1)
+
+        # The point is inside if all the dot products are greater than zero
+        return np.all(np.greater(dotNAP, 0))
+
     def _gen_static_data(self):
         """
         Generate polygons and static data for this room
@@ -196,7 +224,6 @@ class Room:
         """
 
         up_vec = np.array([0, self.wall_height, 0])
-        y_vec = np.array([0, 1, 0])
 
         # Generate the floor vertices
         self.floor_verts = self.outline
@@ -247,13 +274,13 @@ class Room:
 
             # Generate the vertices
             # Vertices are listed in counter-clockwise order
-            self.wall_verts.append(s_p0 + min_y * y_vec)
-            self.wall_verts.append(s_p0 + max_y * y_vec)
-            self.wall_verts.append(s_p1 + max_y * y_vec)
-            self.wall_verts.append(s_p1 + min_y * y_vec)
+            self.wall_verts.append(s_p0 + min_y * Y_VEC)
+            self.wall_verts.append(s_p0 + max_y * Y_VEC)
+            self.wall_verts.append(s_p1 + max_y * Y_VEC)
+            self.wall_verts.append(s_p1 + min_y * Y_VEC)
 
             # Compute the normal for the polygon
-            normal = np.cross(s_p1 - s_p0, y_vec)
+            normal = np.cross(s_p1 - s_p0, Y_VEC)
             normal = -normal / np.linalg.norm(normal)
             for i in range(4):
                 self.wall_norms.append(normal)
@@ -605,10 +632,10 @@ class MiniWorldEnv(gym.Env):
         ent,
         room=None,
         dir=None,
-        min_x=-math.inf,
-        max_x=math.inf,
-        min_z=-math.inf,
-        max_z=math.inf
+        min_x=None,
+        max_x=None,
+        min_z=None,
+        max_z=None
     ):
         """
         Place an entity/object in the world
@@ -625,20 +652,21 @@ class MiniWorldEnv(gym.Env):
             # Pick a room, sample rooms proportionally to floor surface area
             r = room if room else self.rand.choice(self.rooms, probs=self.room_probs)
 
-            # Sample a point using random barycentric coordinates
-            coords = self.rand.float(0, 1, len(r.outline))
-            coords /= coords.sum()
-            coords = np.expand_dims(coords, axis=1)
-            pos = np.sum(coords * r.outline, axis=0)
-            x, _, z = pos
+            # Choose a random point within the square bounding box of the room
+            lx = r.min_x if min_x == None else min_x
+            hx = r.max_x if max_x == None else max_x
+            lz = r.min_z if min_z == None else min_z
+            hz = r.max_z if max_z == None else max_z
+            pos = self.rand.float(
+                low =[lx + ent.radius, 0, lz + ent.radius],
+                high=[hx - ent.radius, 0, hz - ent.radius]
+            )
 
-            # Make sure the position is within bounds
-            if x - ent.radius < min_x or x + ent.radius > max_x:
-                continue
-            if z - ent.radius < min_z or z + ent.radius > max_z:
+            # Make sure the position is within the room's outline
+            if not r.point_inside(pos):
                 continue
 
-            # Make sure the position doesn't intersect with walls
+            # Make sure the position doesn't intersect with any walls
             if self.intersect(ent, pos, ent.radius):
                 continue
 
@@ -657,10 +685,10 @@ class MiniWorldEnv(gym.Env):
         self,
         room=None,
         dir=None,
-        min_x=-math.inf,
-        max_x=math.inf,
-        min_z=-math.inf,
-        max_z=math.inf
+        min_x=None,
+        max_x=None,
+        min_z=None,
+        max_z=None
     ):
         """
         Place the agent in the environment at a random position
