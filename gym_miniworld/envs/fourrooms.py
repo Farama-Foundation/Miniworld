@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 
@@ -10,9 +11,12 @@ class FourRoomsEnv(MiniWorldEnv):
 
     def __init__(self, **kwargs):
         super().__init__(
-            max_episode_steps=500,
+            max_episode_steps=250,
             **kwargs
         )
+
+        # Allow only the movement actions
+        self.action_space = spaces.Discrete(self.actions.move_forward+1)
 
     def _gen_world(self):
 
