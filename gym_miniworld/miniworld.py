@@ -98,6 +98,15 @@ class Room:
         # Compute approximate surface area
         self.area = (self.max_x - self.min_x) * (self.max_z - self.min_z)
 
+        # Compute room edge normals
+        # Compute edge vectors (p1 - p0)
+        # For the first point, p0 is the last
+        # For the last point, p0 is p_n-1
+        next_pts = np.concatenate([self.outline[1:], np.expand_dims(self.outline[0], axis=0)], axis=0)
+        edge_vecs = next_pts - self.outline
+        self.edge_norms = -np.cross(edge_vecs, Y_VEC)
+        self.edge_norms = (self.edge_norms.T / np.linalg.norm(self.edge_norms, axis=1)).T
+
         # Height of the room walls
         self.wall_height = wall_height
 
@@ -195,22 +204,11 @@ class Room:
         Test if a point is inside the room
         """
 
-        # TODO: may want to precompute normals
-
-        # Compute edge vectors (p1 - p0)
-        # For the first point, p0 is the last
-        # For the last point, p0 is p_n-1
-        next_pts = np.concatenate([self.outline[1:], np.expand_dims(self.outline[0], axis=0)], axis=0)
-        edge_vecs = next_pts - self.outline
-
-        # Compute edge normals
-        normals = -np.cross(edge_vecs, Y_VEC)
-
         # Vector from edge start to test point
         ap = p - self.outline
 
         # Compute the dot products of normals to AP vectors
-        dotNAP = np.sum(normals * ap, axis=1)
+        dotNAP = np.sum(self.edge_norms * ap, axis=1)
 
         # The point is inside if all the dot products are greater than zero
         return np.all(np.greater(dotNAP, 0))
@@ -222,8 +220,6 @@ class Room:
         Note: the wall polygons are quads, but the floor and
               ceiling can be arbitrary n-gons
         """
-
-        up_vec = np.array([0, self.wall_height, 0])
 
         # Generate the floor vertices
         self.floor_verts = self.outline
@@ -237,7 +233,7 @@ class Room:
 
         # Generate the ceiling vertices
         # Flip the ceiling vertex order because of backface culling
-        self.ceil_verts = np.flip(self.outline, axis=0) + up_vec
+        self.ceil_verts = np.flip(self.outline, axis=0) + self.wall_height * Y_VEC
         self.ceil_texcs = gen_tex_coords(
             self.ceil_tex,
             0,
@@ -626,6 +622,45 @@ class MiniWorldEnv(gym.Env):
         self.rooms.append(room)
 
         return room
+
+    def connect_rooms(
+        self,
+        room_a,
+        room_b,
+        portal_width=None,
+        portal_height=None
+    ):
+        """
+        Connect two rooms along facing edges
+        """
+
+        # TODO: if the portal width is none, use whole wall width
+
+        # TODO: project the smaller wall onto the bigger one
+        # to get the "connectable extents"
+
+        # Maybe try it both ways, project wall onto other
+        # It should basically be equivalent
+
+        for idx_a in range(room_a.num_walls):
+            norm_a = room_a.edge_norms[idx_a]
+
+            for idx_b in range(room_b.num_walls):
+                norm_b = room_b.edge_norms[idx_b]
+
+                # Reject walls that are not facing each other
+                dp = np.dot(norm_a, norm_b)
+                if dp > -0.9:
+                    continue
+
+                #print(dp)
+
+                # TODO: project this wall onto the other
+
+                # TODO: compute signed distance between walls
+
+
+
 
     def place_entity(
         self,
