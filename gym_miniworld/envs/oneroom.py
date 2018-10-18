@@ -3,39 +3,35 @@ import math
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 
-class HallwayEnv(MiniWorldEnv):
+class OneRoomEnv(MiniWorldEnv):
     """
     Environment in which the goal is to go to a red box
-    at the end of a hallway
+    placed randomly in one big room.
     """
 
-    def __init__(self, length=12, **kwargs):
-        assert length >= 2
-        self.length = length
+    def __init__(self, size=10, **kwargs):
+        assert size >= 2
+        self.size = size
 
         super().__init__(
-            max_episode_steps=250,
+            max_episode_steps=180,
             **kwargs
         )
 
     def _gen_world(self):
         # Create a long rectangular room
         room = self.add_rect_room(
-            min_x=-1, max_x=-1 + self.length,
-            min_z=-2, max_z=2
+            min_x=0,
+            max_x=self.size,
+            min_z=0,
+            max_z=self.size
         )
 
         # Place the box at the end of the hallway
-        self.box = self.place_entity(
-            Box(color='red'),
-            min_x=room.max_x - 2
-        )
+        self.box = self.place_entity(Box(color='red'))
 
         # Place the agent a random distance away from the goal
-        self.place_agent(
-            dir=self.rand.float(-math.pi/4, math.pi/4),
-            max_x=room.max_x - 2
-        )
+        self.place_agent()
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
