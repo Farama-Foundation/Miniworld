@@ -23,10 +23,7 @@ class TMazeEnv(MiniWorldEnv):
             min_x=8, max_x=12,
             min_z=-8, max_z=8
         )
-        #room1.add_portal(0, min_z=-2, max_z=2)
-        #room2.add_portal(2, min_z=-2, max_z=2)
-
-        self.connect_rooms(room1, room2)
+        self.connect_rooms(room1, room2, min_z=-2, max_z=2)
 
         # Add a box at a random end of the hallway
         self.box = Box(color='red')

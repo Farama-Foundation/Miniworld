@@ -98,13 +98,14 @@ class Room:
         # Compute approximate surface area
         self.area = (self.max_x - self.min_x) * (self.max_z - self.min_z)
 
-        # Compute room edge normals
+        # Compute room edge directions and normals
         # Compute edge vectors (p1 - p0)
         # For the first point, p0 is the last
         # For the last point, p0 is p_n-1
         next_pts = np.concatenate([self.outline[1:], np.expand_dims(self.outline[0], axis=0)], axis=0)
-        edge_vecs = next_pts - self.outline
-        self.edge_norms = -np.cross(edge_vecs, Y_VEC)
+        self.edge_dirs = next_pts - self.outline
+        self.edge_dirs = (self.edge_dirs.T / np.linalg.norm(self.edge_dirs, axis=1)).T
+        self.edge_norms = -np.cross(self.edge_dirs, Y_VEC)
         self.edge_norms = (self.edge_norms.T / np.linalg.norm(self.edge_norms, axis=1)).T
 
         # Height of the room walls
@@ -198,6 +199,8 @@ class Room:
             'min_y': min_y,
             'max_y': max_y
         })
+
+        return start_pos, end_pos
 
     def point_inside(self, p):
         """
@@ -627,40 +630,83 @@ class MiniWorldEnv(gym.Env):
         self,
         room_a,
         room_b,
-        portal_width=None,
-        portal_height=None
+        min_x=None,
+        max_x=None,
+        min_z=None,
+        max_z=None,
+        max_y=None
     ):
         """
         Connect two rooms along facing edges
         """
 
-        # TODO: if the portal width is none, use whole wall width
+        def find_facing_edges():
+            for idx_a in range(room_a.num_walls):
+                norm_a = room_a.edge_norms[idx_a]
 
-        # TODO: project the smaller wall onto the bigger one
-        # to get the "connectable extents"
+                for idx_b in range(room_b.num_walls):
+                    norm_b = room_b.edge_norms[idx_b]
 
-        # Maybe try it both ways, project wall onto other
-        # It should basically be equivalent
+                    # Reject edges that are not facing the correct way
+                    if np.dot(norm_a, norm_b) > -0.9:
+                        continue
 
-        for idx_a in range(room_a.num_walls):
-            norm_a = room_a.edge_norms[idx_a]
+                    dir = room_b.outline[idx_b] - room_a.outline[idx_a]
 
-            for idx_b in range(room_b.num_walls):
-                norm_b = room_b.edge_norms[idx_b]
+                    # Reject edges that are not facing each other
+                    if np.dot(norm_a, dir) > 0:
+                        continue
 
-                # Reject walls that are not facing each other
-                dp = np.dot(norm_a, norm_b)
-                if dp > -0.9:
-                    continue
+                    return idx_a, idx_b
 
-                #print(dp)
+            return None, None
 
-                # TODO: project this wall onto the other
+        idx_a, idx_b = find_facing_edges()
+        assert idx_a != None, "matching edges not found in connect_rooms"
 
-                # TODO: compute signed distance between walls
+        start_a, end_a = room_a.add_portal(
+            edge=idx_a,
+            min_x=min_x,
+            max_x=max_x,
+            min_z=min_z,
+            max_z=max_z,
+            max_y=max_y
+        )
 
+        start_b, end_b = room_b.add_portal(
+            edge=idx_b,
+            min_x=min_x,
+            max_x=max_x,
+            min_z=min_z,
+            max_z=max_z,
+            max_y=max_y
+        )
 
+        a = room_a.outline[idx_a] + room_a.edge_dirs[idx_a] * start_a
+        b = room_a.outline[idx_a] + room_a.edge_dirs[idx_a] * end_a
+        c = room_b.outline[idx_b] + room_b.edge_dirs[idx_b] * start_b
+        d = room_b.outline[idx_b] + room_b.edge_dirs[idx_b] * end_b
 
+        # If the portals are directly connected, stop
+        if np.linalg.norm(a - d) < 0.001:
+            return
+
+        len_a = np.linalg.norm(b - a)
+        len_b = np.linalg.norm(d - c)
+
+        # Room outline points must be specified in counter-clockwise order
+        outline = np.stack([c, b, a, d])
+        outline = np.stack([outline[:, 0], outline[:, 2]], axis=1)
+
+        max_y = max_y if max_y != None else room_a.wall_height
+
+        room = Room(
+            outline,
+            wall_height=max_y
+        )
+        self.rooms.append(room)
+        room.add_portal(1, start_pos=0, end_pos=len_a)
+        room.add_portal(3, start_pos=0, end_pos=len_b)
 
     def place_entity(
         self,
