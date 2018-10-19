@@ -31,17 +31,20 @@ COLOR_NAMES = sorted(list(COLORS.keys()))
 # Default wall height for room
 DEFAULT_WALL_HEIGHT=2.74
 
-# TODO: make this a param to gen_tex_coords
 # Texture size/density in texels/meter
 TEX_DENSITY = 512
 
-def gen_tex_coords(
+def gen_texcs_wall(
     tex,
     min_x,
     min_y,
     width,
     height
 ):
+    """
+    Generate texture coordinates for a wall quad
+    """
+
     xc = (TEX_DENSITY / tex.width)
     yc = (TEX_DENSITY / tex.height)
 
@@ -59,6 +62,28 @@ def gen_tex_coords(
         ],
         dtype=np.float32
     )
+
+def gen_texcs_floor(
+    tex,
+    poss
+):
+    """
+    Generate texture coordinates for the floor or ceiling
+    This is done by mapping x,z positions directly to texture
+    coordinates
+    """
+
+    texc_mul = np.array(
+        [
+            TEX_DENSITY / tex.width,
+            TEX_DENSITY / tex.height
+        ],
+        dtype=float
+    )
+
+    coords = np.stack([poss[:,0], poss[:,2]], axis=1) * texc_mul
+
+    return coords
 
 class Room:
     """
@@ -226,23 +251,17 @@ class Room:
 
         # Generate the floor vertices
         self.floor_verts = self.outline
-        self.floor_texcs = gen_tex_coords(
+        self.floor_texcs = gen_texcs_floor(
             self.floor_tex,
-            0,
-            0,
-            np.linalg.norm(self.outline[2,:] - self.outline[1,:]),
-            np.linalg.norm(self.outline[1,:] - self.outline[0,:])
+            self.floor_verts
         )
 
         # Generate the ceiling vertices
         # Flip the ceiling vertex order because of backface culling
         self.ceil_verts = np.flip(self.outline, axis=0) + self.wall_height * Y_VEC
-        self.ceil_texcs = gen_tex_coords(
+        self.ceil_texcs = gen_texcs_floor(
             self.ceil_tex,
-            0,
-            0,
-            np.linalg.norm(self.outline[2,:] - self.outline[1,:]),
-            np.linalg.norm(self.outline[1,:] - self.outline[0,:])
+            self.ceil_verts
         )
 
         self.wall_verts = []
@@ -285,7 +304,7 @@ class Room:
                 self.wall_norms.append(normal)
 
             # Generate the texture coordinates
-            texcs = gen_tex_coords(
+            texcs = gen_texcs_wall(
                 self.wall_tex,
                 seg_start,
                 min_y,
