@@ -215,15 +215,15 @@ class Room:
         assert start_pos >= 0, "portal outside of wall extents"
         assert end_pos <= e_len, "portal outside of wall extents"
 
-        # TODO: make sure portals remain sorted by start position
-        # use sort function
-
         self.portals[edge].append({
             'start_pos': start_pos,
             'end_pos': end_pos,
             'min_y': min_y,
             'max_y': max_y
         })
+
+        # Sort the portals by start position
+        self.portals[edge].sort(key=lambda e: e['start_pos'])
 
         return start_pos, end_pos
 

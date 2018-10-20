@@ -4,14 +4,14 @@ from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 
-class FourRoomsEnv(MiniWorldEnv):
+class ThreeRoomsEnv(MiniWorldEnv):
     """
-    Two small rooms conected 
+    Two small rooms connected to one large room
     """
 
     def __init__(self, **kwargs):
         super().__init__(
-            max_episode_steps=250,
+            max_episode_steps=400,
             **kwargs
         )
 
@@ -20,31 +20,24 @@ class FourRoomsEnv(MiniWorldEnv):
 
     def _gen_world(self):
 
-        # Top-left
+        # Top
         room0 = self.add_rect_room(
-            min_x=-7, max_x=-1,
-            min_z=1 , max_z=7
+            min_x=-7, max_x=7,
+            min_z=0.5 , max_z=7
         )
-        # Top-right
+        # Bottom-left
         room1 = self.add_rect_room(
-            min_x=1, max_x=7,
-            min_z=1, max_z=7
+            min_x=-7, max_x=-1,
+            min_z=-7, max_z=-0.5
         )
         # Bottom-right
         room2 = self.add_rect_room(
             min_x=1 , max_x=7,
-            min_z=-7, max_z=-1
-        )
-        # Bottom-left
-        room3 = self.add_rect_room(
-            min_x=-7, max_x=-1,
-            min_z=-7, max_z=-1
+            min_z=-7, max_z=-0.5
         )
 
-        self.connect_rooms(room0, room1, min_z=3, max_z=5, max_y=2.2)
-        self.connect_rooms(room1, room2, min_x=3, max_x=5, max_y=2.2)
-        self.connect_rooms(room2, room3, min_z=-5, max_z=-3, max_y=2.2)
-        self.connect_rooms(room3, room0, min_x=-5, max_x=-3, max_y=2.2)
+        self.connect_rooms(room0, room1, min_x=-5.25, max_x=-2.75)
+        self.connect_rooms(room0, room2, min_x=2.75, max_x=5.25)
 
         self.box = self.place_entity(Box(color='red'))
         self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))

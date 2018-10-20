@@ -4,6 +4,7 @@ from .hallway import *
 from .oneroom import *
 from .tmaze import *
 from .fourrooms import *
+from .threerooms import *
 
 # Registered environment ids
 env_ids = []
