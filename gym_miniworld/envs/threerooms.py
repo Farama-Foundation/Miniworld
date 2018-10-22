@@ -41,6 +41,7 @@ class ThreeRoomsEnv(MiniWorldEnv):
 
         self.box = self.place_entity(Box(color='red'))
         self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))
+        self.place_entity(Box(color='green', size=0.5))
 
         self.place_agent()
 

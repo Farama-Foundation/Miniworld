@@ -137,6 +137,7 @@ class Room:
         self.wall_height = wall_height
 
         self.wall_tex = Texture.get('concrete')
+        #self.wall_tex = Texture.get('drywall')
         self.floor_tex = Texture.get('floor_tiles_bw')
         self.ceil_tex = Texture.get('concrete_tiles')
 
@@ -880,7 +881,7 @@ class MiniWorldEnv(gym.Env):
         ambient = [0.45, 0.45, 0.45, 1]
 
         # Diffuse material color
-        diffuse = [1, 1, 1, 1]
+        diffuse = [0.70, 0.70, 0.70, 1]
 
         glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat*4)(*light_pos))
         glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat*4)(*ambient))
