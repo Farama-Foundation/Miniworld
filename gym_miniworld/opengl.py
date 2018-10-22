@@ -37,6 +37,7 @@ class Texture:
 
         assert len(paths) > 0, 'failed to load textures for name "%s"' % tex_name
 
+        # If domain-randomization is to be used
         if rng:
             path_idx = rng.int(0, len(paths))
             path = paths[path_idx]
@@ -44,7 +45,7 @@ class Texture:
             path = paths[0]
 
         if path not in self.tex_cache:
-            self.tex_cache[path] = Texture(Texture.load(path))
+            self.tex_cache[path] = Texture(Texture.load(path), tex_name)
 
         return self.tex_cache[path]
 
@@ -82,11 +83,12 @@ class Texture:
 
         return tex
 
-    def __init__(self, tex):
+    def __init__(self, tex, tex_name):
         assert not isinstance(tex, str)
         self.tex = tex
         self.width = self.tex.width
         self.height = self.tex.height
+        self.name = tex_name
 
     def bind(self):
         glBindTexture(self.tex.target, self.tex.id)

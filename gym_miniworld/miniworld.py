@@ -93,7 +93,11 @@ class Room:
     def __init__(
         self,
         outline,
-        wall_height=DEFAULT_WALL_HEIGHT
+        wall_height=DEFAULT_WALL_HEIGHT,
+        floor_tex='floor_tiles_bw',
+        wall_tex='concrete',
+        ceil_tex='concrete_tiles',
+        no_ceiling=False
     ):
         # The outlien should have shape Nx2
         assert len(outline.shape) == 2
@@ -136,10 +140,13 @@ class Room:
         # Height of the room walls
         self.wall_height = wall_height
 
-        self.wall_tex = Texture.get('concrete')
-        #self.wall_tex = Texture.get('drywall')
-        self.floor_tex = Texture.get('floor_tiles_bw')
-        self.ceil_tex = Texture.get('concrete_tiles')
+        # No ceiling flag
+        self.no_ceiling = no_ceiling
+
+        # Load the textures
+        self.wall_tex = Texture.get(wall_tex)
+        self.floor_tex = Texture.get(floor_tex)
+        self.ceil_tex = Texture.get(ceil_tex)
 
         # Lists of portals, indexed by wall/edge index
         self.portals = [[] for i in range(self.num_walls)]
@@ -403,13 +410,14 @@ class Room:
         glEnd()
 
         # Draw the ceiling
-        self.ceil_tex.bind()
-        glBegin(GL_POLYGON)
-        glNormal3f(0, -1, 0)
-        for i in range(self.ceil_verts.shape[0]):
-            glTexCoord2f(*self.ceil_texcs[i, :])
-            glVertex3f(*self.ceil_verts[i, :])
-        glEnd()
+        if not self.no_ceiling:
+            self.ceil_tex.bind()
+            glBegin(GL_POLYGON)
+            glNormal3f(0, -1, 0)
+            for i in range(self.ceil_verts.shape[0]):
+                glTexCoord2f(*self.ceil_texcs[i, :])
+                glVertex3f(*self.ceil_verts[i, :])
+            glEnd()
 
         # Draw the walls
         self.wall_tex.bind()
@@ -617,7 +625,7 @@ class MiniWorldEnv(gym.Env):
         max_x,
         min_z,
         max_z,
-        wall_height=DEFAULT_WALL_HEIGHT
+        **kwargs
     ):
         """
         Create a rectangular room
@@ -640,7 +648,7 @@ class MiniWorldEnv(gym.Env):
 
         room = Room(
             outline,
-            wall_height=wall_height
+            **kwargs,
         )
         self.rooms.append(room)
 
@@ -722,9 +730,15 @@ class MiniWorldEnv(gym.Env):
 
         room = Room(
             outline,
-            wall_height=max_y
+            wall_height=max_y,
+            wall_tex=room_a.wall_tex.name,
+            floor_tex=room_a.floor_tex.name,
+            ceil_tex=room_a.ceil_tex.name,
+            no_ceiling=room_a.no_ceiling,
         )
+
         self.rooms.append(room)
+
         room.add_portal(1, start_pos=0, end_pos=len_a)
         room.add_portal(3, start_pos=0, end_pos=len_b)
 
