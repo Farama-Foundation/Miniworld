@@ -904,13 +904,17 @@ class MiniWorldEnv(gym.Env):
 
         return None
 
-    def near(self, ent):
+    def near(self, ent0, ent1=None):
         """
-        Test if the agent is near to an entity. Used for "go to" type tasks
+        Test if the two entities are near each other.
+        Used for "go to" or "put next" type tasks
         """
 
-        dist = np.linalg.norm(self.agent.pos - ent.pos)
-        return dist < self.agent.radius + ent.radius + 1.1 * self.forward_step
+        if ent1 == None:
+            ent1 = self.agent
+
+        dist = np.linalg.norm(ent0.pos - ent1.pos)
+        return dist < ent0.radius + ent1.radius + 1.1 * self.forward_step
 
     def _gen_static_data(self):
         """
