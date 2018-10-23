@@ -582,6 +582,53 @@ class MiniWorldEnv(gym.Env):
         # Return first observation
         return obs
 
+    def _get_carry_pos(self, ent):
+        """
+        Compute the position at which to place an object being carried
+        """
+
+        dist = self.agent.radius + ent.radius + self.forward_step
+        pos = self.agent.pos + self.agent.dir_vec * 1.05 * dist
+        return pos
+
+    def move_agent(self, fwd_dist):
+        next_pos = self.agent.pos + self.agent.dir_vec * fwd_dist
+
+        if self.intersect(self.agent, next_pos, self.agent.radius):
+            return False
+
+        carrying = self.agent.carrying
+        if carrying:
+            next_carrying_pos = self._get_carry_pos(carrying)
+
+            if self.intersect(carrying, next_carrying_pos, carrying.radius):
+                return False
+
+            carrying.pos = next_carrying_pos
+
+        self.agent.pos = next_pos
+
+        return True
+
+    def turn_agent(self, turn_angle):
+        turn_angle *= (math.pi / 180)
+        orig_dir = self.agent.dir
+
+        self.agent.dir += turn_angle
+
+        carrying = self.agent.carrying
+        if carrying:
+            pos = self._get_carry_pos(carrying)
+
+            if self.intersect(carrying, pos, carrying.radius):
+                self.agent.dir = orig_dir
+                return False
+
+            carrying.pos = pos
+            carrying.dir = self.agent.dir
+
+        return True
+
     def step(self, action):
         """
         Perform one action and update the simulation
@@ -590,20 +637,37 @@ class MiniWorldEnv(gym.Env):
         self.step_count += 1
 
         if action == self.actions.move_forward:
-            next_pos = self.agent.pos + self.agent.dir_vec * self.forward_step
-            if not self.intersect(self.agent, next_pos, self.agent.radius):
-                self.agent.pos = next_pos
+            self.move_agent(self.forward_step)
 
         elif action == self.actions.move_back:
-            next_pos = self.agent.pos - self.agent.dir_vec * self.forward_step
-            if not self.intersect(self.agent, next_pos, self.agent.radius):
-                self.agent.pos = next_pos
+            self.move_agent(-self.forward_step)
 
         elif action == self.actions.turn_left:
-            self.agent.dir += self.turn_step * (math.pi / 180)
+            self.turn_agent(self.turn_step)
 
         elif action == self.actions.turn_right:
-            self.agent.dir -= self.turn_step * (math.pi / 180)
+            self.turn_agent(-self.turn_step)
+
+        # Pick up an object
+        elif action == self.actions.pickup:
+            # Position at which we will test for an intersection
+            test_pos = self.agent.pos + self.agent.dir_vec * 1.5 * self.agent.radius
+            ent = self.intersect(self.agent, test_pos, 1.2 * self.agent.radius)
+            if not self.agent.carrying and ent:
+                print('pickup')
+                self.agent.carrying = ent
+
+        # Drop an object being carried
+        elif action == self.actions.drop:
+            if self.agent.carrying:
+                print('drop')
+                self.agent.carrying = None
+
+        # If we are carrying an object, update its position as we move
+        if self.agent.carrying:
+            ent_pos = self._get_carry_pos(self.agent.carrying)
+            self.agent.carrying.pos = ent_pos
+            self.agent.carrying.dir = self.agent.dir
 
         # Generate the current camera image
         obs = self.render_obs()
@@ -836,9 +900,9 @@ class MiniWorldEnv(gym.Env):
 
             d = np.linalg.norm(ent2.pos - pos)
             if d < radius + ent2.radius:
-                return True
+                return ent2
 
-        return False
+        return None
 
     def near(self, ent):
         """
@@ -973,6 +1037,12 @@ class MiniWorldEnv(gym.Env):
 
         # Call the display list for the static parts of the environment
         glCallList(1)
+
+        # TODO: keep the non-static entities in a different list for efficiency?
+        # Render the non-static entities
+        for ent in self.entities:
+            if not ent.is_static and ent is not self.agent:
+                ent.render()
 
         # Resolve the rendered imahe into a numpy array
         return frame_buffer.resolve()

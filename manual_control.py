@@ -55,6 +55,10 @@ def on_key_press(symbol, modifiers):
         action = env.actions.move_forward
     elif symbol == key.DOWN:
         action = env.actions.move_back
+    elif symbol == key.PAGEUP or symbol == key.P:
+        action = env.actions.pickup
+    elif symbol == key.PAGEDOWN or symbol == key.D:
+        action = env.actions.drop
 
     if action != None:
         obs, reward, done, info = env.step(action)

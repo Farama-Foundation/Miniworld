@@ -97,9 +97,6 @@ class Box(Entity):
         self.color = color
         self.size = size
 
-    def is_static(self):
-        return True
-
     def render(self):
         """
         Draw the object
@@ -116,7 +113,7 @@ class Box(Entity):
 
         glPushMatrix()
         glTranslatef(*self.pos)
-        glRotatef(-self.dir * (180/math.pi), 0, 1, 0)
+        glRotatef(self.dir * (180/math.pi), 0, 1, 0)
 
         glBegin(GL_QUADS)
         glNormal3f(0, 0, 1)
@@ -164,6 +161,9 @@ class Agent(Entity):
 
         # Vertical field of view in degrees
         self.cam_fov_y = 60
+
+        # Object currently being carried by the agent
+        self.carrying = None
 
     @property
     def cam_pos(self):
