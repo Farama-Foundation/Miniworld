@@ -662,13 +662,11 @@ class MiniWorldEnv(gym.Env):
             test_pos = self.agent.pos + self.agent.dir_vec * 1.5 * self.agent.radius
             ent = self.intersect(self.agent, test_pos, 1.2 * self.agent.radius)
             if not self.agent.carrying and ent:
-                print('pickup')
                 self.agent.carrying = ent
 
         # Drop an object being carried
         elif action == self.actions.drop:
             if self.agent.carrying:
-                print('drop')
                 self.agent.carrying = None
 
         # If we are carrying an object, update its position as we move
