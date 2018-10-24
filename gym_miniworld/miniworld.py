@@ -582,16 +582,20 @@ class MiniWorldEnv(gym.Env):
         # Return first observation
         return obs
 
-    def _get_carry_pos(self, ent):
+    def _get_carry_pos(self, agent_pos, ent):
         """
         Compute the position at which to place an object being carried
         """
 
         dist = self.agent.radius + ent.radius + self.forward_step
-        pos = self.agent.pos + self.agent.dir_vec * 1.05 * dist
+        pos = agent_pos + self.agent.dir_vec * 1.05 * dist
         return pos
 
     def move_agent(self, fwd_dist):
+        """
+        Move the agent forward
+        """
+
         next_pos = self.agent.pos + self.agent.dir_vec * fwd_dist
 
         if self.intersect(self.agent, next_pos, self.agent.radius):
@@ -599,7 +603,7 @@ class MiniWorldEnv(gym.Env):
 
         carrying = self.agent.carrying
         if carrying:
-            next_carrying_pos = self._get_carry_pos(carrying)
+            next_carrying_pos = self._get_carry_pos(next_pos, carrying)
 
             if self.intersect(carrying, next_carrying_pos, carrying.radius):
                 return False
@@ -611,6 +615,10 @@ class MiniWorldEnv(gym.Env):
         return True
 
     def turn_agent(self, turn_angle):
+        """
+        Turn the agent left or right
+        """
+
         turn_angle *= (math.pi / 180)
         orig_dir = self.agent.dir
 
@@ -618,7 +626,7 @@ class MiniWorldEnv(gym.Env):
 
         carrying = self.agent.carrying
         if carrying:
-            pos = self._get_carry_pos(carrying)
+            pos = self._get_carry_pos(self.agent.pos, carrying)
 
             if self.intersect(carrying, pos, carrying.radius):
                 self.agent.dir = orig_dir
@@ -665,7 +673,7 @@ class MiniWorldEnv(gym.Env):
 
         # If we are carrying an object, update its position as we move
         if self.agent.carrying:
-            ent_pos = self._get_carry_pos(self.agent.carrying)
+            ent_pos = self._get_carry_pos(self.agent.pos, self.agent.carrying)
             self.agent.carrying.pos = ent_pos
             self.agent.carrying.dir = self.agent.dir
 
@@ -895,6 +903,7 @@ class MiniWorldEnv(gym.Env):
 
         # Check for entity intersection
         for ent2 in self.entities:
+            # Entities can't intersect with themselves
             if ent2 is ent:
                 continue
 
@@ -1047,6 +1056,7 @@ class MiniWorldEnv(gym.Env):
         for ent in self.entities:
             if not ent.is_static and ent is not self.agent:
                 ent.render()
+                #ent.draw_bound()
 
         # Resolve the rendered imahe into a numpy array
         return frame_buffer.resolve()

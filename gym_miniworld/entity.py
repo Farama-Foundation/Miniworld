@@ -25,6 +25,25 @@ class Entity:
         """
         pass
 
+    def draw_bound(self):
+        """
+        Draw the bounding circle
+        Used for debugging purposes
+        """
+
+        x, _, z = self.pos
+
+        glColor3f(1, 0, 0)
+        glBegin(GL_LINES)
+
+        for i in range(60):
+            a = i * 2 * math.pi / 60
+            cx = x + self.radius * math.cos(a)
+            cz = z + self.radius * math.sin(a)
+            glVertex3f(cx, 0.01, cz)
+
+        glEnd(GL_LINES)
+
     @property
     def dir_vec(self):
         """
@@ -93,7 +112,8 @@ class Box(Entity):
         if type(size) is int or type(size) is float:
             size = np.array([size, size, size])
         size = np.array(size)
-        super().__init__(radius=1.41 * np.linalg.norm(size) / 2)
+        sx, _, sz = size
+        super().__init__(radius=math.sqrt(sx*sx + sz*sz)/2)
         self.color = color
         self.size = size
 
