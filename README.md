@@ -1,8 +1,8 @@
 # MiniWorld (gym-miniworld)
 
-**Note that this environment is early in development. It's very basic and you may run into bugs.
-If you do run into problems, or if you want to request specific features, please open an issue
-on this repository. Your feedback helps me make this project better.***
+**Note that this environment is early in development. It's still incomplete and you may run into bugs.
+If you do run into problems, or if you just want to request specific features, please open an issue
+on this repository. Your feedback helps me make this project better.**
 
 MiniWorld is a minimalistic 3D interior environment simulator for reinforcement
 learning &amp; robotics research. It can be used to simulate environments with
