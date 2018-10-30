@@ -19,7 +19,6 @@ class ThreeRoomsEnv(MiniWorldEnv):
         self.action_space = spaces.Discrete(self.actions.move_forward+1)
 
     def _gen_world(self):
-
         # Top
         room0 = self.add_rect_room(
             min_x=-7, max_x=7,
@@ -43,15 +42,12 @@ class ThreeRoomsEnv(MiniWorldEnv):
         self.yellow_box = self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))
         self.place_entity(Box(color='green', size=0.5))
 
-
-
-
-        self.entities.append(ImageFrame(pos=[0, 1, 7], dir=0, width=1.5, tex_name='mila_logo'))
-
-
-
-
-
+        self.entities.append(ImageFrame(
+            pos=[0, 1.35, 7],
+            dir=math.pi/2,
+            width=1.8,
+            tex_name='logo_mila'
+        ))
 
         self.place_agent()
 

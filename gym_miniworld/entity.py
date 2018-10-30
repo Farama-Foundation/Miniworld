@@ -119,7 +119,7 @@ class ImageFrame(Entity):
         self.tex = Texture.get(tex_name)
 
         self.width = width
-        self.height = (float(tex.height) / tex.width) * self.width
+        self.height = (float(self.tex.height) / self.tex.width) * self.width
 
     def is_static(self):
         return True
@@ -131,69 +131,71 @@ class ImageFrame(Entity):
 
         x, y, z = self.pos
 
-        # FIXME: replace hx by sx
-        # frame position aligned with the the wall
-
+        # sx is depth
+        # Frame points towards +sx
         sx = 0.05
         hz = self.width / 2
         hy = self.height / 2
-        hx = sz / 2
 
         glPushMatrix()
         glTranslatef(*self.pos)
         glRotatef(self.dir * (180/math.pi), 0, 1, 0)
 
-        glBegin(GL_QUADS)
-
+        # Bind texture for front
         glColor3f(1, 1, 1)
         glEnable(GL_TEXTURE_2D)
         self.tex.bind()
 
-        # Front
-        glNormal3f(-1, 0, 0)
-        glVertex3f(-hx, +hy, +hz)
-        glVertex3f(-hx, +hy, -hz)
-        glVertex3f(-hx, -sy, -hz)
-        glVertex3f(-hx, -sy, +hz)
+        # Front face, showing image
+        glBegin(GL_QUADS)
+        glNormal3f(1, 0, 0)
+        glTexCoord2f(1, 1)
+        glVertex3f(sx, +hy, -hz)
+        glTexCoord2f(0, 1)
+        glVertex3f(sx, +hy, +hz)
+        glTexCoord2f(0, 0)
+        glVertex3f(sx, -hy, +hz)
+        glTexCoord2f(1, 0)
+        glVertex3f(sx, -hy, -hz)
+        glEnd(GL_QUADS)
 
-
+        # Black frame/border
         glDisable(GL_TEXTURE_2D)
         glColor3f(0, 0, 0)
 
-        # Right
-        glNormal3f(0, 0, 1)
-        glVertex3f(+hx, +sy, +hz)
-        glVertex3f(-hx, +sy, +hz)
-        glVertex3f(-hx, -sy, +hz)
-        glVertex3f(+hx, -sy, +hz)
+        glBegin(GL_QUADS)
 
         # Left
         glNormal3f(0, 0, -1)
-        glVertex3f(-hx, +hy, -hz)
-        glVertex3f(+hx, +hy, -hz)
-        glVertex3f(+hx, -sy, -hz)
-        glVertex3f(-hx, -sy, -hz)
+        glVertex3f(0  , +hy, -hz)
+        glVertex3f(+sx, +hy, -hz)
+        glVertex3f(+sx, -hy, -hz)
+        glVertex3f(0  , -hy, -hz)
 
-        """
-        glNormal3f(1, 0, 0)
-        glVertex3f(+hx, +hy, -hz)
-        glVertex3f(+hx, +hy, +hz)
-        glVertex3f(+hx, -sy, +hz)
-        glVertex3f(+hx, -sy, -hz)
-        """
+        # Right
+        glNormal3f(0, 0, 1)
+        glVertex3f(+sx, +hy, +hz)
+        glVertex3f(0  , +hy, +hz)
+        glVertex3f(0  , -hy, +hz)
+        glVertex3f(+sx, -hy, +hz)
 
+        # Top
         glNormal3f(0, 1, 0)
-        glVertex3f(+hx, +hy, +hz)
-        glVertex3f(+hx, +hy, -hz)
-        glVertex3f(-hx, +hy, -hz)
-        glVertex3f(-hx, +hy, +hz)
+        glVertex3f(+sx, +hy, +hz)
+        glVertex3f(+sx, +hy, -hz)
+        glVertex3f(0  , +hy, -hz)
+        glVertex3f(0  , +hy, +hz)
+
+        # Bottom
+        glNormal3f(0, -1, 0)
+        glVertex3f(+sx, -hy, -hz)
+        glVertex3f(+sx, -hy, +hz)
+        glVertex3f(0  , -hy, +hz)
+        glVertex3f(0  , -hy, -hz)
+
         glEnd(GL_QUADS)
 
         glPopMatrix()
-
-
-
-
 
 class Box(Entity):
     """
