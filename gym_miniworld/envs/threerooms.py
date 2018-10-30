@@ -2,7 +2,7 @@ import numpy as np
 import math
 from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
-from ..entity import Box
+from ..entity import Box, ImageFrame
 
 class ThreeRoomsEnv(MiniWorldEnv):
     """
@@ -42,6 +42,16 @@ class ThreeRoomsEnv(MiniWorldEnv):
         self.box = self.place_entity(Box(color='red'))
         self.yellow_box = self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))
         self.place_entity(Box(color='green', size=0.5))
+
+
+
+
+        self.entities.append(ImageFrame(pos=[0, 1, 7], dir=0, width=1.5, tex_name='mila_logo'))
+
+
+
+
+
 
         self.place_agent()
 

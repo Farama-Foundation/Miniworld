@@ -103,6 +103,98 @@ class CeilingLight(Entity):
 
         glEnable(GL_LIGHTING)
 
+class ImageFrame(Entity):
+    """
+    Frame to display an image on a wall
+    Note: the position is in the middle of the frame, on the wall
+    """
+
+    def __init__(self, pos, dir, tex_name, width):
+        super().__init__(radius=0)
+
+        self.pos = pos
+        self.dir = dir
+
+        # Load the image to be displayed
+        self.tex = Texture.get(tex_name)
+
+        self.width = width
+        self.height = (float(tex.height) / tex.width) * self.width
+
+    def is_static(self):
+        return True
+
+    def render(self):
+        """
+        Draw the object
+        """
+
+        x, y, z = self.pos
+
+        # FIXME: replace hx by sx
+        # frame position aligned with the the wall
+
+        sx = 0.05
+        hz = self.width / 2
+        hy = self.height / 2
+        hx = sz / 2
+
+        glPushMatrix()
+        glTranslatef(*self.pos)
+        glRotatef(self.dir * (180/math.pi), 0, 1, 0)
+
+        glBegin(GL_QUADS)
+
+        glColor3f(1, 1, 1)
+        glEnable(GL_TEXTURE_2D)
+        self.tex.bind()
+
+        # Front
+        glNormal3f(-1, 0, 0)
+        glVertex3f(-hx, +hy, +hz)
+        glVertex3f(-hx, +hy, -hz)
+        glVertex3f(-hx, -sy, -hz)
+        glVertex3f(-hx, -sy, +hz)
+
+
+        glDisable(GL_TEXTURE_2D)
+        glColor3f(0, 0, 0)
+
+        # Right
+        glNormal3f(0, 0, 1)
+        glVertex3f(+hx, +sy, +hz)
+        glVertex3f(-hx, +sy, +hz)
+        glVertex3f(-hx, -sy, +hz)
+        glVertex3f(+hx, -sy, +hz)
+
+        # Left
+        glNormal3f(0, 0, -1)
+        glVertex3f(-hx, +hy, -hz)
+        glVertex3f(+hx, +hy, -hz)
+        glVertex3f(+hx, -sy, -hz)
+        glVertex3f(-hx, -sy, -hz)
+
+        """
+        glNormal3f(1, 0, 0)
+        glVertex3f(+hx, +hy, -hz)
+        glVertex3f(+hx, +hy, +hz)
+        glVertex3f(+hx, -sy, +hz)
+        glVertex3f(+hx, -sy, -hz)
+        """
+
+        glNormal3f(0, 1, 0)
+        glVertex3f(+hx, +hy, +hz)
+        glVertex3f(+hx, +hy, -hz)
+        glVertex3f(-hx, +hy, -hz)
+        glVertex3f(-hx, +hy, +hz)
+        glEnd(GL_QUADS)
+
+        glPopMatrix()
+
+
+
+
+
 class Box(Entity):
     """
     Colored box object
