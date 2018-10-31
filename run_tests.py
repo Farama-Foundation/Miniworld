@@ -41,9 +41,11 @@ for _ in range(30):
 for env_id in gym_miniworld.envs.env_ids:
     print('Loading "' + env_id + '"')
     env = gym.make(env_id)
-    for _ in range(10):
+    # Try multiple random restarts
+    for _ in range(15):
         env.reset()
         assert not env.intersect(env.agent, env.agent.pos, env.agent.radius)
+        # Perform multiple random actions
         for _ in range(0, 20):
             action = env.rand.int(0, env.action_space.n)
             obs, reward, done, info = env.step(action)

@@ -36,7 +36,8 @@ class RandGen:
         """
 
         lst = list(iterable)
-        return self.np_random.choice(lst, p=probs)
+        idx = self.np_random.choice(len(lst), p=probs)
+        return lst[idx]
 
     def color(self):
         """

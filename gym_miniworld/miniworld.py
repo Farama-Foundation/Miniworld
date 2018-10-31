@@ -389,8 +389,16 @@ class Room:
 
         self.wall_verts = np.array(self.wall_verts)
         self.wall_norms = np.array(self.wall_norms)
-        self.wall_texcs = np.concatenate(self.wall_texcs)
-        self.wall_segs = np.array(self.wall_segs)
+
+        if len(self.wall_segs) > 0:
+            self.wall_segs = np.array(self.wall_segs)
+        else:
+            self.wall_segs = np.array([]).reshape(0, 2, 3)
+
+        if len(self.wall_texcs) > 0:
+            self.wall_texcs = np.concatenate(self.wall_texcs)
+        else:
+            self.wall_texcs = np.array([]).reshape(0, 2)
 
     def _render(self):
         """

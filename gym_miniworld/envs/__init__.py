@@ -7,6 +7,7 @@ from .fourrooms import *
 from .threerooms import *
 from .wallgap import *
 from .putnext import *
+from .maze import *
 
 # Registered environment ids
 env_ids = []
