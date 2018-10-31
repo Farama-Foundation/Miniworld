@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/maximecb/gym-miniworld.svg?branch=master)](https://travis-ci.org/maximecb/gym-miniworld)
 
 **Note that this environment is early in development. It's still incomplete and you may run into bugs.
-If you do run into problems, or if you just want to request specific features, please open an issue
+If you do run into problems, or if you want to request specific features, please open an issue
 on this repository. Your feedback helps me make this project better.**
 
 MiniWorld is a minimalistic 3D interior environment simulator for reinforcement
@@ -51,7 +51,6 @@ Requirements:
 - Python 3.5+
 - OpenAI Gym
 - NumPy
-- PyYAML
 - Pyglet (3D graphics)
 
 You can install all the dependencies with `pip3`:
