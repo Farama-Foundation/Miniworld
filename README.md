@@ -1,5 +1,7 @@
 # MiniWorld (gym-miniworld)
 
+[![Build Status](https://travis-ci.org/maximecb/gym-miniworld.svg?branch=master)](https://travis-ci.org/maximecb/gym-miniworld)
+
 **Note that this environment is early in development. It's still incomplete and you may run into bugs.
 If you do run into problems, or if you just want to request specific features, please open an issue
 on this repository. Your feedback helps me make this project better.**
