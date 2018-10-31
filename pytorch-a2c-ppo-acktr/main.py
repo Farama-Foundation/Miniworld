@@ -211,6 +211,7 @@ def main():
                 np.mean(eval_episode_rewards)
             ))
 
+        """
         if args.vis and j % args.vis_interval == 0:
             try:
                 # Sometimes monitor doesn't properly flush the outputs
@@ -218,7 +219,7 @@ def main():
                                   args.algo, args.num_frames)
             except IOError:
                 pass
-
+        """
 
 if __name__ == "__main__":
     main()
