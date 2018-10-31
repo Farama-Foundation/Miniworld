@@ -51,7 +51,8 @@ Requirements:
 - Python 3.5+
 - OpenAI Gym
 - NumPy
-- Pyglet (3D graphics)
+- Pyglet (OpenGL 3D graphics)
+- GPU for 3D graphics acceleration (optional)
 
 You can install all the dependencies with `pip3`:
 
