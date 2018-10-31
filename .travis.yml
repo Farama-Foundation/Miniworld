@@ -6,7 +6,7 @@ python:
 install:
     - pip3 install -e .
     - pip3 install flake8
-    - pip3 install torch
+    - pip3 install --quiet torch 
 
 # Commands to run tests
 script:
