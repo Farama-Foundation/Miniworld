@@ -12,13 +12,13 @@ parameters in the constructor.
 ## Actions
 
 For simplicity, actions are discrete. The available actions are:
-- turn_left
-- turn_right
-- move_forward
-- move_back
-- pickup
-- drop
-- toggle
+- `turn_left`
+- `turn_right`
+- `move_forward`
+- `move_back`
+- `pickup` (pick up an object in front of the agent)
+- `drop` (drop an object being carried)
+- `toggle` (toggle an item/entity to perform some function)
 
 The turn and move actions will rotate or move the agent by a small fixed interval. The simulator assumes that the agent is a differential drive robot.
 
