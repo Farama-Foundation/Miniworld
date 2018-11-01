@@ -49,7 +49,9 @@ class MazeEnv(MiniWorldEnv):
                     min_x=min_x,
                     max_x=max_x,
                     min_z=min_z,
-                    max_z=max_z
+                    max_z=max_z,
+                    wall_tex='brick_wall',
+                    #floor_tex='asphalt'
                 )
                 row.append(room)
 
