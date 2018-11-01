@@ -2,6 +2,13 @@
 
 [![Build Status](https://travis-ci.org/maximecb/gym-miniworld.svg?branch=master)](https://travis-ci.org/maximecb/gym-miniworld)
 
+Contents:
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Usage](#usage)
+
+## Introduction
+
 **Note that this environment is early in development. It's still incomplete and you may run into bugs.
 If you do run into problems, or if you want to request specific features, please open an issue
 on this repository. Your feedback helps me make this project better.**
