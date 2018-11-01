@@ -20,7 +20,7 @@ For simplicity, actions are discrete. The available actions are:
 - `drop` (drop an object being carried)
 - `toggle` (toggle an item/entity to perform some function)
 
-The turn and move actions will rotate or move the agent by a small fixed interval. The simulator assumes that the agent is a differential drive robot.
+The turn and move actions will rotate or move the agent by a small fixed interval. The simulator assumes that the agent is a [differential drive](https://groups.csail.mit.edu/drl/courses/cs54-2001s/diffdrive.html) robot.
 
 ## Reward Function
 
