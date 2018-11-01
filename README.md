@@ -6,6 +6,7 @@ Contents:
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Environments](docs/environments.md)
 - [Design](docs/design.md)
 - [Troubleshooting](docs/troubleshooting.md)
 
@@ -79,7 +80,7 @@ repository to let us know something is wrong.
 
 ### Testing
 
-There is a simple UI application which allows you to control the simulation or real robot manually. The `manual_control.py` application will launch the Gym environment, display camera images and send actions (keyboard commands) back to the simulator or robot.
+There is a simple UI application which allows you to control the simulation or real robot manually. The `manual_control.py` application will launch the Gym environment, display camera images and send actions (keyboard commands) back to the simulator or robot. The `--env-name` argument specifies which environment to load. See the list of [available environments](docs/environments.md) for more information.
 
 ```
 ./manual_control.py --env-name MiniWorld-Hallway-v0
