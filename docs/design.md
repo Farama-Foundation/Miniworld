@@ -1,4 +1,4 @@
-# Design
+# Design of MiniWorld
 
 ## Coordinate System
 
