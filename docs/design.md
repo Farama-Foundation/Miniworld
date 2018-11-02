@@ -2,7 +2,7 @@
 
 ## The World
 
-In MiniWorld, the world is made of static elements (rooms and hallways), as well as objects which may be dynamic, which we call entities. Environments are essentially 2D floorplans made of connected rooms. Rooms can have any convex outline defined by at least 3 points. Portals (openings) can be created in walls to create doors or windows into other rooms. Hallways are themselves small rooms with some walls completely open.
+In MiniWorld, the world is made of static elements (rooms and hallways), as well as objects which may be dynamic, which we call entities. Environments are essentially 2D floorplans made of connected rooms. Rooms can have any convex outline defined by at least 3 points. Portals (openings) can be created in walls to create doors or windows into other rooms. Hallways are themselves small rooms with some walls completely open. To get an idea how to create and connect rooms, you should take a look at the implementation of the [ThreeRooms environment](/gym_miniworld/envs/threerooms.py).
 
 The entities are defined in [gym_miniworld/entity.py](/gym_miniworld/entity.py) and include:
 
