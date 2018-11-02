@@ -2,7 +2,7 @@ import numpy as np
 import math
 from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
-from ..entity import Box, ImageFrame
+from ..entity import Box, ImageFrame, MeshEnt
 
 class ThreeRoomsEnv(MiniWorldEnv):
     """
@@ -19,22 +19,23 @@ class ThreeRoomsEnv(MiniWorldEnv):
         self.action_space = spaces.Discrete(self.actions.move_forward+1)
 
     def _gen_world(self):
-        # Top
+        # Top room
         room0 = self.add_rect_room(
             min_x=-7, max_x=7,
             min_z=0.5 , max_z=7
         )
-        # Bottom-left
+        # Bottom-left room
         room1 = self.add_rect_room(
             min_x=-7, max_x=-1,
             min_z=-7, max_z=-0.5
         )
-        # Bottom-right
+        # Bottom-right room
         room2 = self.add_rect_room(
             min_x=1 , max_x=7,
             min_z=-7, max_z=-0.5
         )
 
+        # Connect the rooms with portals/openings
         self.connect_rooms(room0, room1, min_x=-5.25, max_x=-2.75)
         self.connect_rooms(room0, room2, min_x=2.75, max_x=5.25)
 
@@ -42,11 +43,18 @@ class ThreeRoomsEnv(MiniWorldEnv):
         self.yellow_box = self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))
         self.place_entity(Box(color='green', size=0.5))
 
+        # Mila logo image on the wall
         self.entities.append(ImageFrame(
             pos=[0, 1.35, 7],
             dir=math.pi/2,
             width=1.8,
             tex_name='logo_mila'
+        ))
+
+        self.place_entity(MeshEnt(
+            mesh_name='duckie',
+            height=0.20,
+            radius=0.05
         ))
 
         self.place_agent()

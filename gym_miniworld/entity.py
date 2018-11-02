@@ -97,7 +97,7 @@ class MeshEnt(Entity):
         self.mesh = ObjMesh.get(mesh_name)
 
         # Compute the mesh scaling factor
-        self.scale = height / mesh.max_coords[1]
+        self.scale = height / self.mesh.max_coords[1]
 
     def render(self):
         """
@@ -105,7 +105,7 @@ class MeshEnt(Entity):
         """
 
         glPushMatrix()
-        glTranslatef(*self.cur_pos)
+        glTranslatef(*self.pos)
         glScalef(self.scale, self.scale, self.scale)
         glRotatef(self.dir * 180 / math.pi, 0, 1, 0)
         glColor3f(1, 1, 1)

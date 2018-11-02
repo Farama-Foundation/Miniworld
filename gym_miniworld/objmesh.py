@@ -221,7 +221,7 @@ class ObjMesh:
 
         # Determine the default texture path for the default material
         tex_name = file_name.split('.')[0]
-        tex_path = get_file_path('textures', tex_name, 'png')
+        tex_path = get_file_path('meshes', tex_name, 'png')
         if os.path.exists(tex_path):
             default_mtl['map_Kd'] = tex_path
 
