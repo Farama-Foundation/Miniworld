@@ -9,7 +9,7 @@ Registered configurations:
 - `MiniWorld-Hallway-v0`
 
 <p align="center">
-<img src="images/hallway_0.jpg" width=260></img>
+<img src="/images/hallway_0.jpg" width=300></img>
 </p>
 
 In this environment, the agent has to go to a red box at the end of a
@@ -42,7 +42,7 @@ Registered configurations:
 - `MiniWorld-Maze-v0`
 
 <p align="center">
-<img src="images/maze_0.jpg" width=260></img>
+<img src="/images/maze_0.jpg" width=300></img>
 </p>
 
 Randomly generated maze, in which the agent starts in a random location, and
