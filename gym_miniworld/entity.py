@@ -1,5 +1,7 @@
+import math
 import numpy as np
-from .objmesh import *
+from .opengl import *
+from .objmesh import ObjMesh
 
 class Entity:
     def __init__(self, radius=None):
@@ -72,36 +74,47 @@ class Entity:
         """
         return False
 
-class CeilingLight(Entity):
+class MeshEnt(Entity):
     """
-    Ceiling light object
-    Note: the position is at ceiling level
+    Entity whose appearance is defined by a mesh file
+
+    height -- scale the model to this height
+    static -- flag indicating this object cannot move
+    radius -- collision radius, None means no collision detection
     """
 
-    def __init__(self, pos, dir):
-        super().__init__(pos, dir)
+    def __init__(
+        self,
+        mesh_name,
+        height,
+        static=True,
+        radius=None
+    ):
+        super().__init__(radius=radius)
 
-    def is_static(self):
-        return True
+        self.static = static
+
+        self.mesh = ObjMesh.get(mesh_name)
+
+        # Compute the mesh scaling factor
+        self.scale = height / mesh.max_coords[1]
 
     def render(self):
         """
         Draw the object
         """
 
-        x, y, z = self.pos
+        glPushMatrix()
+        glTranslatef(*self.cur_pos)
+        glScalef(self.scale, self.scale, self.scale)
+        glRotatef(self.dir * 180 / math.pi, 0, 1, 0)
+        glColor3f(1, 1, 1)
+        self.mesh.render()
+        glPopMatrix()
 
-        glDisable(GL_LIGHTING)
-        glDisable(GL_TEXTURE_2D)
-
-        glBegin(GL_QUADS)
-        glVertex3f(x - 0.5, y - 0.05, z + 0.5)
-        glVertex3f(x + 0.5, y - 0.05, z + 0.5)
-        glVertex3f(x + 0.5, y - 0.05, z - 0.5)
-        glVertex3f(x - 0.5, y - 0.05, z - 0.5)
-        glEnd(GL_QUADS)
-
-        glEnable(GL_LIGHTING)
+    @property
+    def is_static(self):
+        return self.static
 
 class ImageFrame(Entity):
     """
