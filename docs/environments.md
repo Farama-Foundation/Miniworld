@@ -8,6 +8,10 @@ For details about the observations and action space, consult the
 Registered configurations:
 - `MiniWorld-Hallway-v0`
 
+<p align="center">
+<img src="images/hallway_0.jpg" width=260></img>
+</p>
+
 In this environment, the agent has to go to a red box at the end of a
 straight hallway. Requires the agent to walk forward and correct its course
 to avoid bumping into walls. This environment is easily solved with
@@ -36,6 +40,10 @@ is randomly placed at one end or the other.
 
 Registered configurations:
 - `MiniWorld-Maze-v0`
+
+<p align="center">
+<img src="images/maze_0.jpg" width=260></img>
+</p>
 
 Randomly generated maze, in which the agent starts in a random location, and
 has to navigate to a red box placed at another random location. This is a
