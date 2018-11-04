@@ -669,8 +669,10 @@ class MiniWorldEnv(gym.Env):
             # Position at which we will test for an intersection
             test_pos = self.agent.pos + self.agent.dir_vec * 1.5 * self.agent.radius
             ent = self.intersect(self.agent, test_pos, 1.2 * self.agent.radius)
-            if not self.agent.carrying and isinstance(ent, Entity):
-                self.agent.carrying = ent
+            if not self.agent.carrying:
+                if isinstance(ent, Entity):
+                    if not ent.is_static:
+                        self.agent.carrying = ent
 
         # Drop an object being carried
         elif action == self.actions.drop:
