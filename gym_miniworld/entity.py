@@ -105,7 +105,7 @@ class MeshEnt(Entity):
         self.scale = height / sy
 
         # Compute the radius and height
-        self.radius = math.sqrt(sx*sx + sz*sz)
+        self.radius = math.sqrt(sx*sx + sz*sz) * self.scale
         self.height = height
 
     def render(self):
