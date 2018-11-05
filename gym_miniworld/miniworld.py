@@ -597,6 +597,11 @@ class MiniWorldEnv(gym.Env):
 
         dist = self.agent.radius + ent.radius + self.forward_step
         pos = agent_pos + self.agent.dir_vec * 1.05 * dist
+
+        # Adjust the Y-position so the object is visible while being carried
+        y_pos = max(self.agent.cam_height - ent.height - 0.3, 0)
+        pos = pos + Y_VEC * y_pos
+
         return pos
 
     def move_agent(self, fwd_dist):
@@ -677,6 +682,7 @@ class MiniWorldEnv(gym.Env):
         # Drop an object being carried
         elif action == self.actions.drop:
             if self.agent.carrying:
+                self.agent.carrying.pos[1] = 0
                 self.agent.carrying = None
 
         # If we are carrying an object, update its position as we move
@@ -905,6 +911,10 @@ class MiniWorldEnv(gym.Env):
         Check if an entity intersects with the world
         """
 
+        # Ignore the Y position
+        px, _, pz = pos
+        pos = np.array([px, 0, pz])
+
         # Check for intersection with walls
         if intersect_circle_segs(pos, radius, self.wall_segs):
             return True
@@ -915,7 +925,10 @@ class MiniWorldEnv(gym.Env):
             if ent2 is ent:
                 continue
 
-            d = np.linalg.norm(ent2.pos - pos)
+            px, _, pz = ent2.pos
+            pos2 = np.array([px, 0, pz])
+
+            d = np.linalg.norm(pos2 - pos)
             if d < radius + ent2.radius:
                 return ent2
 

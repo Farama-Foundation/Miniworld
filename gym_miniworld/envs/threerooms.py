@@ -41,7 +41,7 @@ class ThreeRoomsEnv(MiniWorldEnv):
 
         self.box = self.place_entity(Box(color='red'))
         self.yellow_box = self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))
-        self.place_entity(Box(color='green', size=0.5))
+        self.place_entity(Box(color='green', size=0.6))
 
         # Mila logo image on the wall
         self.entities.append(ImageFrame(
@@ -53,19 +53,13 @@ class ThreeRoomsEnv(MiniWorldEnv):
 
         self.place_entity(MeshEnt(
             mesh_name='duckie',
-            height=0.20,
-            radius=0.05
+            height=0.25,
+            static=False
         ))
 
         self.place_agent()
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
-
-        """
-        if self.near(self.box):
-            reward += self._reward()
-            done = True
-        """
 
         return obs, reward, done, info

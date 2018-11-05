@@ -7,6 +7,10 @@ def intersect_circle_segs(point, radius, segs):
     Test if a circle intersects with any wall segments
     """
 
+    # Ignore Y coordinate
+    px, _, pz = point
+    point = np.array([px, 0, pz])
+
     a = segs[:, 0, :]
     b = segs[:, 1, :]
     ab = b - a

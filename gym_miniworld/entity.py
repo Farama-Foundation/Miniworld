@@ -4,7 +4,7 @@ from .opengl import *
 from .objmesh import ObjMesh
 
 class Entity:
-    def __init__(self, radius=None):
+    def __init__(self):
         # World position
         # Note: for most entities, the position is at floor level
         self.pos = None
@@ -13,7 +13,10 @@ class Entity:
         self.dir = None
 
         # Radius for bounding circle/cylinder
-        self.radius = radius
+        self.radius = 0
+
+        # Height of bounding cylinder
+        self.height = 0
 
     def render(self):
         """
@@ -80,24 +83,30 @@ class MeshEnt(Entity):
 
     height -- scale the model to this height
     static -- flag indicating this object cannot move
-    radius -- collision radius, None means no collision detection
     """
 
     def __init__(
         self,
         mesh_name,
         height,
-        static=True,
-        radius=None
+        static=True
     ):
-        super().__init__(radius=radius)
+        super().__init__()
 
         self.static = static
 
+        # Load the mesh
         self.mesh = ObjMesh.get(mesh_name)
 
+        # Get the mesh extents
+        sx, sy, sz = self.mesh.max_coords
+
         # Compute the mesh scaling factor
-        self.scale = height / self.mesh.max_coords[1]
+        self.scale = height / sy
+
+        # Compute the radius and height
+        self.radius = math.sqrt(sx*sx + sz*sz)
+        self.height = height
 
     def render(self):
         """
@@ -123,7 +132,7 @@ class ImageFrame(Entity):
     """
 
     def __init__(self, pos, dir, tex_name, width):
-        super().__init__(radius=0)
+        super().__init__()
 
         self.pos = pos
         self.dir = dir
@@ -216,13 +225,18 @@ class Box(Entity):
     """
 
     def __init__(self, color, size=0.8):
+        super().__init__()
+
         if type(size) is int or type(size) is float:
             size = np.array([size, size, size])
         size = np.array(size)
-        sx, _, sz = size
-        super().__init__(radius=math.sqrt(sx*sx + sz*sz)/2)
+        sx, sy, sz = size
+
         self.color = color
         self.size = size
+
+        self.radius = math.sqrt(sx*sx + sz*sz)/2
+        self.height = sy
 
     def render(self):
         """
@@ -278,7 +292,7 @@ class Box(Entity):
 
 class Agent(Entity):
     def __init__(self):
-        super().__init__(radius=0.4)
+        super().__init__()
 
         # Distance between the camera and the floor
         self.cam_height = 1.5
@@ -291,6 +305,9 @@ class Agent(Entity):
 
         # Object currently being carried by the agent
         self.carrying = None
+
+        self.radius = 0.4
+        self.height = 1.6
 
     @property
     def cam_pos(self):
