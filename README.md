@@ -38,7 +38,7 @@ Advantages of MiniWorld:
 
 Limitations:
 - Graphics are basic, nowhere near photorealism
-- Physics are very basic, not sufficient for robot arms/etc
+- Physics are very basic, not sufficient for robot arms/manipulation
 
 Please use this bibtex if you want to cite this repository in your publications:
 
