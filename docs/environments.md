@@ -49,6 +49,17 @@ Randomly generated maze, in which the agent starts in a random location, and
 has to navigate to a red box placed at another random location. This is a
 very challenging environment to solve with reinforcement learning.
 
+# CollectHealth
+
+Registered configurations:
+- `MiniWorld-CollectHealth-v0`
+
+Inspired by VizDoom's HealthGathering environment. The agent is placed inside
+a room filled with acid and has to collect medkits in order to survive. The
+reward corresponds to the survival time of the agent. Please note that the
+rewards produced in this environment are not directly comparable to VizDoom's
+as the dynamics are not exactly the same.
+
 # PutNext
 
 Registered configurations:

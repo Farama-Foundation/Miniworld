@@ -8,6 +8,7 @@ from .threerooms import *
 from .wallgap import *
 from .putnext import *
 from .maze import *
+from .collecthealth import *
 
 # Registered environment ids
 env_ids = []
