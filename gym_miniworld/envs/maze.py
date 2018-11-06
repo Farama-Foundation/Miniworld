@@ -22,7 +22,7 @@ class MazeEnv(MiniWorldEnv):
         self.gap_size = 0.25
 
         super().__init__(
-            max_episode_steps=1600,
+            max_episode_steps=num_rows * num_cols * 24,
             **kwargs
         )
 
@@ -109,3 +109,7 @@ class MazeEnv(MiniWorldEnv):
             done = True
 
         return obs, reward, done, info
+
+class MazeS3Env(MazeEnv):
+    def __init__(self):
+        super().__init__(num_rows=3, num_cols=3)

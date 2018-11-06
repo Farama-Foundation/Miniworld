@@ -40,6 +40,7 @@ is randomly placed at one end or the other.
 
 Registered configurations:
 - `MiniWorld-Maze-v0`
+- `MiniWorld-MazeS3-v0`
 
 <p align="center">
 <img src="/images/maze_0.jpg" width=300></img>
