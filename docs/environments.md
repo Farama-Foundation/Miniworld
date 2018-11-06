@@ -54,6 +54,10 @@ very challenging environment to solve with reinforcement learning.
 Registered configurations:
 - `MiniWorld-CollectHealth-v0`
 
+<p align="center">
+<img src="/images/collecthealth_0.jpg" width=300></img>
+</p>
+
 Inspired by VizDoom's HealthGathering environment. The agent is placed inside
 a room filled with acid and has to collect medkits in order to survive. The
 reward corresponds to the survival time of the agent. Please note that the
