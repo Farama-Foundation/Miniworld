@@ -829,6 +829,7 @@ class MiniWorldEnv(gym.Env):
         self,
         ent,
         room=None,
+        pos=None,
         dir=None,
         min_x=None,
         max_x=None,
@@ -836,7 +837,8 @@ class MiniWorldEnv(gym.Env):
         max_z=None
     ):
         """
-        Place an entity/object in the world
+        Place an entity/object in the world.
+        Find a position that doesn't intersect with any other object.
         """
 
         assert len(self.rooms) > 0, "create rooms before calling place_entity"
@@ -846,6 +848,14 @@ class MiniWorldEnv(gym.Env):
         if len(self.wall_segs) == 0:
             self._gen_static_data()
 
+        # If an exact position if specified
+        if pos is not None:
+            ent.dir = dir if dir else self.rand.float(-math.pi, math.pi)
+            ent.pos = pos
+            self.entities.append(ent)
+            return
+
+        # Keep retrying until we find a suitable position
         while True:
             # Pick a room, sample rooms proportionally to floor surface area
             r = room if room else self.rand.choice(self.rooms, probs=self.room_probs)

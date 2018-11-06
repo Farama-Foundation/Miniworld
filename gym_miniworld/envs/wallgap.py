@@ -2,7 +2,7 @@ import numpy as np
 import math
 from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
-from ..entity import Box
+from ..entity import Box, ImageFrame, MeshEnt
 
 class WallGapEnv(MiniWorldEnv):
     """
@@ -35,9 +35,19 @@ class WallGapEnv(MiniWorldEnv):
             floor_tex='asphalt',
             no_ceiling=True
         )
-        self.connect_rooms(room0, room1, min_x=-1.2, max_x=1.2)
+        self.connect_rooms(room0, room1, min_x=-1.5, max_x=1.5)
 
         self.box = self.place_entity(Box(color='red'), room=room1)
+
+        # Decorative building in the background
+        self.place_entity(
+            MeshEnt(
+                mesh_name='building',
+                height=30
+            ),
+            pos = np.array([30, 0, 30]),
+            dir = -math.pi
+        )
 
         self.place_agent(room=room0)
 
