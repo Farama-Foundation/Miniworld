@@ -574,6 +574,12 @@ class MiniWorldEnv(gym.Env):
         # Generate the world
         self._gen_world()
 
+        # Compute the min and max x, z extents of the whole floorplan
+        self.min_x = min([r.min_x for r in self.rooms])
+        self.max_x = max([r.max_x for r in self.rooms])
+        self.min_z = min([r.min_z for r in self.rooms])
+        self.max_z = max([r.max_z for r in self.rooms])
+
         # Generate static data
         if len(self.wall_segs) == 0:
             self._gen_static_data()
