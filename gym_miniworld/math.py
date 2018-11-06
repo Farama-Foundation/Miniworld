@@ -1,6 +1,21 @@
 import math
 import numpy as np
-#import pybullet
+
+def gen_rot_matrix(axis, angle):
+    """
+    Rotation matrix for a counterclockwise rotation around a given axis
+    The angle should be in radians
+    """
+
+    axis = axis / math.sqrt(np.dot(axis, axis))
+    a = math.cos(angle / 2.0)
+    b, c, d = -axis * math.sin(angle / 2.0)
+
+    return np.array([
+        [a*a+b*b-c*c-d*d, 2*(b*c-a*d), 2*(b*d+a*c)],
+        [2*(b*c+a*d), a*a+c*c-b*b-d*d, 2*(c*d-a*b)],
+        [2*(b*d-a*c), 2*(c*d+a*b), a*a+d*d-b*b-c*c]
+    ])
 
 def intersect_circle_segs(point, radius, segs):
     """

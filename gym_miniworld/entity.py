@@ -297,24 +297,34 @@ class Agent(Entity):
         # Distance between the camera and the floor
         self.cam_height = 1.5
 
-        # Camera up/down angle
+        # Camera up/down angles in degrees
+        # Positive angles tilt the camera upwards
         self.cam_angle = 0
 
         # Vertical field of view in degrees
         self.cam_fov_y = 60
 
-        # Object currently being carried by the agent
-        self.carrying = None
-
+        # Bounding cylinder size for the agent
         self.radius = 0.4
         self.height = 1.6
 
+        # Object currently being carried by the agent
+        self.carrying = None
+
     @property
     def cam_pos(self):
+        """
+        Camera position in 3D space
+        """
+
         return self.pos + np.array([0, self.cam_height, 0])
 
     @property
     def cam_dir(self):
+        """
+        Camera direction (lookat) vector
+        """
+
         # FIXME: take cam_angle into account
         # NOTE: this is useful even if just for slight domain
         # randomization of camera angle

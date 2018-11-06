@@ -7,7 +7,7 @@ from .random import *
 from .opengl import *
 from .objmesh import *
 from .entity import *
-from .physics import *
+from .math import *
 
 # Y-axis vector
 Y_VEC = np.array([0, 1, 0])
@@ -1035,7 +1035,7 @@ class MiniWorldEnv(gym.Env):
         and produce a numpy image array as output.
         """
 
-        # Switch to the default context
+        # Switch to the default OpenGL context
         # This is necessary on Linux Nvidia drivers
         self.shadow_window.switch_to()
 
