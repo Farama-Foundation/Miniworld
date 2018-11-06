@@ -9,9 +9,6 @@ from .objmesh import *
 from .entity import *
 from .math import *
 
-# Y-axis vector
-Y_VEC = np.array([0, 1, 0])
-
 # Blue sky horizon color
 BLUE_SKY_COLOR = np.array([0.45, 0.82, 1])
 

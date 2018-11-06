@@ -1,6 +1,11 @@
 import math
 import numpy as np
 
+# X, Y, Z-axis vectors
+X_VEC = np.array([1, 0, 0])
+Y_VEC = np.array([0, 1, 0])
+Z_VEC = np.array([0, 0, 1])
+
 def gen_rot_matrix(axis, angle):
     """
     Rotation matrix for a counterclockwise rotation around a given axis

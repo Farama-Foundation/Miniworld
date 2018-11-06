@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from .math import *
 from .opengl import *
 from .objmesh import ObjMesh
 
@@ -323,12 +324,18 @@ class Agent(Entity):
     def cam_dir(self):
         """
         Camera direction (lookat) vector
+
+        Note: this is useful even if just for slight domain
+        randomization of camera angle
         """
 
-        # FIXME: take cam_angle into account
-        # NOTE: this is useful even if just for slight domain
-        # randomization of camera angle
-        return self.dir_vec
+        rot_z = gen_rot_matrix(Z_VEC, self.cam_angle * math.pi/180)
+        rot_y = gen_rot_matrix(Y_VEC, self.dir)
+
+        dir = np.dot(X_VEC, rot_z)
+        dir = np.dot(dir, rot_y)
+
+        return dir
 
     def step(self, delta_time):
         pass
