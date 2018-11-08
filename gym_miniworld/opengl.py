@@ -6,9 +6,22 @@ from pyglet.gl import *
 from ctypes import byref, POINTER
 from .utils import *
 
+# Mapping of frame buffer error enums to strings
+FB_ERROR_ENUMS = {
+    GL_FRAMEBUFFER_UNDEFINED: 'GL_FRAMEBUFFER_UNDEFINED',
+    GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT: 'GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT',
+    GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT: 'GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT',
+    GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER: 'GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER',
+    GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER: 'GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER',
+    GL_FRAMEBUFFER_UNSUPPORTED: 'GL_FRAMEBUFFER_UNSUPPORTED',
+    GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: 'GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE',
+    GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: 'GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE',
+    GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS: 'GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS',
+}
+
 class Texture:
     """
-    Manage the caching of textures, and texture randomization
+    Manage the loading and caching of textures, as well as texture randomization
     """
 
     # List of textures available for a given path
@@ -180,7 +193,7 @@ class FrameBuffer:
         # Sanity check
         if pyglet.options['debug_gl']:
             res = glCheckFramebufferStatus(GL_FRAMEBUFFER)
-            assert res == GL_FRAMEBUFFER_COMPLETE
+            assert res == GL_FRAMEBUFFER_COMPLETE, FB_ERROR_ENUMS.get(res, res)
 
         # Create the frame buffer used to resolve the final render
         self.final_fbo = GLuint(0)
@@ -209,9 +222,11 @@ class FrameBuffer:
             fbTex,
             0
         )
+
+        # Sanity check
         if pyglet.options['debug_gl']:
           res = glCheckFramebufferStatus(GL_FRAMEBUFFER)
-          assert res == GL_FRAMEBUFFER_COMPLETE
+          assert res == GL_FRAMEBUFFER_COMPLETE, FB_ERROR_ENUMS.get(res, res)
 
         # Enable depth testing
         glEnable(GL_DEPTH_TEST)
