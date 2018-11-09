@@ -130,6 +130,9 @@ class FrameBuffer:
         # (Intel GPU drivers on MacBooks in particular) do not
         # support multisampling on frame buffer objects
         try:
+            # Ensure that the correct extension is supported
+            assert gl_info.have_extension('GL_EXT_framebuffer_multisample')
+
             # Create a multisampled texture to render into
             fbTex = GLuint(0)
             glGenTextures( 1, byref(fbTex));
