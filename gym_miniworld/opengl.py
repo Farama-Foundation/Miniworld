@@ -119,7 +119,6 @@ class FrameBuffer:
 
         self.width = width
         self.height = height
-        self.num_samples = num_samples
 
         # Create a frame buffer (rendering target)
         self.multi_fbo = GLuint(0)
@@ -132,6 +131,16 @@ class FrameBuffer:
         try:
             # Ensure that the correct extension is supported
             assert gl_info.have_extension('GL_EXT_framebuffer_multisample')
+
+            # Get the maximum number of samples supported
+            MAX_SAMPLES_EXT = 0x8D57
+            max_samples = (GLint)()
+            glGetIntegerv(MAX_SAMPLES_EXT, max_samples)
+            max_samples = max_samples.value
+
+            if num_samples > max_samples:
+                print('Falling back to num_samples={}'.format(max_samples))
+                num_samples = max_samples
 
             # Create a multisampled texture to render into
             fbTex = GLuint(0)
