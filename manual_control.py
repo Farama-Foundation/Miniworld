@@ -47,28 +47,40 @@ def on_key_press(symbol, modifiers):
         sys.exit(0)
 
     action = None
-    if symbol == key.LEFT:
+    num_repeat = 1
+
+    if symbol == key.UP:
+        action = env.actions.move_forward
+        if key_handler[key.LSHIFT] or key_handler[key.RSHIFT]:
+            num_repeat = 3
+    elif symbol == key.DOWN:
+        action = env.actions.move_back
+        if key_handler[key.LSHIFT] or key_handler[key.RSHIFT]:
+            num_repeat = 3
+    elif symbol == key.LEFT:
         action = env.actions.turn_left
     elif symbol == key.RIGHT:
         action = env.actions.turn_right
-    elif symbol == key.UP:
-        action = env.actions.move_forward
-    elif symbol == key.DOWN:
-        action = env.actions.move_back
     elif symbol == key.PAGEUP or symbol == key.P:
         action = env.actions.pickup
     elif symbol == key.PAGEDOWN or symbol == key.D:
         action = env.actions.drop
 
     if action != None:
-        obs, reward, done, info = env.step(action)
-        #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
+        for _ in range(num_repeat):
+            obs, reward, done, info = env.step(action)
+            #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
 
-        if done:
-            print('done! reward={:.2f}'.format(reward))
-            env.reset()
+            if done:
+                print('done! reward={:.2f}'.format(reward))
+                env.reset()
+                break
 
         env.render('pyglet')
+
+# Register a keyboard handler
+key_handler = key.KeyStateHandler()
+env.unwrapped.window.push_handlers(key_handler)
 
 # Enter main event loop
 pyglet.app.run()
