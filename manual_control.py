@@ -78,6 +78,10 @@ def on_key_press(symbol, modifiers):
 
         env.render('pyglet')
 
+@env.unwrapped.window.event
+def on_close():
+    pyglet.app.exit()
+
 # Register a keyboard handler
 key_handler = key.KeyStateHandler()
 env.unwrapped.window.push_handlers(key_handler)
