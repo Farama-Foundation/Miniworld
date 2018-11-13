@@ -1036,7 +1036,11 @@ class MiniWorldEnv(gym.Env):
 
         glEndList()
 
-    def _render_world(self, frame_buffer):
+    def _render_world(
+        self,
+        frame_buffer,
+        render_agent
+    ):
         """
         Render the world from a given camera position into a frame buffer,
         and produce a numpy image array as output.
@@ -1051,6 +1055,9 @@ class MiniWorldEnv(gym.Env):
             if not ent.is_static and ent is not self.agent:
                 ent.render()
                 #ent.draw_bound()
+
+        if render_agent:
+            self.agent.render()
 
         # Resolve the rendered imahe into a numpy array
         return frame_buffer.resolve()
@@ -1075,14 +1082,39 @@ class MiniWorldEnv(gym.Env):
         glClearDepth(1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+        # Scene extents to render
+        min_x = self.min_x - 1
+        max_x = self.max_x + 1
+        min_z = self.min_z - 1
+        max_z = self.max_z + 1
+
+        width = max_x - min_x
+        height = max_z - min_z
+        aspect = width / height
+        fb_aspect = frame_buffer.width / frame_buffer.height
+
+        # Adjust the aspect extents to match the frame buffer aspect
+        if aspect > fb_aspect:
+            # Want to add to denom, add to height
+            new_h = width / fb_aspect
+            h_diff = new_h - height
+            min_z -= h_diff / 2
+            max_z += h_diff / 2
+        elif aspect < fb_aspect:
+            # Want to add to num, add to width
+            new_w = height * fb_aspect
+            w_diff = new_w - width
+            min_x -= w_diff / 2
+            max_x += w_diff / 2
+
         # Set the projection matrix
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         glOrtho(
-            self.min_x - 1,
-            self.max_x + 1,
-            self.min_z - 1,
-            self.max_z + 1,
+            min_x,
+            max_x,
+            -max_z,
+            -min_z,
             -100, 100.0
         )
 
@@ -1093,14 +1125,15 @@ class MiniWorldEnv(gym.Env):
         m = [
             1, 0, 0, 0,
             0, 0, 1, 0,
-            0, 1, 0, 0,
+            0, -1, 0, 0,
             0, 0, 0, 1,
         ]
         glLoadMatrixf((GLfloat * len(m))(*m))
 
-        glFrontFace(GL_CW)
-
-        return self._render_world(frame_buffer)
+        return self._render_world(
+            frame_buffer,
+            render_agent=True
+        )
 
     def render_obs(self, frame_buffer=None):
         """
@@ -1144,9 +1177,10 @@ class MiniWorldEnv(gym.Env):
             0, 1.0, 0.0
         )
 
-        glFrontFace(GL_CCW)
-
-        return self._render_world(frame_buffer)
+        return self._render_world(
+            frame_buffer,
+            render_agent=False
+        )
 
     def render(self, mode='human', close=False):
         """
