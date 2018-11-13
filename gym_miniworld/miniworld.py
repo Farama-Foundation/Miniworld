@@ -1036,51 +1036,11 @@ class MiniWorldEnv(gym.Env):
 
         glEndList()
 
-    def _render_world(
-        self,
-        frame_buffer,
-        cam_pos,
-        cam_dir,
-        cam_fov_y
-    ):
+    def _render_world(self, frame_buffer):
         """
         Render the world from a given camera position into a frame buffer,
         and produce a numpy image array as output.
         """
-
-        # Switch to the default OpenGL context
-        # This is necessary on Linux Nvidia drivers
-        self.shadow_window.switch_to()
-
-        # Bind the frame buffer before rendering into it
-        frame_buffer.bind()
-
-        # Clear the color and depth buffers
-        glClearColor(*BLUE_SKY_COLOR, 1.0)
-        glClearDepth(1.0)
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        # Set the projection matrix
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(
-            cam_fov_y,
-            frame_buffer.width / float(frame_buffer.height),
-            0.04,
-            100.0
-        )
-
-        # Setup the camera
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
-        gluLookAt(
-            # Eye position
-            *cam_pos,
-            # Target
-            *(cam_pos + cam_dir),
-            # Up vector
-            0, 1.0, 0.0
-        )
 
         # Call the display list for the static parts of the environment
         glCallList(1)
@@ -1095,6 +1055,53 @@ class MiniWorldEnv(gym.Env):
         # Resolve the rendered imahe into a numpy array
         return frame_buffer.resolve()
 
+    def render_top_view(self, frame_buffer=None):
+        """
+        Render a top view of the whole map (from above)
+        """
+
+        if frame_buffer == None:
+            frame_buffer = self.obs_fb
+
+        # Switch to the default OpenGL context
+        # This is necessary on Linux Nvidia drivers
+        self.shadow_window.switch_to()
+
+        # Bind the frame buffer before rendering into it
+        frame_buffer.bind()
+
+        # Clear the color and depth buffers
+        glClearColor(*BLUE_SKY_COLOR, 1.0)
+        glClearDepth(1.0)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+        # Set the projection matrix
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        glOrtho(
+            self.min_x - 1,
+            self.max_x + 1,
+            self.min_z - 1,
+            self.max_z + 1,
+            -100, 100.0
+        )
+
+        # Setup the camera
+        # Y maps to +Z, Z maps to +Y
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        m = [
+            1, 0, 0, 0,
+            0, 0, 1, 0,
+            0, 1, 0, 0,
+            0, 0, 0, 1,
+        ]
+        glLoadMatrixf((GLfloat * len(m))(*m))
+
+        glFrontFace(GL_CW)
+
+        return self._render_world(frame_buffer)
+
     def render_obs(self, frame_buffer=None):
         """
         Render an observation from the point of view of the agent
@@ -1103,12 +1110,43 @@ class MiniWorldEnv(gym.Env):
         if frame_buffer == None:
             frame_buffer = self.obs_fb
 
-        return self._render_world(
-            frame_buffer,
-            self.agent.cam_pos,
-            self.agent.cam_dir,
-            self.agent.cam_fov_y
+        # Switch to the default OpenGL context
+        # This is necessary on Linux Nvidia drivers
+        self.shadow_window.switch_to()
+
+        # Bind the frame buffer before rendering into it
+        frame_buffer.bind()
+
+        # Clear the color and depth buffers
+        glClearColor(*BLUE_SKY_COLOR, 1.0)
+        glClearDepth(1.0)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+        # Set the projection matrix
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(
+            self.agent.cam_fov_y,
+            frame_buffer.width / float(frame_buffer.height),
+            0.04,
+            100.0
         )
+
+        # Setup the camera
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        gluLookAt(
+            # Eye position
+            *self.agent.cam_pos,
+            # Target
+            *(self.agent.cam_pos + self.agent.cam_dir),
+            # Up vector
+            0, 1.0, 0.0
+        )
+
+        glFrontFace(GL_CCW)
+
+        return self._render_world(frame_buffer)
 
     def render(self, mode='human', close=False):
         """
@@ -1122,13 +1160,14 @@ class MiniWorldEnv(gym.Env):
 
         # Render the human-view image
         img = self.render_obs(self.vis_fb)
+        #img = self.render_top_view(self.vis_fb)
         img_width = img.shape[1]
         img_height = img.shape[0]
 
         if mode == 'rgb_array':
             return img
 
-        # Render the neural network view
+        # Render the agent's view
         obs = self.render_obs()
         obs_width = obs.shape[1]
         obs_height = obs.shape[0]
