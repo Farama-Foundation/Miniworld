@@ -144,8 +144,8 @@ class FrameBuffer:
 
             # Create a multisampled texture to render into
             fbTex = GLuint(0)
-            glGenTextures( 1, byref(fbTex));
-            glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, fbTex);
+            glGenTextures( 1, byref(fbTex))
+            glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, fbTex)
             glTexImage2DMultisample(
                 GL_TEXTURE_2D_MULTISAMPLE,
                 num_samples,
@@ -153,29 +153,33 @@ class FrameBuffer:
                 width,
                 height,
                 True
-            );
+            )
             glFramebufferTexture2D(
                 GL_FRAMEBUFFER,
                 GL_COLOR_ATTACHMENT0,
                 GL_TEXTURE_2D_MULTISAMPLE,
                 fbTex,
                 0
-            );
+            )
 
             # Attach a multisampled depth buffer to the FBO
             depth_rb = GLuint(0)
             glGenRenderbuffers(1, byref(depth_rb))
             glBindRenderbuffer(GL_RENDERBUFFER, depth_rb)
-            glRenderbufferStorageMultisample(GL_RENDERBUFFER, num_samples, GL_DEPTH_COMPONENT, width, height);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rb);
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, num_samples, GL_DEPTH_COMPONENT, width, height)
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rb)
+
+            # Check that the frame buffer creation succeeded
+            res = glCheckFramebufferStatus(GL_FRAMEBUFFER)
+            assert res == GL_FRAMEBUFFER_COMPLETE, FB_ERROR_ENUMS.get(res, res)
 
         except:
             print('Falling back to non-multisampled frame buffer')
 
             # Create a plain texture texture to render into
             fbTex = GLuint(0)
-            glGenTextures( 1, byref(fbTex));
-            glBindTexture(GL_TEXTURE_2D, fbTex);
+            glGenTextures( 1, byref(fbTex))
+            glBindTexture(GL_TEXTURE_2D, fbTex)
             glTexImage2D(
                 GL_TEXTURE_2D,
                 0,
@@ -193,19 +197,18 @@ class FrameBuffer:
                 GL_TEXTURE_2D,
                 fbTex,
                 0
-            );
+            )
 
             # Attach depth buffer to FBO
             depth_rb = GLuint(0)
             glGenRenderbuffers(1, byref(depth_rb))
             glBindRenderbuffer(GL_RENDERBUFFER, depth_rb)
             glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height)
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rb);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rb)
 
         # Sanity check
-        if pyglet.options['debug_gl']:
-            res = glCheckFramebufferStatus(GL_FRAMEBUFFER)
-            assert res == GL_FRAMEBUFFER_COMPLETE, FB_ERROR_ENUMS.get(res, res)
+        res = glCheckFramebufferStatus(GL_FRAMEBUFFER)
+        assert res == GL_FRAMEBUFFER_COMPLETE, FB_ERROR_ENUMS.get(res, res)
 
         # Create the frame buffer used to resolve the final render
         self.final_fbo = GLuint(0)
@@ -236,9 +239,8 @@ class FrameBuffer:
         )
 
         # Sanity check
-        if pyglet.options['debug_gl']:
-          res = glCheckFramebufferStatus(GL_FRAMEBUFFER)
-          assert res == GL_FRAMEBUFFER_COMPLETE, FB_ERROR_ENUMS.get(res, res)
+        res = glCheckFramebufferStatus(GL_FRAMEBUFFER)
+        assert res == GL_FRAMEBUFFER_COMPLETE, FB_ERROR_ENUMS.get(res, res)
 
         # Enable depth testing
         glEnable(GL_DEPTH_TEST)
@@ -246,10 +248,8 @@ class FrameBuffer:
         # Unbind the frame buffer
         glBindFramebuffer(GL_FRAMEBUFFER, 0)
 
-        # FIXME: store in Fortran order, order='f' ?
-        # The array is stored in column-major order
-
         # Array to render the image into (for observation rendering)
+        # The array is stored in column-major order
         self.img_array = np.zeros(shape=(height, width, 3), dtype=np.uint8)
         #print(self.img_array.strides)
         #print(self.img_array.flags)
@@ -261,7 +261,7 @@ class FrameBuffer:
 
         # Bind the multisampled frame buffer
         glEnable(GL_MULTISAMPLE)
-        glBindFramebuffer(GL_FRAMEBUFFER, self.multi_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, self.multi_fbo)
         glViewport(0, 0, self.width, self.height)
 
     def resolve(self):
@@ -270,8 +270,8 @@ class FrameBuffer:
         """
 
         # Resolve the multisampled frame buffer into the final frame buffer
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, self.multi_fbo);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, self.final_fbo);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, self.multi_fbo)
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, self.final_fbo)
         glBlitFramebuffer(
             0, 0,
             self.width, self.height,
@@ -279,11 +279,11 @@ class FrameBuffer:
             self.width, self.height,
             GL_COLOR_BUFFER_BIT,
             GL_LINEAR
-        );
+        )
 
         # Copy the frame buffer contents into a numpy array
         # Note: glReadPixels reads starting from the lower left corner
-        glBindFramebuffer(GL_FRAMEBUFFER, self.final_fbo);
+        glBindFramebuffer(GL_FRAMEBUFFER, self.final_fbo)
         glPixelStorei(GL_PACK_ALIGNMENT, 1)
         glReadPixels(
             0,
@@ -296,7 +296,7 @@ class FrameBuffer:
         )
 
         # Unbind the frame buffer
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0)
 
         # Flip the image because OpenGL maps (0,0) to the lower-left corner
         # Note: this is necessary for gym.wrappers.Monitor to record videos
