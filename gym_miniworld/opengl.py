@@ -76,9 +76,6 @@ class Texture:
         glEnable(tex.target)
         glBindTexture(tex.target, tex.id)
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-
         glTexImage2D(
             GL_TEXTURE_2D,
             0,
@@ -90,6 +87,14 @@ class Texture:
             GL_UNSIGNED_BYTE,
             img.get_image_data().get_data('RGBA', img.width * 4)
         )
+
+        # Generate mipmaps (multiple levels of detail)
+        glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST)
+        glGenerateMipmap(GL_TEXTURE_2D)
+
+        # Trilinear texture filtering
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
 
         # Unbind the texture
         glBindTexture(GL_TEXTURE_2D, 0)
