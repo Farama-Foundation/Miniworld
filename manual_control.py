@@ -10,6 +10,7 @@ import argparse
 import pyglet
 import math
 from pyglet.window import key
+from pyglet import clock
 import numpy as np
 import gym
 import gym_miniworld
@@ -29,6 +30,26 @@ if args.no_time_limit:
 # Create the display window
 env.render('pyglet')
 
+def step(dt, action, n=0, repeat=True):
+    print('step')
+
+    obs, reward, done, info = env.step(action)
+    #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
+
+    if done:
+        print('done! reward={:.2f}'.format(reward))
+        clock.unschedule(step)
+        env.reset()
+
+    env.render('pyglet')
+
+    if repeat and not done:
+        if n == 0:
+            clock.unschedule(step)
+            clock.schedule_once(step, 0.5, action=action, n=n+1)
+        else:
+            clock.schedule_once(step, 0.08, action=action, n=n+1)
+
 @env.unwrapped.window.event
 def on_key_press(symbol, modifiers):
     """
@@ -46,29 +67,29 @@ def on_key_press(symbol, modifiers):
         env.close()
         sys.exit(0)
 
-    action = None
-    if symbol == key.LEFT:
-        action = env.actions.turn_left
-    elif symbol == key.RIGHT:
-        action = env.actions.turn_right
-    elif symbol == key.UP:
-        action = env.actions.move_forward
+    if symbol == key.UP:
+        step(0, env.actions.move_forward)
     elif symbol == key.DOWN:
-        action = env.actions.move_back
+        step(0, env.actions.move_back)
+
+    elif symbol == key.LEFT:
+        step(0, env.actions.turn_left)
+    elif symbol == key.RIGHT:
+        step(0, env.actions.turn_right)
+
     elif symbol == key.PAGEUP or symbol == key.P:
-        action = env.actions.pickup
+        step(0, env.actions.pickup, repeat=False)
     elif symbol == key.PAGEDOWN or symbol == key.D:
-        action = env.actions.drop
+        step(0, env.actions.drop, repeat=False)
 
-    if action != None:
-        obs, reward, done, info = env.step(action)
-        #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
+@env.unwrapped.window.event
+def on_key_release(symbol, modifiers):
+    clock.unschedule(step)
+    #clock.unschedule(repeat_action)
 
-        if done:
-            print('done! reward={:.2f}'.format(reward))
-            env.reset()
-
-        env.render('pyglet')
+@env.unwrapped.window.event
+def on_draw():
+    env.render('pyglet')
 
 @env.unwrapped.window.event
 def on_close():
