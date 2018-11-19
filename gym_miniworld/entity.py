@@ -19,6 +19,12 @@ class Entity:
         # Height of bounding cylinder
         self.height = 0
 
+    def randomize(self, params, rng):
+        """
+        Set the domain randomization parameters
+        """
+        pass
+
     def render(self):
         """
         Draw the object
@@ -300,7 +306,7 @@ class Agent(Entity):
 
         # Camera up/down angles in degrees
         # Positive angles tilt the camera upwards
-        self.cam_angle = 0
+        self.cam_pitch = 0
 
         # Vertical field of view in degrees
         self.cam_fov_y = 60
@@ -329,13 +335,20 @@ class Agent(Entity):
         randomization of camera angle
         """
 
-        rot_z = gen_rot_matrix(Z_VEC, self.cam_angle * math.pi/180)
+        rot_z = gen_rot_matrix(Z_VEC, self.cam_pitch * math.pi/180)
         rot_y = gen_rot_matrix(Y_VEC, self.dir)
 
         dir = np.dot(X_VEC, rot_z)
         dir = np.dot(dir, rot_y)
 
         return dir
+
+    def randomize(self, params, rng):
+        params.sample_many(rng, self, [
+            'cam_height',
+            'cam_pitch',
+            'cam_fov_y',
+        ])
 
     def render(self):
         """

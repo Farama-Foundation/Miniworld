@@ -8,9 +8,7 @@ from .opengl import *
 from .objmesh import *
 from .entity import *
 from .math import *
-
-# Blue sky horizon color
-BLUE_SKY_COLOR = np.array([0.45, 0.82, 1])
+from .params import *
 
 # Map of color names to RGB values
 COLORS = {
@@ -140,10 +138,10 @@ class Room:
         # No ceiling flag
         self.no_ceiling = no_ceiling
 
-        # Load the textures
-        self.wall_tex = Texture.get(wall_tex)
-        self.floor_tex = Texture.get(floor_tex)
-        self.ceil_tex = Texture.get(ceil_tex)
+        # Texture names
+        self.wall_tex_name = wall_tex
+        self.floor_tex_name = floor_tex
+        self.ceil_tex_name = ceil_tex
 
         # Lists of portals, indexed by wall/edge index
         self.portals = [[] for i in range(self.num_walls)]
@@ -246,13 +244,18 @@ class Room:
         # The point is inside if all the dot products are greater than zero
         return np.all(np.greater(dotNAP, 0))
 
-    def _gen_static_data(self):
+    def _gen_static_data(self, env):
         """
         Generate polygons and static data for this room
         Needed for rendering and collision detection
         Note: the wall polygons are quads, but the floor and
               ceiling can be arbitrary n-gons
         """
+
+        # Load the textures
+        self.wall_tex = env._load_tex(self.wall_tex_name)
+        self.floor_tex = env._load_tex(self.floor_tex_name)
+        self.ceil_tex = env._load_tex(self.ceil_tex_name)
 
         # Generate the floor vertices
         self.floor_verts = self.outline
@@ -467,13 +470,13 @@ class MiniWorldEnv(gym.Env):
     def __init__(
         self,
         max_episode_steps=1500,
-        forward_step=0.15,
-        turn_step=15,
         obs_width=80,
         obs_height=60,
         window_width=800,
         window_height=600,
-        domain_rand=False
+        forward_step=0.15,
+        turn_step=15,
+        params=DEFAULT_PARAMS
     ):
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions
@@ -494,14 +497,14 @@ class MiniWorldEnv(gym.Env):
         # Maximum number of steps per episode
         self.max_episode_steps = max_episode_steps
 
-        # Flag to enable/disable domain randomization
-        self.domain_rand = domain_rand
-
         # Robot forward movement step size in meters
         self.forward_step = forward_step
 
         # Robot turn step size in degrees
         self.turn_step = turn_step
+
+        # Simulation parameters, used for domain randomization
+        self.params = params
 
         # Window for displaying the environment to humans
         self.window = None
@@ -562,17 +565,23 @@ class MiniWorldEnv(gym.Env):
         # List of rooms in the world
         self.rooms = []
 
-        # TODO: randomize elements of the world
-        # Perform domain-randomization
-        # May want a params class with some accessor for param names
-        # params.randomize(seed)
-        # params.val_name
-
         # Wall segments for collision detection
         self.wall_segs = []
 
         # Generate the world
         self._gen_world()
+
+        # Randomize elements of the world (domain randomization)
+        self.params.sample_many(self.rand, self, [
+            'tex_rand',
+            'sky_color',
+            'light_pos',
+            'light_color',
+        ])
+
+        # Randomize parameters of the entities
+        for ent in self.entities:
+            ent.randomize(self.params, self.rand)
 
         # Compute the min and max x, z extents of the whole floorplan
         self.min_x = min([r.min_x for r in self.rooms])
@@ -820,9 +829,9 @@ class MiniWorldEnv(gym.Env):
         room = Room(
             outline,
             wall_height=max_y,
-            wall_tex=room_a.wall_tex.name,
-            floor_tex=room_a.floor_tex.name,
-            ceil_tex=room_a.ceil_tex.name,
+            wall_tex=room_a.wall_tex_name,
+            floor_tex=room_a.floor_tex_name,
+            ceil_tex=room_a.ceil_tex_name,
             no_ceiling=room_a.no_ceiling,
         )
 
@@ -959,6 +968,14 @@ class MiniWorldEnv(gym.Env):
         dist = np.linalg.norm(ent0.pos - ent1.pos)
         return dist < ent0.radius + ent1.radius + 1.1 * self.forward_step
 
+    def _load_tex(self, tex_name):
+        """
+        Load a texture, with or without domain randomization
+        """
+
+        rand = self.rand if self.params.sample(self.rand, 'tex_rand') else None
+        return Texture.get(tex_name, rand)
+
     def _gen_static_data(self):
         """
         Generate static data needed for rendering and collision detection
@@ -966,7 +983,7 @@ class MiniWorldEnv(gym.Env):
 
         # Generate the static data for each room
         for room in self.rooms:
-            room._gen_static_data()
+            room._gen_static_data(self)
 
         # Concatenate the wall segments
         self.wall_segs = np.concatenate([r.wall_segs for r in self.rooms])
@@ -1000,17 +1017,15 @@ class MiniWorldEnv(gym.Env):
         glDeleteLists(1, 1);
         glNewList(1, GL_COMPILE);
 
-        light_pos = [0, 2.5, 0, 1]
+        # Light position
+        glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat*4)(*self.light_pos + [1]))
 
         # Background/minimum light level
         ambient = [0.45, 0.45, 0.45, 1]
-
-        # Diffuse material color
-        diffuse = [0.70, 0.70, 0.70, 1]
-
-        glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat*4)(*light_pos))
         glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat*4)(*ambient))
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, (GLfloat*4)(*diffuse))
+
+        # Diffuse light color
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, (GLfloat*4)(*self.light_color))
 
         #glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180)
         #glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 0)
@@ -1078,7 +1093,7 @@ class MiniWorldEnv(gym.Env):
         frame_buffer.bind()
 
         # Clear the color and depth buffers
-        glClearColor(*BLUE_SKY_COLOR, 1.0)
+        glClearColor(*self.sky_color, 1.0)
         glClearDepth(1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -1151,7 +1166,7 @@ class MiniWorldEnv(gym.Env):
         frame_buffer.bind()
 
         # Clear the color and depth buffers
-        glClearColor(*BLUE_SKY_COLOR, 1.0)
+        glClearColor(*self.sky_color, 1.0)
         glClearDepth(1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
