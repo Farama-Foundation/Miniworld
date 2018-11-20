@@ -41,6 +41,7 @@ for _ in range(30):
 for env_id in gym_miniworld.envs.env_ids:
     print('Loading "' + env_id + '"')
     env = gym.make(env_id)
+    env.domain_rand = True
     # Try multiple random restarts
     for _ in range(15):
         env.reset()

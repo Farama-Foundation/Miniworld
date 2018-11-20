@@ -583,6 +583,7 @@ class MiniWorldEnv(gym.Env):
             'sky_color',
             'light_pos',
             'light_color',
+            'light_ambient'
         ])
 
         # Randomize parameters of the entities
@@ -1030,8 +1031,7 @@ class MiniWorldEnv(gym.Env):
         glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat*4)(*self.light_pos + [1]))
 
         # Background/minimum light level
-        ambient = [0.45, 0.45, 0.45, 1]
-        glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat*4)(*ambient))
+        glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat*4)(*self.light_ambient))
 
         # Diffuse light color
         glLightfv(GL_LIGHT0, GL_DIFFUSE, (GLfloat*4)(*self.light_color))
