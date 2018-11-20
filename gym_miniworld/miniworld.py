@@ -474,8 +474,6 @@ class MiniWorldEnv(gym.Env):
         obs_height=60,
         window_width=800,
         window_height=600,
-        forward_step=0.15,
-        turn_step=15,
         params=DEFAULT_PARAMS,
         domain_rand=False
     ):
@@ -497,12 +495,6 @@ class MiniWorldEnv(gym.Env):
 
         # Maximum number of steps per episode
         self.max_episode_steps = max_episode_steps
-
-        # Robot forward movement step size in meters
-        self.forward_step = forward_step
-
-        # Robot turn step size in degrees
-        self.turn_step = turn_step
 
         # Simulation parameters, used for domain randomization
         self.params = params
@@ -586,6 +578,9 @@ class MiniWorldEnv(gym.Env):
             'light_ambient'
         ])
 
+        # Get the max forward step distance
+        self.max_forward_step = self.params.get_max('forward_step')
+
         # Randomize parameters of the entities
         for ent in self.entities:
             ent.randomize(self.params, rand)
@@ -614,7 +609,7 @@ class MiniWorldEnv(gym.Env):
         Compute the position at which to place an object being carried
         """
 
-        dist = self.agent.radius + ent.radius + self.forward_step
+        dist = self.agent.radius + ent.radius + self.max_forward_step
         pos = agent_pos + self.agent.dir_vec * 1.05 * dist
 
         # Adjust the Y-position so the object is visible while being carried
@@ -676,17 +671,21 @@ class MiniWorldEnv(gym.Env):
 
         self.step_count += 1
 
+        rand = self.rand if self.domain_rand else None
+        fwd_step = self.params.sample(rand, 'forward_step')
+        turn_step = self.params.sample(rand, 'turn_step')
+
         if action == self.actions.move_forward:
-            self.move_agent(self.forward_step)
+            self.move_agent(fwd_step)
 
         elif action == self.actions.move_back:
-            self.move_agent(-self.forward_step)
+            self.move_agent(-fwd_step)
 
         elif action == self.actions.turn_left:
-            self.turn_agent(self.turn_step)
+            self.turn_agent(turn_step)
 
         elif action == self.actions.turn_right:
-            self.turn_agent(-self.turn_step)
+            self.turn_agent(-turn_step)
 
         # Pick up an object
         elif action == self.actions.pickup:
@@ -973,7 +972,7 @@ class MiniWorldEnv(gym.Env):
             ent1 = self.agent
 
         dist = np.linalg.norm(ent0.pos - ent1.pos)
-        return dist < ent0.radius + ent1.radius + 1.1 * self.forward_step
+        return dist < ent0.radius + ent1.radius + 1.1 * self.max_forward_step
 
     def _load_tex(self, tex_name):
         """

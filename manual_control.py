@@ -46,8 +46,8 @@ def step(dt, action, n=0, repeat=True):
     env.render('pyglet')
 
     if repeat and not done:
+        clock.unschedule(step)
         if n == 0:
-            clock.unschedule(step)
             clock.schedule_once(step, 0.5, action=action, n=n+1)
         else:
             clock.schedule_once(step, 0.08, action=action, n=n+1)

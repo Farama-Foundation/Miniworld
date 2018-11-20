@@ -40,6 +40,11 @@ class DomainParams:
 
         self.params[name] = DomainParam(default, min, max, type)
 
+    def get_max(self, name):
+        assert name in self.params, name
+        p = self.params[name]
+        return p.max
+
     def sample(self, rng, name):
         """
         Sample a single parameter
@@ -47,7 +52,7 @@ class DomainParams:
         has the effect of turning off domain randomization
         """
 
-        assert name in self.params
+        assert name in self.params, name
         p = self.params[name]
 
         if rng is None:
@@ -74,6 +79,8 @@ DEFAULT_PARAMS.add('sky_color', [0.25, 0.82, 1], [0.1, 0.1, 0.1], [1.0, 1.0, 1.0
 DEFAULT_PARAMS.add('light_pos', [0, 2.5, 0], [-40, 2.5, -40], [40, 5, 40])
 DEFAULT_PARAMS.add('light_color', [0.7, 0.7, 0.7], [0.45, 0.45, 0.45], [0.8, 0.8, 0.8])
 DEFAULT_PARAMS.add('light_ambient', [0.45, 0.45, 0.45], [0.35, 0.35, 0.35], [0.55, 0.55, 0.55])
+DEFAULT_PARAMS.add('forward_step', 0.15, 0.12, 0.17)
+DEFAULT_PARAMS.add('turn_step', 15, 10, 20)
 DEFAULT_PARAMS.add('cam_pitch', 0, -5, 5)
 DEFAULT_PARAMS.add('cam_fov_y', 60, 55, 65)
 DEFAULT_PARAMS.add('cam_height', 1.5, 1.45, 1.55)
