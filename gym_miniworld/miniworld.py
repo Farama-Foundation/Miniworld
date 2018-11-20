@@ -244,7 +244,7 @@ class Room:
         # The point is inside if all the dot products are greater than zero
         return np.all(np.greater(dotNAP, 0))
 
-    def _gen_static_data(self, env):
+    def _gen_static_data(self, params, rng):
         """
         Generate polygons and static data for this room
         Needed for rendering and collision detection
@@ -252,10 +252,10 @@ class Room:
               ceiling can be arbitrary n-gons
         """
 
-        # Load the textures
-        self.wall_tex = env._load_tex(self.wall_tex_name)
-        self.floor_tex = env._load_tex(self.floor_tex_name)
-        self.ceil_tex = env._load_tex(self.ceil_tex_name)
+        # Load the textures and do texture randomization
+        self.wall_tex = Texture.get(self.wall_tex_name, rng)
+        self.floor_tex = Texture.get(self.floor_tex_name, rng)
+        self.ceil_tex = Texture.get(self.ceil_tex_name, rng)
 
         # Generate the floor vertices
         self.floor_verts = self.outline
@@ -476,7 +476,8 @@ class MiniWorldEnv(gym.Env):
         window_height=600,
         forward_step=0.15,
         turn_step=15,
-        params=DEFAULT_PARAMS
+        params=DEFAULT_PARAMS,
+        domain_rand=False
     ):
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions
@@ -505,6 +506,9 @@ class MiniWorldEnv(gym.Env):
 
         # Simulation parameters, used for domain randomization
         self.params = params
+
+        # Domain randomization enable/disable flag
+        self.domain_rand = domain_rand
 
         # Window for displaying the environment to humans
         self.window = None
@@ -571,9 +575,11 @@ class MiniWorldEnv(gym.Env):
         # Generate the world
         self._gen_world()
 
+        # Check if domain randomization is enabled or not
+        rand = self.rand if self.domain_rand else None
+
         # Randomize elements of the world (domain randomization)
-        self.params.sample_many(self.rand, self, [
-            'tex_rand',
+        self.params.sample_many(rand, self, [
             'sky_color',
             'light_pos',
             'light_color',
@@ -581,7 +587,7 @@ class MiniWorldEnv(gym.Env):
 
         # Randomize parameters of the entities
         for ent in self.entities:
-            ent.randomize(self.params, self.rand)
+            ent.randomize(self.params, rand)
 
         # Compute the min and max x, z extents of the whole floorplan
         self.min_x = min([r.min_x for r in self.rooms])
@@ -983,7 +989,10 @@ class MiniWorldEnv(gym.Env):
 
         # Generate the static data for each room
         for room in self.rooms:
-            room._gen_static_data(self)
+            room._gen_static_data(
+                self.params,
+                self.rand if self.domain_rand else None
+            )
 
         # Concatenate the wall segments
         self.wall_segs = np.concatenate([r.wall_segs for r in self.rooms])

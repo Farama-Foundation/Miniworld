@@ -14,7 +14,6 @@ from pyglet import clock
 import numpy as np
 import gym
 import gym_miniworld
-from gym_miniworld.params import DEFAULT_PARAMS_RAND
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env-name', default='MiniWorld-Hallway-v0')
@@ -28,7 +27,7 @@ env.reset()
 if args.no_time_limit:
     env.max_episode_steps = math.inf
 if args.domain_rand:
-    env.params = DEFAULT_PARAMS_RAND
+    env.domain_rand = True
 
 # Create the display window
 env.render('pyglet')

@@ -324,7 +324,11 @@ class Agent(Entity):
         Camera position in 3D space
         """
 
-        return self.pos + np.array([0, self.cam_height, 0])
+        rot_y = gen_rot_matrix(Y_VEC, self.dir)
+        cam_disp = np.array([self.cam_fwd_disp, self.cam_height, 0])
+        cam_disp = np.dot(cam_disp, rot_y)
+
+        return self.pos + cam_disp
 
     @property
     def cam_dir(self):
@@ -346,6 +350,7 @@ class Agent(Entity):
     def randomize(self, params, rng):
         params.sample_many(rng, self, [
             'cam_height',
+            'cam_fwd_disp',
             'cam_pitch',
             'cam_fov_y',
         ])
