@@ -21,7 +21,14 @@ assert m0 > 0 and m0 < 255
 assert abs(m0 - m1) < 5
 
 # Check that the observation shapes match in reset and step
-second_obs, _, _, _ = env.step([0.0, 0.0])
+second_obs, _, _, _ = env.step(0)
+assert first_obs.shape == env.observation_space.shape
+assert first_obs.shape == second_obs.shape
+
+# Test the PyTorch observation wrapper
+env = PyTorchObsWrapper(env)
+first_obs = env.reset()
+second_obs, _, _, _ = env.step(0)
 assert first_obs.shape == env.observation_space.shape
 assert first_obs.shape == second_obs.shape
 
