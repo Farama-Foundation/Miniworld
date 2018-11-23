@@ -79,7 +79,7 @@ def gen_data():
 
 def visualize():
 
-    for _ in range(5):
+    for _ in range(8):
 
         obs = env.reset()
 
@@ -87,7 +87,7 @@ def visualize():
 
         dot_r = 0
 
-        for _ in range(30):
+        for _ in range(80):
 
             last_dot_r = dot_r
 
@@ -112,9 +112,9 @@ def visualize():
             obs, _, _, _ = env.step(action)
 
             env.render('human')
-            time.sleep(0.025)
+            #time.sleep(0.025)
 
-        time.sleep(0.5)
+        time.sleep(0.4)
 
 
 if __name__ == "__main__":
@@ -122,8 +122,8 @@ if __name__ == "__main__":
     #parser.add_argument('--map-name', required=True)
     #args = parser.parse_args()
 
-    env = gym.make('MiniWorld-OneRoom-v0')
-    #env.domain_rand = True
+    env = gym.make('MiniWorld-SimToReal1-v0')
+    env.domain_rand = True
     env = PyTorchObsWrapper(env)
 
     model = Model()

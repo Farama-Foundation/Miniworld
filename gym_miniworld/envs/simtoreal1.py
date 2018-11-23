@@ -27,6 +27,7 @@ class SimToReal1Env(MiniWorldEnv):
         super().__init__(
             max_episode_steps=100,
             params=sim_params,
+            domain_rand=True,
             **kwargs
         )
 
