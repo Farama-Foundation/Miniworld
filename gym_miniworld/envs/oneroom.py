@@ -19,7 +19,6 @@ class OneRoomEnv(MiniWorldEnv):
         )
 
     def _gen_world(self):
-        # Create a long rectangular room
         room = self.add_rect_room(
             min_x=0,
             max_x=self.size,
@@ -27,10 +26,7 @@ class OneRoomEnv(MiniWorldEnv):
             max_z=self.size
         )
 
-        # Place the box at the end of the hallway
         self.box = self.place_entity(Box(color='red'))
-
-        # Place the agent a random distance away from the goal
         self.place_agent()
 
     def step(self, action):

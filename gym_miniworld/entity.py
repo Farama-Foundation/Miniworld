@@ -354,6 +354,7 @@ class Agent(Entity):
             'cam_pitch',
             'cam_fov_y',
         ])
+        #self.radius = params.sample(rng, 'bot_radius')
 
     def render(self):
         """

@@ -46,7 +46,6 @@ def step(dt, action, n=0, repeat=True):
     env.render('pyglet')
 
     if repeat and not done:
-        clock.unschedule(step)
         if n == 0:
             clock.schedule_once(step, 0.5, action=action, n=n+1)
         else:
@@ -58,6 +57,8 @@ def on_key_press(symbol, modifiers):
     This handler processes keyboard commands that
     control the simulation
     """
+
+    clock.unschedule(step)
 
     if symbol == key.BACKSPACE or symbol == key.SLASH:
         print('RESET')
@@ -87,7 +88,6 @@ def on_key_press(symbol, modifiers):
 @env.unwrapped.window.event
 def on_key_release(symbol, modifiers):
     clock.unschedule(step)
-    #clock.unschedule(repeat_action)
 
 @env.unwrapped.window.event
 def on_draw():
