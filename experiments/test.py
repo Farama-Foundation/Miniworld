@@ -43,10 +43,11 @@ class Model(nn.Module):
         self.enc_to_out = nn.Sequential(
             nn.Linear(32 * 5 * 8, 256),
             nn.LeakyReLU(),
+            nn.Linear(256, 256),
+            nn.LeakyReLU(),
             nn.Linear(256, 32),
             nn.LeakyReLU(),
-            nn.Linear(32, 1),
-            nn.LeakyReLU(),
+            nn.Linear(32, 2)
         )
 
         self.apply(init_weights)
@@ -59,17 +60,62 @@ class Model(nn.Module):
         x = x.view(x.size(0), -1)
         #print(x.size())
 
-        y = self.enc_to_out(x)
-        return y
+        out = self.enc_to_out(x)
+        return out
 
 def gen_data():
     obs = env.reset()
 
     box = env.unwrapped.box
     agent = env.unwrapped.agent
-    dist = np.linalg.norm(box.pos - agent.pos)
 
-    return obs, dist
+    #dist = np.linalg.norm(box.pos - agent.pos)
+    #return obs, dist
+
+    vec = box.pos - agent.pos
+    dot_f = np.dot(agent.dir_vec, vec)
+    dot_r = np.dot(agent.right_vec, vec)
+    return obs, (dot_f, dot_r)
+
+def visualize():
+
+    for _ in range(5):
+
+        obs = env.reset()
+
+        env.render('human')
+
+        dot_r = 0
+
+        for _ in range(30):
+
+            last_dot_r = dot_r
+
+            obs = make_var(obs).unsqueeze(0)
+            out = model(obs).squeeze(0)
+            dot_f = out.data[0].item()
+            dot_r = out.data[1].item()
+
+            print(dot_f)
+            print(dot_r)
+
+            if dot_f < 0:
+                action = env.unwrapped.actions.turn_right
+            else:
+                if abs(dot_r) < 0.5 or last_dot_r < 0 and dot_r > 0 or last_dot_r > 0 and dot_r < 0:
+                    action = env.unwrapped.actions.move_forward
+                elif dot_r > 0:
+                    action = env.unwrapped.actions.turn_right
+                else:
+                    action = env.unwrapped.actions.turn_left
+
+            obs, _, _, _ = env.step(action)
+
+            env.render('human')
+            time.sleep(0.025)
+
+        time.sleep(0.5)
+
 
 if __name__ == "__main__":
     #parser = argparse.ArgumentParser()
@@ -86,11 +132,10 @@ if __name__ == "__main__":
 
     optimizer = optim.Adam(model.parameters(), lr=1e-5)
 
-    for i in range(10000):
+    for i in range(10000000):
         print(i)
 
         obs, target = gen_batch(gen_data, batch_size=32)
-
         y = model(obs)
 
         optimizer.zero_grad()
@@ -98,4 +143,7 @@ if __name__ == "__main__":
         loss.backward()
         optimizer.step()
 
-        print(loss.data.item())
+        #print(loss.data.item())
+
+        if i % 200 == 0:
+            visualize()
