@@ -10,19 +10,6 @@ from .entity import *
 from .math import *
 from .params import *
 
-# Map of color names to RGB values
-COLORS = {
-    'red'   : np.array([1, 0, 0]),
-    'green' : np.array([0, 1, 0]),
-    'blue'  : np.array([0, 0, 1]),
-    'purple': np.array([0.44, 0.15, 0.76]),
-    'yellow': np.array([1, 1, 0]),
-    'grey'  : np.array([0.39, 0.39, 0.39])
-}
-
-# List of color names, sorted alphabetically
-COLOR_NAMES = sorted(list(COLORS.keys()))
-
 # Default wall height for room
 DEFAULT_WALL_HEIGHT=2.74
 
