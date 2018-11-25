@@ -31,6 +31,9 @@ class SimToReal1Env(MiniWorldEnv):
             **kwargs
         )
 
+        # Allow only the movement actions
+        self.action_space = spaces.Discrete(self.actions.move_forward+1)
+
     def _gen_world(self):
         # 1-2 meter wide rink
         size = self.rand.float(1, 2)
