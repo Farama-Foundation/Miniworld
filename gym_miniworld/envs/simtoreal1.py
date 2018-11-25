@@ -3,6 +3,7 @@ import math
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 from ..params import DEFAULT_PARAMS
+from gym import spaces
 
 # Simulation parameters
 # These assume a robot about 15cm tall with a pi camera module v2
