@@ -165,6 +165,8 @@ class CNNBase(NNBase):
             #Print(),
             Flatten(),
 
+            nn.Dropout(0.2),
+
             init_(nn.Linear(32 * 7 * 5, hidden_size)),
             nn.ReLU()
         )

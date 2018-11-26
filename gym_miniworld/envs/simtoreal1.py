@@ -39,16 +39,24 @@ class SimToReal1Env(MiniWorldEnv):
         # 1-2 meter wide rink
         size = self.rand.float(1, 2)
 
-        wall_height = self.rand.float(0.20, 0.45)
+        wall_height = self.rand.float(0.20, 0.50)
 
         box_size = self.rand.float(0.07, 0.12)
 
-        self.agent.radius = 0.19
+        self.agent.radius = 0.11
 
         floor_tex = self.rand.choice([
             'cardboard',
             'wood',
-            'wood_planks'
+            'wood_planks',
+
+        ])
+
+        wall_tex = self.rand.choice([
+            'cardboard',
+            # Chosen because they have visible lines/seams
+            'concrete_tiles',
+            'ceiling_tiles',
         ])
 
         # Create a long rectangular room
@@ -59,7 +67,7 @@ class SimToReal1Env(MiniWorldEnv):
             max_z=size,
             no_ceiling=True,
             wall_height=wall_height,
-            wall_tex='cardboard',
+            wall_tex=wall_tex,
             floor_tex=floor_tex
         )
 
