@@ -51,10 +51,11 @@ class SimToReal1Env(MiniWorldEnv):
             'cardboard',
             'wood',
             'wood_planks',
-
         ])
 
         wall_tex = self.rand.choice([
+            'drywall',
+            'stucco',
             'cardboard',
             # Chosen because they have visible lines/seams
             'concrete_tiles',
