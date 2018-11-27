@@ -164,7 +164,7 @@ def main():
                     np.median(episode_rewards),
                     np.min(episode_rewards),
                     np.max(episode_rewards),
-                    np.count_nonzero(episode_rewards) / len(episode_rewards)
+                    np.count_nonzero(np.greater(episode_rewards, 0)) / len(episode_rewards)
                 )
             )
 

@@ -43,6 +43,8 @@ while True:
 actor_critic, ob_rms = \
             torch.load(os.path.join(args.load_dir, args.env_name + ".pt"))
 
+actor_critic.eval()
+
 """
 if isinstance(env.venv, VecNormalize):
     env.venv.ob_rms = ob_rms

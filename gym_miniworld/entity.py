@@ -4,6 +4,19 @@ from .math import *
 from .opengl import *
 from .objmesh import ObjMesh
 
+# Map of color names to RGB values
+COLORS = {
+    'red'   : np.array([1.0, 0.0, 0.0]),
+    'green' : np.array([0.0, 1.0, 0.0]),
+    'blue'  : np.array([0.0, 0.0, 1.0]),
+    'purple': np.array([0.44, 0.15, 0.76]),
+    'yellow': np.array([1.00, 1.00, 0.00]),
+    'grey'  : np.array([0.39, 0.39, 0.39])
+}
+
+# List of color names, sorted alphabetically
+COLOR_NAMES = sorted(list(COLORS.keys()))
+
 class Entity:
     def __init__(self):
         # World position
@@ -245,19 +258,21 @@ class Box(Entity):
         self.radius = math.sqrt(sx*sx + sz*sz)/2
         self.height = sy
 
+    def randomize(self, params, rng):
+        self.color_vec = COLORS[self.color] + params.sample(rng, 'obj_color_bias')
+        self.color_vec = np.clip(self.color_vec, 0, 1)
+
     def render(self):
         """
         Draw the object
         """
-
-        from .miniworld import COLORS
 
         sx, sy, sz = self.size
         hx = sx / 2
         hz = sz / 2
 
         glDisable(GL_TEXTURE_2D)
-        glColor3f(*COLORS[self.color])
+        glColor3f(*self.color_vec)
 
         glPushMatrix()
         glTranslatef(*self.pos)

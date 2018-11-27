@@ -46,6 +46,9 @@ for _ in range(30):
 
 # Try loading each of the available environments
 for env_id in gym_miniworld.envs.env_ids:
+    if 'RemoteBot' in env_id:
+        continue
+
     print('Loading "' + env_id + '"')
     env = gym.make(env_id)
     env.domain_rand = True

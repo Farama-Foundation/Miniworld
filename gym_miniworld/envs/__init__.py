@@ -1,5 +1,6 @@
 import gym
 
+from .remotebot import *
 from .hallway import *
 from .oneroom import *
 from .tmaze import *
