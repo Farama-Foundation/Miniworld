@@ -14,9 +14,9 @@ Registered configurations:
 
 In this environment, the agent has to go to a red box at the end of a
 straight hallway. Requires the agent to walk forward and correct its course
-to avoid bumping into walls. This environment is easily solved with
-reinforcement learning, it is useful for debugging purposes, to verify that
-your training code is working correctly.
+to avoid bumping into walls. Think of this environment as a kind of "Hello World!".
+It is easily solved with reinforcement learning and is useful for debugging purposes,
+to verify that your training code is working correctly.
 
 # OneRoom
 
