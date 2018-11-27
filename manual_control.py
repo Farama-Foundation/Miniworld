@@ -33,7 +33,7 @@ if args.domain_rand:
 env.render('pyglet')
 
 def step(dt, action, n=0, repeat=True):
-    print('step')
+    print('step {}: {}'.format(env.step_count, env.actions(action).name))
 
     obs, reward, done, info = env.step(action)
     #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
