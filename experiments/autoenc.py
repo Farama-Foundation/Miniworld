@@ -27,17 +27,20 @@ class Model(nn.Module):
 
         self.encoder = nn.Sequential(
             #Print(),
-            nn.Conv2d(3, 32, kernel_size=4, stride=2),
-            #nn.BatchNorm2d(32),
+
+            nn.Conv2d(3, 32, kernel_size=5, stride=2),
+            nn.BatchNorm2d(32),
+            nn.LeakyReLU(),
+
+            nn.Conv2d(32, 32, kernel_size=5, stride=2),
+            nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
             nn.Conv2d(32, 32, kernel_size=4, stride=2),
-            #nn.BatchNorm2d(32),
+            nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
-            nn.Conv2d(32, 32, 4, stride=2),
-            #nn.BatchNorm2d(32),
-            nn.LeakyReLU(),
+            nn.Dropout(0.2),
         )
 
         self.decoder = nn.Sequential(
@@ -47,7 +50,7 @@ class Model(nn.Module):
             #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
-            nn.ConvTranspose2d(32, 32, kernel_size=5, stride=2),
+            nn.ConvTranspose2d(32, 32, kernel_size=6, stride=2),
             #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
@@ -85,10 +88,11 @@ class Model(nn.Module):
         #out = self.enc_to_out(x)
         #return out
 
+        #print(x.size())
         y = self.decoder(x)
 
-        #print(x.size())
-        y = 255 * y[:, :, 3:83, 2:62]
+        #print(y.size())
+        y = 255 * y[:, :, 2:82, 3:63]
         #print(y.size())
 
         return y
