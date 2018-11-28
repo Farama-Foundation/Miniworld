@@ -93,9 +93,21 @@ class Model(nn.Module):
 
         return y
 
-buffer = np.zeros(shape=(16384, 3, 80, 60))
+
+batch_size = 128
+
+buffer = np.zeros(shape=(32768, 3, 80, 60))
 cur_gen_idx = 0
 idx_avail = 0
+
+def gen_data():
+    global cur_gen_idx
+    global idx_avail
+
+    for _ in range(32):
+        buffer[cur_gen_idx] = env.reset()
+        cur_gen_idx = (cur_gen_idx + 1) % buffer.shape[0]
+        idx_avail = max(idx_avail, cur_gen_idx)
 
 if __name__ == "__main__":
     #parser = argparse.ArgumentParser()
@@ -110,26 +122,22 @@ if __name__ == "__main__":
     model.cuda()
     print_model_info(model)
 
-    optimizer = optim.Adam(model.parameters(), lr=1e-5)
+    optimizer = optim.Adam(model.parameters(), lr=1e-4)
+
+    while idx_avail <= batch_size:
+        gen_data()
 
     for i in range(10000000):
         print(i, cur_gen_idx)
-
-        for _ in range(16):
-            buffer[cur_gen_idx] = env.reset()
-            cur_gen_idx = (cur_gen_idx + 1) % buffer.shape[0]
-            idx_avail = max(idx_avail, cur_gen_idx)
-
-        batch_size = 128
-
-        if batch_size >= idx_avail:
-            continue
 
         batch_idx = np.random.randint(0, idx_avail - batch_size)
         batch = buffer[batch_idx:(batch_idx+batch_size)]
         batch = make_var(batch)
 
         y = model(batch)
+
+        # Generate data while the GPU is computing
+        gen_data()
 
         optimizer.zero_grad()
         diff = y - batch
