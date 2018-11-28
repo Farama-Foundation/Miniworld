@@ -28,17 +28,18 @@ MiniWorld can be seen as an alternative to VizDoom or DMLab. It is written
 <img src="images/collecthealth_0.jpg" width=260></img>
 </p>
 
-Advantages of MiniWorld:
-- Compatible with OpenAI Gym
+Features:
 - Few dependencies, less likely to break, easy to install
-- Easy to modify, customize or extend
+- Easy to create your own levels, or modify existing ones
 - Good performance, high frame rate, support for multiple processes
 - Lightweight, small download, low memory requirements
 - Software provided under a permissive MIT license
+- Fully observable overhead view available
+- [Domain randomization](https://blog.openai.com/generalizing-from-simulation/) support, for sim-to-real transfer
 
 Limitations:
 - Graphics are basic, nowhere near photorealism
-- Physics are very basic, not sufficient for robot arms/manipulation
+- Physics are very basic, not sufficient for robot arms or manipulation
 
 Please use this bibtex if you want to cite this repository in your publications:
 
