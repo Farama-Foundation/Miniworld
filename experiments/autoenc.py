@@ -43,7 +43,7 @@ class Model(nn.Module):
         self.decoder = nn.Sequential(
             #Print(),
 
-            nn.ConvTranspose2d(32, 32, kernel_size=5, stride=2),
+            nn.ConvTranspose2d(32, 32, kernel_size=6, stride=2),
             #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
@@ -88,30 +88,14 @@ class Model(nn.Module):
         y = self.decoder(x)
 
         #print(x.size())
-        y = 255 * y[:, :, 0:80, 0:60]
+        y = 255 * y[:, :, 3:83, 2:62]
         #print(y.size())
 
         return y
 
-def gen_data():
-    obs = env.reset()
-
-    box = env.unwrapped.box
-    agent = env.unwrapped.agent
-
-    #dist = np.linalg.norm(box.pos - agent.pos)
-    #return obs, dist
-
-    vec = box.pos - agent.pos
-    dot_f = np.dot(agent.dir_vec, vec)
-    dot_r = np.dot(agent.right_vec, vec)
-    return obs, (dot_f, dot_r)
-
-
-buffer = np.zeros(shape=(8192, 80, 60))
-
-
-
+buffer = np.zeros(shape=(16384, 3, 80, 60))
+cur_gen_idx = 0
+idx_avail = 0
 
 if __name__ == "__main__":
     #parser = argparse.ArgumentParser()
@@ -129,20 +113,33 @@ if __name__ == "__main__":
     optimizer = optim.Adam(model.parameters(), lr=1e-5)
 
     for i in range(10000000):
-        print(i)
+        print(i, cur_gen_idx)
 
-        obs, target = gen_batch(gen_data, batch_size=32)
-        y = model(obs)
+        for _ in range(16):
+            buffer[cur_gen_idx] = env.reset()
+            cur_gen_idx = (cur_gen_idx + 1) % buffer.shape[0]
+            idx_avail = max(idx_avail, cur_gen_idx)
+
+        batch_size = 128
+
+        if batch_size >= idx_avail:
+            continue
+
+        batch_idx = np.random.randint(0, idx_avail - batch_size)
+        batch = buffer[batch_idx:(batch_idx+batch_size)]
+        batch = make_var(batch)
+
+        y = model(batch)
 
         optimizer.zero_grad()
-        loss = (y - obs).abs().mean()
+        diff = y - batch
+        loss = (diff * diff).mean() # L2 loss
+        #loss = (y - batch).abs().mean()
         loss.backward()
         optimizer.step()
 
         print(loss.data.item())
 
-        if i % 200 == 0:
-            obs = obs[0]
-            y = y[0]
-            save_img('test_obs.png', obs)
-            save_img('test_out.png', y)
+        if i % 50 == 0:
+            save_img('test_obs.png', batch[0])
+            save_img('test_out.png', y[0])
