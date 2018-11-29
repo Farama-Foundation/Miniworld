@@ -110,6 +110,10 @@ class MazeEnv(MiniWorldEnv):
 
         return obs, reward, done, info
 
+class MazeS2Env(MazeEnv):
+    def __init__(self):
+        super().__init__(num_rows=2, num_cols=2)
+
 class MazeS3Env(MazeEnv):
     def __init__(self):
         super().__init__(num_rows=3, num_cols=3)
