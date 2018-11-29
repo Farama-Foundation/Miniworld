@@ -19,6 +19,8 @@ MiniWorld uses OpenGL's right-handed coordinate system. The ground plane lies al
 The observations are single camera images, as numpy arrays of size (80, 60, 3). These arrays contain unsigned 8-bit integer values in the [0, 255] range. It is possible to change the observation image size by directly instantiating the environment class and setting the appropriate
 parameters in the constructor.
 
+An overhead fully observable view of the environment can be produced as well. To produce this view, you can call the `env.render_top_view()` method, which returns a NumPy RGB array as output.
+
 ## Actions
 
 For simplicity, actions are discrete. The available actions are:
