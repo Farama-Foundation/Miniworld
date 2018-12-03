@@ -16,12 +16,12 @@ class RandGen:
 
         return self.np_random.randint(low, high)
 
-    def float(self, low, high):
+    def float(self, low, high, shape=None):
         """
         Generate random float in [low,high[
         """
 
-        return self.np_random.uniform(low, high)
+        return self.np_random.uniform(low, high, size=shape)
 
     def bool(self):
         """
@@ -30,13 +30,13 @@ class RandGen:
 
         return (self.np_random.randint(0, 2) == 0)
 
-    def elem(self, iterable):
+    def choice(self, iterable, probs=None):
         """
         Pick a random element in a list
         """
 
         lst = list(iterable)
-        idx = self.int(0, len(lst))
+        idx = self.np_random.choice(len(lst), p=probs)
         return lst[idx]
 
     def color(self):
@@ -45,7 +45,7 @@ class RandGen:
         """
 
         from .miniworld import COLOR_NAMES
-        return self.elem(COLOR_NAMES)
+        return self.choice(COLOR_NAMES)
 
     def subset(self, iterable, num_elems):
         """
@@ -58,7 +58,7 @@ class RandGen:
         out = []
 
         while len(out) < num_elems:
-            elem = self.elem(lst)
+            elem = self.choice(lst)
             lst.remove(elem)
             out.append(elem)
 

@@ -1,7 +1,16 @@
 import gym
 
+from .remotebot import *
 from .hallway import *
+from .oneroom import *
 from .tmaze import *
+from .fourrooms import *
+from .threerooms import *
+from .wallgap import *
+from .putnext import *
+from .maze import *
+from .collecthealth import *
+from .simtoreal1 import *
 
 # Registered environment ids
 env_ids = []
@@ -12,7 +21,9 @@ def register_envs():
 
     # Iterate through global names
     for global_name in sorted(list(global_vars.keys())):
-        if not global_name.endswith('Env') or global_name == 'MiniWorldEnv':
+        if not global_name.endswith('Env'):
+            continue
+        if global_name == 'MiniWorldEnv':
             continue
 
         env_name = global_name.split('Env')[0]

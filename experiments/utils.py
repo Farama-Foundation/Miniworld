@@ -68,11 +68,13 @@ def save_img(file_name, img):
     from skimage import io
 
     if isinstance(img, Variable):
-        img = img.data.numpy()
+        img = img.data.cpu().numpy()
 
     if len(img.shape) == 4:
         img = img.squeeze(0)
 
+    img = img.transpose(2, 1, 0)
+    img = img.clip(0, 255)
     img = img.astype(np.uint8)
 
     io.imsave(file_name, img)

@@ -164,15 +164,18 @@ def main():
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             end = time.time()
-            print("Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.2f}/{:.2f}, min/max reward {:.2f}/{:.2f}\n".
-                format(j, total_num_steps,
-                       int(total_num_steps / (end - start)),
-                       len(episode_rewards),
-                       np.mean(episode_rewards),
-                       np.median(episode_rewards),
-                       np.min(episode_rewards),
-                       np.max(episode_rewards), dist_entropy,
-                       value_loss, action_loss))
+            print("Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.2f}/{:.2f}, min/max reward {:.2f}/{:.2f}, success rate {:.2f}\n".
+                format(
+                    j, total_num_steps,
+                    int(total_num_steps / (end - start)),
+                    len(episode_rewards),
+                    np.mean(episode_rewards),
+                    np.median(episode_rewards),
+                    np.min(episode_rewards),
+                    np.max(episode_rewards),
+                    np.count_nonzero(np.greater(episode_rewards, 0)) / len(episode_rewards)
+                )
+            )
 
             cur_time = int(time.time() - start_time)
             csv_out.writerow([cur_time, total_num_steps, np.mean(episode_rewards)])
@@ -221,6 +224,7 @@ def main():
                 np.mean(eval_episode_rewards)
             ))
 
+        """
         if args.vis and j % args.vis_interval == 0:
             try:
                 # Sometimes monitor doesn't properly flush the outputs
@@ -228,7 +232,7 @@ def main():
                                   args.algo, args.num_frames)
             except IOError:
                 pass
-
+        """
 
 if __name__ == "__main__":
     main()

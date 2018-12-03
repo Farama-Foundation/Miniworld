@@ -22,13 +22,12 @@ from gym_miniworld.wrappers import *
 from utils import *
 
 class Model(nn.Module):
-    def __init__(self, num_actions):
+    def __init__(self):
         super().__init__()
 
         self.encoder = nn.Sequential(
             #Print(),
-            nn.Conv2d(1, 32, kernel_size=4, stride=2),
-
+            nn.Conv2d(3, 32, kernel_size=4, stride=2),
             #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
@@ -36,14 +35,19 @@ class Model(nn.Module):
             #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
-            #nn.Conv2d(32, 32, 4, stride=2),
+            nn.Conv2d(32, 32, 4, stride=2),
             #nn.BatchNorm2d(32),
-            #nn.LeakyReLU()
+            nn.LeakyReLU()
         )
 
-        self.enc_to_actions = nn.Sequential(
-            nn.Linear(32 * 6 * 6, num_actions),
+        self.enc_to_out = nn.Sequential(
+            nn.Linear(32 * 5 * 8, 256),
             nn.LeakyReLU(),
+            nn.Linear(256, 256),
+            nn.LeakyReLU(),
+            nn.Linear(256, 32),
+            nn.LeakyReLU(),
+            nn.Linear(32, 2)
         )
 
         self.apply(init_weights)
@@ -52,116 +56,94 @@ class Model(nn.Module):
         img = img / 255
 
         x = self.encoder(img)
+        #print(x.size())
         x = x.view(x.size(0), -1)
+        #print(x.size())
 
-        action_vals = self.enc_to_actions(x)
-
-        max_val, action = action_vals.max(1)
-
-        return action
-
-
-
+        out = self.enc_to_out(x)
+        return out
 
 def gen_data():
-    idx = random.randint(0, len(positions) - 1)
-    cur_pos = np.array(positions[idx][0])
-    cur_angle = positions[idx][1]
-    vels = np.array(actions[idx])
-
-    env.unwrapped.cur_pos = cur_pos
-    env.unwrapped.cur_angle = cur_angle
-
-    obs = env.unwrapped.render_obs().copy()
-    obs = obs.transpose(2, 0, 1)
-
-    return obs, vels
-
-def eval_episode(model, env, seed=0):
-    total_reward = 0
-
-    env.seed(seed)
     obs = env.reset()
 
-    while True:
+    box = env.unwrapped.box
+    agent = env.unwrapped.agent
 
-        obs = obs.transpose(2, 0, 1)
-        obs = make_var(obs)
-        obs = obs.unsqueeze(0)
-        action = model(obs)
+    #dist = np.linalg.norm(box.pos - agent.pos)
+    #return obs, dist
 
-        obs, reward, done, info = env.step(action)
+    vec = box.pos - agent.pos
+    dot_f = np.dot(agent.dir_vec, vec)
+    dot_r = np.dot(agent.right_vec, vec)
+    return obs, (dot_f, dot_r)
 
-        total_reward += reward
+def visualize():
 
-        if done:
-            break
+    for _ in range(8):
 
-    return total_reward
-
-def eval_model(model, env, num_episodes=25):
-    total_reward = 0
-
-    for i in range(0, num_episodes):
-        total_reward += eval_episode(model, env, seed=i)
-
-    return total_reward / num_episodes
-
-def visualize(model, env, num_episodes=5):
-    for i in range(0, num_episodes):
-        env.seed(i)
         obs = env.reset()
 
-        while True:
+        env.render('human')
+
+        dot_r = 0
+
+        for _ in range(80):
+
+            last_dot_r = dot_r
+
+            obs = make_var(obs).unsqueeze(0)
+            out = model(obs).squeeze(0)
+            dot_f = out.data[0].item()
+            dot_r = out.data[1].item()
+
+            print(dot_f)
+            print(dot_r)
+
+            if dot_f < 0:
+                action = env.unwrapped.actions.turn_right
+            else:
+                if abs(dot_r) < 0.5 or last_dot_r < 0 and dot_r > 0 or last_dot_r > 0 and dot_r < 0:
+                    action = env.unwrapped.actions.move_forward
+                elif dot_r > 0:
+                    action = env.unwrapped.actions.turn_right
+                else:
+                    action = env.unwrapped.actions.turn_left
+
+            obs, _, _, _ = env.step(action)
+
             env.render('human')
+            #time.sleep(0.025)
 
-            obs = obs.transpose(2, 0, 1)
-            obs = make_var(obs)
-            obs = obs.unsqueeze(0)
-            action = model(obs)
+        time.sleep(0.4)
 
-            #print(action)
-
-            obs, reward, done, info = env.step(action)
-            #time.sleep(1 / env.frame_rate / 3)
-
-            if done:
-                break
-
-    return
 
 if __name__ == "__main__":
     #parser = argparse.ArgumentParser()
     #parser.add_argument('--map-name', required=True)
     #args = parser.parse_args()
 
-    env = gym.make('MiniWorld-Hallway-v0')
-    env = GreyscaleWrapper(env)
+    env = gym.make('MiniWorld-SimToReal1-v0')
+    env.domain_rand = True
+    env = PyTorchObsWrapper(env)
 
-    """
-    model = Model(env.action_space.n)
+    model = Model()
     model.cuda()
     print_model_info(model)
-    """
 
-    best_model = None
-    best_r = -math.inf
+    optimizer = optim.Adam(model.parameters(), lr=1e-5)
 
-    for i in range(0, 500):
-        #model = Model(env.action_space.n)
-        model = Model(3)
-        model.cuda()
+    for i in range(10000000):
+        print(i)
 
-        r = eval_model(model, env)
+        obs, target = gen_batch(gen_data, batch_size=32)
+        y = model(obs)
 
-        print('itr #%d, r=%s' % (i, r))
+        optimizer.zero_grad()
+        loss = (target - y).abs().mean()
+        loss.backward()
+        optimizer.step()
 
-        if r > best_r:
-            best_model = model
-            best_r = r
+        #print(loss.data.item())
 
-            print('new best model')
-
-
-
-    visualize(best_model, env, 1000000)
+        if i % 200 == 0:
+            visualize()

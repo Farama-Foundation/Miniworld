@@ -10,6 +10,7 @@ import argparse
 import pyglet
 import math
 from pyglet.window import key
+from pyglet import clock
 import numpy as np
 import gym
 import gym_miniworld
@@ -18,7 +19,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--env-name', default='MiniWorld-Hallway-v0')
 parser.add_argument('--domain-rand', action='store_true', help='enable domain randomization')
 parser.add_argument('--no-time-limit', action='store_true', help='ignore time step limits')
-parser.add_argument('--high-fps', action='store_true', help='run at a higher frame rate for smooth motion')
 args = parser.parse_args()
 
 env = gym.make(args.env_name)
@@ -26,12 +26,30 @@ env.reset()
 
 if args.no_time_limit:
     env.max_episode_steps = math.inf
-if args.high_fps:
-    env.max_episode_steps *= 30 / env.frame_rate
-    env.frame_rate = 30
+if args.domain_rand:
+    env.domain_rand = True
 
 # Create the display window
 env.render('pyglet')
+
+def step(dt, action, n=0, repeat=True):
+    print('step {}: {}'.format(env.step_count, env.actions(action).name))
+
+    obs, reward, done, info = env.step(action)
+    #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
+
+    if done:
+        print('done! reward={:.2f}'.format(reward))
+        clock.unschedule(step)
+        env.reset()
+
+    env.render('pyglet')
+
+    if repeat and not done:
+        if n == 0:
+            clock.schedule_once(step, 0.5, action=action, n=n+1)
+        else:
+            clock.schedule_once(step, 0.08, action=action, n=n+1)
 
 @env.unwrapped.window.event
 def on_key_press(symbol, modifiers):
@@ -40,46 +58,44 @@ def on_key_press(symbol, modifiers):
     control the simulation
     """
 
+    clock.unschedule(step)
+
     if symbol == key.BACKSPACE or symbol == key.SLASH:
         print('RESET')
         env.reset()
         env.render('pyglet')
-    elif symbol == key.ESCAPE:
+        return
+
+    if symbol == key.ESCAPE:
         env.close()
         sys.exit(0)
 
-# Register a keyboard handler
-key_handler = key.KeyStateHandler()
-env.unwrapped.window.push_handlers(key_handler)
+    if symbol == key.UP:
+        step(0, env.actions.move_forward)
+    elif symbol == key.DOWN:
+        step(0, env.actions.move_back)
 
-def update(dt):
-    """
-    This function is called at every frame to handle
-    movement/stepping and redrawing
-    """
+    elif symbol == key.LEFT:
+        step(0, env.actions.turn_left)
+    elif symbol == key.RIGHT:
+        step(0, env.actions.turn_right)
 
-    action = env.actions.do_nothing
+    elif symbol == key.PAGEUP or symbol == key.P:
+        step(0, env.actions.pickup, repeat=False)
+    elif symbol == key.PAGEDOWN or symbol == key.D:
+        step(0, env.actions.drop, repeat=False)
 
-    if key_handler[key.UP]:
-        action = env.actions.move_forward
-    if key_handler[key.DOWN]:
-        action = env.actions.move_back
-    if key_handler[key.LEFT]:
-        action = env.actions.turn_left
-    if key_handler[key.RIGHT]:
-        action = env.actions.turn_right
+@env.unwrapped.window.event
+def on_key_release(symbol, modifiers):
+    clock.unschedule(step)
 
-    obs, reward, done, info = env.step(action)
-    #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
-
-    if done:
-        print('done! reward={:.2f}'.format(reward))
-        env.reset()
-        env.render('pyglet')
-
+@env.unwrapped.window.event
+def on_draw():
     env.render('pyglet')
 
-pyglet.clock.schedule_interval(update, 1 / env.unwrapped.frame_rate)
+@env.unwrapped.window.event
+def on_close():
+    pyglet.app.exit()
 
 # Enter main event loop
 pyglet.app.run()
