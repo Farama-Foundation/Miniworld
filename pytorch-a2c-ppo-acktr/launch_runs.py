@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# Launch command:
+# sbatch --array=1-256 --account=rpp-bengioy --mail-user maximechevalierb@gmail.com --mail-type ALL --time=6:00:00 --gres=gpu:1 -c 8 --mem=15000M ./launch_runs.py
+
 import os
 import math
 import csv
@@ -24,7 +27,8 @@ def gen_params():
     return {
         'seed': random.randint(1, 500),
         'lr': lr,
-        'recurrent-policy': random.choice([True, False]),
+        'recurrent-policy': True,
+        'num-steps': random.choice([5, 10, 20, 30, 40, 50]),
         'max-grad-norm': 0.5,
     }
 
@@ -41,11 +45,11 @@ def launch_run(params, run_no):
         'xvfb-run', '--error-file', '/dev/stdout', '--auto-servernum', '--server-num', server_num, '-s', '-screen 0 1024x768x24 -ac +extension GLX +render -noreset',
         'python3', 'main.py',
         '--csv-out-file', csv_file_name,
-        '--env-name', 'MiniWorld-Hallway-v0',
+        '--env-name', 'MiniWorld-MazeS2-v0',
         '--algo', 'ppo',
         '--num-frames', '5000000',
         '--num-processes', '16',
-        '--num-steps', '80',
+        #'--num-steps', '80',
     ]
 
     param_args = []
@@ -65,7 +69,7 @@ def launch_run(params, run_no):
     print(' '.join(full_cmd))
 
     if not args.test:
-        if not os.path.exists('logs')
+        if not os.path.exists('logs'):
             os.mkdir('logs')
 
         # Write the parameter values
