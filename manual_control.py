@@ -32,7 +32,7 @@ if args.domain_rand:
 # Create the display window
 env.render('pyglet')
 
-def step(dt, action, n=0, repeat=True):
+def step(action):
     print('step {}: {}'.format(env.step_count, env.actions(action).name))
 
     obs, reward, done, info = env.step(action)
@@ -40,16 +40,9 @@ def step(dt, action, n=0, repeat=True):
 
     if done:
         print('done! reward={:.2f}'.format(reward))
-        clock.unschedule(step)
         env.reset()
 
     env.render('pyglet')
-
-    if repeat and not done:
-        if n == 0:
-            clock.schedule_once(step, 0.5, action=action, n=n+1)
-        else:
-            clock.schedule_once(step, 0.08, action=action, n=n+1)
 
 @env.unwrapped.window.event
 def on_key_press(symbol, modifiers):
@@ -57,8 +50,6 @@ def on_key_press(symbol, modifiers):
     This handler processes keyboard commands that
     control the simulation
     """
-
-    clock.unschedule(step)
 
     if symbol == key.BACKSPACE or symbol == key.SLASH:
         print('RESET')
@@ -71,23 +62,23 @@ def on_key_press(symbol, modifiers):
         sys.exit(0)
 
     if symbol == key.UP:
-        step(0, env.actions.move_forward)
+        step(env.actions.move_forward)
     elif symbol == key.DOWN:
-        step(0, env.actions.move_back)
+        step(env.actions.move_back)
 
     elif symbol == key.LEFT:
-        step(0, env.actions.turn_left)
+        step(env.actions.turn_left)
     elif symbol == key.RIGHT:
-        step(0, env.actions.turn_right)
+        step(env.actions.turn_right)
 
     elif symbol == key.PAGEUP or symbol == key.P:
-        step(0, env.actions.pickup, repeat=False)
+        step(env.actions.pickup)
     elif symbol == key.PAGEDOWN or symbol == key.D:
-        step(0, env.actions.drop, repeat=False)
+        step(env.actions.drop)
 
 @env.unwrapped.window.event
 def on_key_release(symbol, modifiers):
-    clock.unschedule(step)
+    pass
 
 @env.unwrapped.window.event
 def on_draw():
