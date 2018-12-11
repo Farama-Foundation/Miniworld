@@ -22,6 +22,14 @@ class Print(nn.Module):
         print('layer input:', x.shape)
         return x
 
+class Flatten(nn.Module):
+    """
+    Flatten layer, to flatten convolutional layer output
+    """
+
+    def forward(self, input):
+        return input.view(input.size(0), -1)
+
 class GradReverse(torch.autograd.Function):
     """
     Gradient reversal layer
