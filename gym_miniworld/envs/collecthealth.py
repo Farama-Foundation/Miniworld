@@ -21,7 +21,7 @@ class CollectHealthEnv(MiniWorldEnv):
         self.size = size
 
         super().__init__(
-            max_episode_steps=math.inf,
+            max_episode_steps=1000,
             **kwargs
         )
 
@@ -68,12 +68,9 @@ class CollectHealthEnv(MiniWorldEnv):
             reward = 2
         else:
             reward = -100
-            self.health = 100
-            self.place_agent()
+            done = True
 
         # Pass current health value in info dict
         info['health'] = self.health
-
-        #print(self.health)
 
         return obs, reward, done, info
