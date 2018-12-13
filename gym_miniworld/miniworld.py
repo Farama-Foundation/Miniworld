@@ -1284,7 +1284,7 @@ class MiniWorldEnv(gym.Env):
         # Draw the text label in the window
         self.text_label.text = "pos: (%.2f, %.2f, %.2f)\nangle: %d\nsteps: %d" % (
             *self.agent.pos,
-            int(self.agent.dir * 180 / math.pi),
+            int(self.agent.dir * 180 / math.pi) % 360,
             self.step_count
         )
         self.text_label.draw()
