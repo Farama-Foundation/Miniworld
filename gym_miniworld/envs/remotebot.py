@@ -191,7 +191,6 @@ class RemoteBotEnv(gym.Env):
             )
 
         self.window.switch_to()
-        self.window.dispatch_events()
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0)
         glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -218,5 +217,8 @@ class RemoteBotEnv(gym.Env):
         )
         imgData.blit(0, 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT)
 
+        # If we are not running the Pyglet event loop,
+        # we have to manually flip the buffers and dispatch events
         if mode == 'human':
             self.window.flip()
+            self.window.dispatch_events()

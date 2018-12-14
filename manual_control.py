@@ -36,7 +36,6 @@ def step(action):
     print('step {}: {}'.format(env.step_count, env.actions(action).name))
 
     obs, reward, done, info = env.step(action)
-    #print('step_count = %s, reward=%.2f' % (env.unwrapped.step_count, reward))
 
     if done:
         print('done! reward={:.2f}'.format(reward))
