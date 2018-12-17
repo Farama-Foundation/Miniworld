@@ -74,9 +74,6 @@ print('num actions:', num_actions)
 max_steps = env.max_episode_steps
 print('max episode steps:', max_steps)
 
-
-
-
 def evaluate(model, seed=0, num_episodes=100):
     env = gym.make('MiniWorld-Hallway-v0')
 
@@ -111,15 +108,23 @@ def evaluate(model, seed=0, num_episodes=100):
 
 
 
+best_score = 0
 
-for i in range(100):
+for i in range(500):
     model = Model(num_actions)
     model.cuda()
 
     s = evaluate(model)
 
-    print('#{}: {:.3f}'.format(i+1, s))
+    print('#{}: {:.2f}'.format(i+1, s))
 
+    if s > best_score:
+        best_score = s
+        print('new best score: {:.2f}'.format(s))
+
+
+    del model
+    torch.cuda.empty_cache()
 
 
 
