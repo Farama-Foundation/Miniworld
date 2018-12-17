@@ -11,7 +11,7 @@ sim_params = DEFAULT_PARAMS.copy()
 sim_params.set('forward_step', 0.035, 0.028, 0.042)
 sim_params.set('turn_step', 17, 13, 21)
 sim_params.set('bot_radius', 0.4, 0.38, 0.42) # FIXME: not used
-sim_params.set('cam_pitch', -10, -15, -5)
+sim_params.set('cam_pitch', -10, -15, -3)
 sim_params.set('cam_fov_y', 49, 45, 55)
 sim_params.set('cam_height', 0.18, 0.17, 0.19)
 sim_params.set('cam_fwd_disp', 0, -0.02, 0.02)
