@@ -101,15 +101,15 @@ class RemoteBotEnv(gym.Env):
 
         # Connect to the Gym bridge ROS node
         addr_str = "tcp://%s:%s" % (serverAddr, serverPort)
-        print("connecting to %s ..." % addr_str)
+        print("Connecting to %s ..." % addr_str)
         context = zmq.Context()
         self.socket = context.socket(zmq.PAIR)
         self.socket.connect(addr_str)
-        print("connected! :)")
 
         # Initialize the state
         self.seed()
         self.reset()
+        print('Connected')
 
     def close(self):
         # FIXME
@@ -119,25 +119,12 @@ class RemoteBotEnv(gym.Env):
 
     def _recv_frame(self):
         # Receive a camera image from the server
-        self.img = recv_array(self.socket)
-
-        """
-        # Resize the image
-        import cv2
-        self.img = cv2.resize(
-            self.img,
-            (CAMERA_WIDTH, CAMERA_HEIGHT),
-            interpolation = cv2.INTER_AREA
-        )
-        """
-
-        #print(self.img.shape)
-
-        # BGR to RGB
-        self.img = self.img[:, :, ::-1]
+        img = recv_array(self.socket)
 
         # Flip vertically
-        self.img = numpy.flip(self.img, axis=0)
+        img = numpy.flip(img, axis=0)
+
+        self.img = img
 
     def reset(self):
         # Step count since episode start
