@@ -22,12 +22,13 @@ parser.add_argument('--no-time-limit', action='store_true', help='ignore time st
 args = parser.parse_args()
 
 env = gym.make(args.env_name)
-env.reset()
 
 if args.no_time_limit:
     env.max_episode_steps = math.inf
 if args.domain_rand:
     env.domain_rand = True
+
+env.reset()
 
 # Create the display window
 env.render('pyglet')
