@@ -1230,7 +1230,6 @@ class MiniWorldEnv(gym.Env):
 
         self.window.clear()
         self.window.switch_to()
-        self.window.dispatch_events()
 
         # Bind the default frame buffer
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -1293,8 +1292,9 @@ class MiniWorldEnv(gym.Env):
         glFlush()
 
         # If we are not running the Pyglet event loop,
-        # we have to manually flip the buffers
+        # we have to manually flip the buffers and dispatch events
         if mode == 'human':
             self.window.flip()
+            self.window.dispatch_events()
 
         return None
