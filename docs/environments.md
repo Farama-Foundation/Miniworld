@@ -72,3 +72,14 @@ Registered configurations:
 
 There are multiple colored boxes of random sizes in one large room. In order
 to get a reward, the agent must put the red box next to the yellow box.
+
+# RemoteBot
+
+Registered configurations:
+- `MiniWorld-RemoteBot-v0`
+
+<p align="center">
+<img src="/images/minibot.jpg" width=300></img>
+</p>
+
+This is a fake environment that uses ZMQ to connect remotely to a small robot (MiniBot). The robot uses differential drive and discrete actions that match those of MiniWorld. This makes it possible to do sim-to-real transfer experiments. Note that domain randomization needs to be enabled to make this work. This [repository](https://github.com/maximecb/minibot-iface) contains the code that runs on the robot and interfaces with the `RemoteBot` environment.
