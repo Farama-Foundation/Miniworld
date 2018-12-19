@@ -33,9 +33,10 @@ Features:
 - Easy to create your own levels, or modify existing ones
 - Good performance, high frame rate, support for multiple processes
 - Lightweight, small download, low memory requirements
-- Software provided under a permissive MIT license
-- Fully observable overhead view available
+- Provided under a permissive MIT license
+- Fully observable [top-down/overhead view](images/maze_top_view.jpg) available
 - [Domain randomization](https://blog.openai.com/generalizing-from-simulation/) support, for sim-to-real transfer
+- Ability to [display alphanumeric strings](images/textframe.jpg) on walls
 
 Limitations:
 - Graphics are basic, nowhere near photorealism
