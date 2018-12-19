@@ -140,7 +140,7 @@ class Print(nn.Module):
 
 
 class CNNBase(NNBase):
-    def __init__(self, num_inputs, recurrent=False, hidden_size=256):
+    def __init__(self, num_inputs, recurrent=False, hidden_size=128):
         super(CNNBase, self).__init__(recurrent, hidden_size, hidden_size)
 
         init_ = lambda m: init(m,
@@ -165,7 +165,7 @@ class CNNBase(NNBase):
             #Print(),
             Flatten(),
 
-            nn.Dropout(0.2),
+            #nn.Dropout(0.2),
 
             init_(nn.Linear(32 * 7 * 5, hidden_size)),
             nn.ReLU()
