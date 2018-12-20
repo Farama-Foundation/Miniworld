@@ -115,10 +115,9 @@ class PPOAlgo(BaseAlgo):
                 log_values.append(batch_value)
                 log_policy_losses.append(batch_policy_loss)
                 log_value_losses.append(batch_value_loss)
-                log_grad_norms.append(grad_norm)
+                log_grad_norms.append(grad_norm.item())
 
         # Log some values
-
         logs["entropy"] = numpy.mean(log_entropies)
         logs["value"] = numpy.mean(log_values)
         logs["policy_loss"] = numpy.mean(log_policy_losses)

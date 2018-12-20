@@ -9,10 +9,11 @@ import torch_rl
 import sys
 
 try:
-    import gym_minigrid
+    import gym_miniworld
 except ImportError:
     pass
 
+#from torch_rl.utils.penv import ParallelEnv
 import utils
 from model import ACModel
 
@@ -46,7 +47,7 @@ parser.add_argument("--lr", type=float, default=7e-4,
 parser.add_argument("--gae-lambda", type=float, default=0.95,
                     help="lambda coefficient in GAE formula (default: 0.95, 1 means no gae)")
 parser.add_argument("--entropy-coef", type=float, default=0.01,
-                    help="entropy term coefficient (default: 0.01)")
+                    help="entropy term coefficient")
 parser.add_argument("--value-loss-coef", type=float, default=0.5,
                     help="value loss term coefficient (default: 0.5)")
 parser.add_argument("--max-grad-norm", type=float, default=0.5,
@@ -193,7 +194,8 @@ while num_frames < args.frames:
     # Save vocabulary and model
 
     if args.save_interval > 0 and update % args.save_interval == 0:
-        preprocess_obss.vocab.save()
+        if hasattr(preprocess_obss, 'vocab'):
+            preprocess_obss.vocab.save()
 
         if torch.cuda.is_available():
             acmodel.cpu()

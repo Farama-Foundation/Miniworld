@@ -1,5 +1,7 @@
-from multiprocessing import Process, Pipe
+from multiprocessing import Process, Pipe, set_start_method
 import gym
+
+set_start_method('forkserver')
 
 def worker(conn, env):
     while True:
