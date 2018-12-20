@@ -67,7 +67,6 @@ parser.add_argument("--recurrence", type=int, default=1,
 parser.add_argument("--text", action="store_true", default=False,
                     help="add a GRU to the model to handle text input")
 
-
 def main():
     args = parser.parse_args()
     args.mem = args.recurrence > 1
@@ -96,19 +95,11 @@ def main():
 
     utils.seed(args.seed)
 
-
     def make_env(seed):
         env = gym.make(args.env)
         env.seed(seed)
         return env
-
     penv = ParallelEnv(make_env, args.procs, args.seed)
-
-
-    print('sleeping')
-    time.sleep(10)
-    print('waking')
-
 
     # Define obss preprocessor
 

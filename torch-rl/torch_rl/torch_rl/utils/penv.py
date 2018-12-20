@@ -3,14 +3,9 @@ import cloudpickle
 import gym
 
 def worker(conn, make_env, seed):
+    print('Creating env, seed={}'.format(seed))
 
     make_env = cloudpickle.loads(make_env)
-
-    #paren_remote.close()
-
-    print('CREATING ENV, seed=', seed)
-
-
     env = make_env(seed)
 
     while True:
