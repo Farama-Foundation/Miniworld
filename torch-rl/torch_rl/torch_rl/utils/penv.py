@@ -1,9 +1,18 @@
 from multiprocessing import Process, Pipe, set_start_method
+import cloudpickle
 import gym
 
-set_start_method('forkserver')
+def worker(conn, make_env, seed):
 
-def worker(conn, env):
+    make_env = cloudpickle.loads(make_env)
+
+    #paren_remote.close()
+
+    print('CREATING ENV, seed=', seed)
+
+
+    env = make_env(seed)
+
     while True:
         cmd, data = conn.recv()
         if cmd == "step":
@@ -20,18 +29,28 @@ def worker(conn, env):
 class ParallelEnv(gym.Env):
     """A concurrent execution of environments in multiple processes."""
 
-    def __init__(self, envs):
-        assert len(envs) >= 1, "No environment given."
+    def __init__(self, make_env, num_procs, seed):
+        assert num_procs >= 1
+        self.num_procs = num_procs
 
-        self.envs = envs
-        self.observation_space = self.envs[0].observation_space
-        self.action_space = self.envs[0].action_space
+        self.env0 = make_env(seed + 10000*0)
+        self.observation_space = self.env0.observation_space
+        self.action_space = self.env0.action_space
+
+
+
+        set_start_method('forkserver')
+
+        make_env = cloudpickle.dumps(make_env)
+
+
 
         self.locals = []
-        for env in self.envs[1:]:
+        for proc_idx in range(1, num_procs):
+            seed = seed + 10000*proc_idx
             local, remote = Pipe()
             self.locals.append(local)
-            p = Process(target=worker, args=(remote, env))
+            p = Process(target=worker, args=(remote, make_env, seed))
             p.daemon = True
             p.start()
             remote.close()
@@ -39,15 +58,15 @@ class ParallelEnv(gym.Env):
     def reset(self):
         for local in self.locals:
             local.send(("reset", None))
-        results = [self.envs[0].reset()] + [local.recv() for local in self.locals]
+        results = [self.env0.reset()] + [local.recv() for local in self.locals]
         return results
 
     def step(self, actions):
         for local, action in zip(self.locals, actions[1:]):
             local.send(("step", action))
-        obs, reward, done, info = self.envs[0].step(actions[0])
+        obs, reward, done, info = self.env0.step(actions[0])
         if done:
-            obs = self.envs[0].reset()
+            obs = self.env0.reset()
         results = zip(*[(obs, reward, done, info)] + [local.recv() for local in self.locals])
         return results
 

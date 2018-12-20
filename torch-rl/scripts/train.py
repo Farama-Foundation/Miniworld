@@ -13,7 +13,7 @@ try:
 except ImportError:
     pass
 
-#from torch_rl.utils.penv import ParallelEnv
+from torch_rl.utils.penv import ParallelEnv
 import utils
 from model import ACModel
 
@@ -66,142 +66,154 @@ parser.add_argument("--recurrence", type=int, default=1,
                     help="number of timesteps gradient is backpropagated (default: 1)\nIf > 1, a LSTM is added to the model to have memory")
 parser.add_argument("--text", action="store_true", default=False,
                     help="add a GRU to the model to handle text input")
-args = parser.parse_args()
-args.mem = args.recurrence > 1
 
-# Define run dir
 
-suffix = datetime.datetime.now().strftime("%y-%m-%d-%H-%M-%S")
-default_model_name = "{}_{}_seed{}_{}".format(args.env, args.algo, args.seed, suffix)
-model_name = args.model or default_model_name
-model_dir = utils.get_model_dir(model_name)
+def main():
+    args = parser.parse_args()
+    args.mem = args.recurrence > 1
 
-# Define logger, CSV writer and Tensorboard writer
+    # Define run dir
 
-logger = utils.get_logger(model_dir)
-csv_file, csv_writer = utils.get_csv_writer(model_dir)
-if args.tb:
-    from tensorboardX import SummaryWriter
-    tb_writer = SummaryWriter(model_dir)
+    suffix = datetime.datetime.now().strftime("%y-%m-%d-%H-%M-%S")
+    default_model_name = "{}_{}_seed{}_{}".format(args.env, args.algo, args.seed, suffix)
+    model_name = args.model or default_model_name
+    model_dir = utils.get_model_dir(model_name)
 
-# Log command and all script arguments
+    # Define logger, CSV writer and Tensorboard writer
 
-logger.info("{}\n".format(" ".join(sys.argv)))
-logger.info("{}\n".format(args))
+    logger = utils.get_logger(model_dir)
+    csv_file, csv_writer = utils.get_csv_writer(model_dir)
+    if args.tb:
+        from tensorboardX import SummaryWriter
+        tb_writer = SummaryWriter(model_dir)
 
-# Set seed for all randomness sources
+    # Log command and all script arguments
 
-utils.seed(args.seed)
+    logger.info("{}\n".format(" ".join(sys.argv)))
+    logger.info("{}\n".format(args))
 
-# Generate environments
+    # Set seed for all randomness sources
 
-envs = []
-for i in range(args.procs):
-    env = gym.make(args.env)
-    env.seed(args.seed + 10000*i)
-    envs.append(env)
+    utils.seed(args.seed)
 
-# Define obss preprocessor
 
-obs_space, preprocess_obss = utils.get_obss_preprocessor(args.env, envs[0].observation_space, model_dir)
+    def make_env(seed):
+        env = gym.make(args.env)
+        env.seed(seed)
+        return env
 
-# Load training status
+    penv = ParallelEnv(make_env, args.procs, args.seed)
 
-try:
-    status = utils.load_status(model_dir)
-except OSError:
-    status = {"num_frames": 0, "update": 0}
 
-# Define actor-critic model
+    print('sleeping')
+    time.sleep(10)
+    print('waking')
 
-try:
-    acmodel = utils.load_model(model_dir)
-    logger.info("Model successfully loaded\n")
-except OSError:
-    acmodel = ACModel(obs_space, envs[0].action_space, args.mem, args.text)
-    logger.info("Model successfully created\n")
-logger.info("{}\n".format(acmodel))
 
-if torch.cuda.is_available():
-    acmodel.cuda()
-logger.info("CUDA available: {}\n".format(torch.cuda.is_available()))
+    # Define obss preprocessor
 
-# Define actor-critic algo
+    obs_space, preprocess_obss = utils.get_obss_preprocessor(args.env, penv.observation_space, model_dir)
 
-if args.algo == "a2c":
-    algo = torch_rl.A2CAlgo(envs, acmodel, args.frames_per_proc, args.discount, args.lr, args.gae_lambda,
-                            args.entropy_coef, args.value_loss_coef, args.max_grad_norm, args.recurrence,
-                            args.optim_alpha, args.optim_eps, preprocess_obss)
-elif args.algo == "ppo":
-    algo = torch_rl.PPOAlgo(envs, acmodel, args.frames_per_proc, args.discount, args.lr, args.gae_lambda,
-                            args.entropy_coef, args.value_loss_coef, args.max_grad_norm, args.recurrence,
-                            args.optim_eps, args.clip_eps, args.epochs, args.batch_size, preprocess_obss)
-else:
-    raise ValueError("Incorrect algorithm name: {}".format(args.algo))
+    # Load training status
 
-# Train model
+    try:
+        status = utils.load_status(model_dir)
+    except OSError:
+        status = {"num_frames": 0, "update": 0}
 
-num_frames = status["num_frames"]
-total_start_time = time.time()
-update = status["update"]
+    # Define actor-critic model
 
-while num_frames < args.frames:
-    # Update model parameters
+    try:
+        acmodel = utils.load_model(model_dir)
+        logger.info("Model successfully loaded\n")
+    except OSError:
+        acmodel = ACModel(obs_space, penv.action_space, args.mem, args.text)
+        logger.info("Model successfully created\n")
+    logger.info("{}\n".format(acmodel))
 
-    update_start_time = time.time()
-    logs = algo.update_parameters()
-    update_end_time = time.time()
+    if torch.cuda.is_available():
+        acmodel.cuda()
+    logger.info("CUDA available: {}\n".format(torch.cuda.is_available()))
 
-    num_frames += logs["num_frames"]
-    update += 1
+    # Define actor-critic algo
 
-    # Print logs
+    if args.algo == "a2c":
+        algo = torch_rl.A2CAlgo(penv, acmodel, args.frames_per_proc, args.discount, args.lr, args.gae_lambda,
+                                args.entropy_coef, args.value_loss_coef, args.max_grad_norm, args.recurrence,
+                                args.optim_alpha, args.optim_eps, preprocess_obss)
+    elif args.algo == "ppo":
+        algo = torch_rl.PPOAlgo(penv, acmodel, args.frames_per_proc, args.discount, args.lr, args.gae_lambda,
+                                args.entropy_coef, args.value_loss_coef, args.max_grad_norm, args.recurrence,
+                                args.optim_eps, args.clip_eps, args.epochs, args.batch_size, preprocess_obss)
+    else:
+        raise ValueError("Incorrect algorithm name: {}".format(args.algo))
 
-    if update % args.log_interval == 0:
-        fps = logs["num_frames"]/(update_end_time - update_start_time)
-        duration = int(time.time() - total_start_time)
-        return_per_episode = utils.synthesize(logs["return_per_episode"])
-        rreturn_per_episode = utils.synthesize(logs["reshaped_return_per_episode"])
-        num_frames_per_episode = utils.synthesize(logs["num_frames_per_episode"])
+    # Train model
 
-        header = ["update", "frames", "FPS", "duration"]
-        data = [update, num_frames, fps, duration]
-        header += ["rreturn_" + key for key in rreturn_per_episode.keys()]
-        data += rreturn_per_episode.values()
-        header += ["num_frames_" + key for key in num_frames_per_episode.keys()]
-        data += num_frames_per_episode.values()
-        header += ["entropy", "value", "policy_loss", "value_loss", "grad_norm"]
-        data += [logs["entropy"], logs["value"], logs["policy_loss"], logs["value_loss"], logs["grad_norm"]]
+    num_frames = status["num_frames"]
+    total_start_time = time.time()
+    update = status["update"]
 
-        logger.info(
-            "U {} | F {:06} | FPS {:04.0f} | D {} | rR:μσmM {:.2f} {:.2f} {:.2f} {:.2f} | F:μσmM {:.1f} {:.1f} {} {} | H {:.3f} | V {:.3f} | pL {:.3f} | vL {:.3f} | ∇ {:.3f}"
-            .format(*data))
+    while num_frames < args.frames:
+        # Update model parameters
 
-        header += ["return_" + key for key in return_per_episode.keys()]
-        data += return_per_episode.values()
+        update_start_time = time.time()
+        logs = algo.update_parameters()
+        update_end_time = time.time()
 
-        if status["num_frames"] == 0:
-            csv_writer.writerow(header)
-        csv_writer.writerow(data)
-        csv_file.flush()
+        num_frames += logs["num_frames"]
+        update += 1
 
-        if args.tb:
-            for field, value in zip(header, data):
-                tb_writer.add_scalar(field, value, num_frames)
+        # Print logs
 
-        status = {"num_frames": num_frames, "update": update}
+        if update % args.log_interval == 0:
+            fps = logs["num_frames"]/(update_end_time - update_start_time)
+            duration = int(time.time() - total_start_time)
+            return_per_episode = utils.synthesize(logs["return_per_episode"])
+            rreturn_per_episode = utils.synthesize(logs["reshaped_return_per_episode"])
+            num_frames_per_episode = utils.synthesize(logs["num_frames_per_episode"])
 
-    # Save vocabulary and model
+            header = ["update", "frames", "FPS", "duration"]
+            data = [update, num_frames, fps, duration]
+            header += ["rreturn_" + key for key in rreturn_per_episode.keys()]
+            data += rreturn_per_episode.values()
+            header += ["num_frames_" + key for key in num_frames_per_episode.keys()]
+            data += num_frames_per_episode.values()
+            header += ["entropy", "value", "policy_loss", "value_loss", "grad_norm"]
+            data += [logs["entropy"], logs["value"], logs["policy_loss"], logs["value_loss"], logs["grad_norm"]]
 
-    if args.save_interval > 0 and update % args.save_interval == 0:
-        if hasattr(preprocess_obss, 'vocab'):
-            preprocess_obss.vocab.save()
+            logger.info(
+                "U {} | F {:06} | FPS {:04.0f} | D {} | rR:μσmM {:.2f} {:.2f} {:.2f} {:.2f} | F:μσmM {:.1f} {:.1f} {} {} | H {:.3f} | V {:.3f} | pL {:.3f} | vL {:.3f} | ∇ {:.3f}"
+                .format(*data))
 
-        if torch.cuda.is_available():
-            acmodel.cpu()
-        utils.save_model(acmodel, model_dir)
-        logger.info("Model successfully saved")
-        if torch.cuda.is_available():
-            acmodel.cuda()
+            header += ["return_" + key for key in return_per_episode.keys()]
+            data += return_per_episode.values()
 
-        utils.save_status(status, model_dir)
+            if status["num_frames"] == 0:
+                csv_writer.writerow(header)
+            csv_writer.writerow(data)
+            csv_file.flush()
+
+            if args.tb:
+                for field, value in zip(header, data):
+                    tb_writer.add_scalar(field, value, num_frames)
+
+            status = {"num_frames": num_frames, "update": update}
+
+        # Save vocabulary and model
+
+        if args.save_interval > 0 and update % args.save_interval == 0:
+            if hasattr(preprocess_obss, 'vocab'):
+                preprocess_obss.vocab.save()
+
+            if torch.cuda.is_available():
+                acmodel.cpu()
+            utils.save_model(acmodel, model_dir)
+            logger.info("Model successfully saved")
+            if torch.cuda.is_available():
+                acmodel.cuda()
+
+            utils.save_status(status, model_dir)
+
+if __name__ == "__main__":
+    main()
