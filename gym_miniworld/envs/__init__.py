@@ -11,6 +11,7 @@ from .putnext import *
 from .maze import *
 from .collecthealth import *
 from .simtoreal1 import *
+from .simtoreal2 import *
 
 # Registered environment ids
 env_ids = []
