@@ -34,7 +34,7 @@ parser.add_argument("--frames", type=int, default=10**7,
                     help="number of frames of training (default: 10e7)")
 parser.add_argument("--log-interval", type=int, default=1,
                     help="number of updates between two logs (default: 1)")
-parser.add_argument("--save-interval", type=int, default=0,
+parser.add_argument("--save-interval", type=int, default=50,
                     help="number of updates between two saves (default: 0, 0 means no saving)")
 parser.add_argument("--tb", action="store_true", default=False,
                     help="log into Tensorboard")
