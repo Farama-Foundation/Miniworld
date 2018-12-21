@@ -69,7 +69,7 @@ class Texture:
         In mose cases, this method should not be used directly.
         """
 
-        print('loading texture "%s"' % tex_path)
+        print('Loading texture "%s"' % tex_path)
 
         img = pyglet.image.load(tex_path)
         tex = img.get_texture()

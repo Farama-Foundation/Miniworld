@@ -49,7 +49,7 @@ for env_id in gym_miniworld.envs.env_ids:
     if 'RemoteBot' in env_id:
         continue
 
-    print('Loading "' + env_id + '"')
+    print('Testing "' + env_id + '"')
     env = gym.make(env_id)
     env.domain_rand = True
     # Try multiple random restarts
