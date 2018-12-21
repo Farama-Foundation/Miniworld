@@ -19,8 +19,3 @@ class RecurrentACModel(ACModel):
     @abstractmethod
     def forward(self, obs, memory):
         pass
-
-    @property
-    @abstractmethod
-    def memory_size(self):
-        pass

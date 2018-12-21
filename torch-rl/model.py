@@ -15,7 +15,7 @@ def initialize_parameters(m):
             m.bias.data.fill_(0)
 
 class ACModel(nn.Module, torch_rl.RecurrentACModel):
-    def __init__(self, obs_space, action_space, use_memory=False, use_text=False):
+    def __init__(self, obs_space, action_space, use_memory=False, use_text=False, memory_size=128):
         super().__init__()
 
         # Decide which components are enabled
@@ -36,9 +36,11 @@ class ACModel(nn.Module, torch_rl.RecurrentACModel):
 
         self.image_embedding_size = 7 * 5 * 32
 
+        self.memory_size = memory_size
+
         # Define memory
         if self.use_memory:
-            self.memory_rnn = nn.LSTMCell(self.image_embedding_size, self.semi_memory_size)
+            self.memory_rnn = nn.GRUCell(self.image_embedding_size, self.memory_size)
 
         # Define text embedding
         if self.use_text:
@@ -48,7 +50,7 @@ class ACModel(nn.Module, torch_rl.RecurrentACModel):
             self.text_rnn = nn.GRU(self.word_embedding_size, self.text_embedding_size, batch_first=True)
 
         # Resize image embedding
-        self.embedding_size = self.semi_memory_size
+        self.embedding_size = self.memory_size
         if self.use_text:
             self.embedding_size += self.text_embedding_size
 
@@ -72,14 +74,6 @@ class ACModel(nn.Module, torch_rl.RecurrentACModel):
         # Initialize parameters correctly
         self.apply(initialize_parameters)
 
-    @property
-    def memory_size(self):
-        return 2*self.semi_memory_size
-
-    @property
-    def semi_memory_size(self):
-        return self.image_embedding_size
-
     def forward(self, obs, memory):
         x = torch.transpose(torch.transpose(obs.image, 1, 3), 2, 3)
         x = self.image_conv(x)
@@ -87,10 +81,8 @@ class ACModel(nn.Module, torch_rl.RecurrentACModel):
         x = x.reshape(x.shape[0], -1)
 
         if self.use_memory:
-            hidden = (memory[:, :self.semi_memory_size], memory[:, self.semi_memory_size:])
-            hidden = self.memory_rnn(x, hidden)
-            embedding = hidden[0]
-            memory = torch.cat(hidden, dim=1)
+            memory = self.memory_rnn(x, memory)
+            embedding = memory
         else:
             embedding = x
 
