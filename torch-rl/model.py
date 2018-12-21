@@ -24,17 +24,17 @@ class ACModel(nn.Module, torch_rl.RecurrentACModel):
 
         # Define image embedding
         self.image_conv = nn.Sequential(
-            nn.Conv2d(3, 16, (2, 2)),
+            nn.Conv2d(3, 32, kernel_size=5, stride=2),
             nn.ReLU(),
-            nn.MaxPool2d((2, 2)),
-            nn.Conv2d(16, 32, (2, 2)),
+
+            nn.Conv2d(32, 32, kernel_size=5, stride=2),
             nn.ReLU(),
-            nn.Conv2d(32, 64, (2, 2)),
+
+            nn.Conv2d(32, 32, kernel_size=4, stride=2),
             nn.ReLU()
         )
-        n = obs_space["image"][0]
-        m = obs_space["image"][1]
-        self.image_embedding_size = ((n-1)//2-2)*((m-1)//2-2)*64
+
+        self.image_embedding_size = 7 * 5 * 32
 
         # Define memory
         if self.use_memory:
@@ -83,6 +83,7 @@ class ACModel(nn.Module, torch_rl.RecurrentACModel):
     def forward(self, obs, memory):
         x = torch.transpose(torch.transpose(obs.image, 1, 3), 2, 3)
         x = self.image_conv(x)
+
         x = x.reshape(x.shape[0], -1)
 
         if self.use_memory:
