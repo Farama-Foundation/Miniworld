@@ -14,6 +14,27 @@ def initialize_parameters(m):
         if m.bias is not None:
             m.bias.data.fill_(0)
 
+class Print(nn.Module):
+    """
+    Layer that prints the size of its input.
+    Used to debug nn.Sequential
+    """
+
+    def __init__(self):
+        super(Print, self).__init__()
+
+    def forward(self, x):
+        print('layer input:', x.shape)
+        return x
+
+class Flatten(nn.Module):
+    """
+    Flatten layer, to flatten convolutional layer output
+    """
+
+    def forward(self, input):
+        return input.view(input.size(0), -1)
+
 class ACModel(nn.Module, torch_rl.RecurrentACModel):
     def __init__(self, obs_space, action_space, use_memory=False, use_text=False, memory_size=128):
         super().__init__()
@@ -22,21 +43,26 @@ class ACModel(nn.Module, torch_rl.RecurrentACModel):
         self.use_text = use_text
         self.use_memory = use_memory
 
+        self.image_embedding_size = 128
+
+        self.memory_size = memory_size
+
         # Define image embedding
         self.image_conv = nn.Sequential(
             nn.Conv2d(3, 32, kernel_size=5, stride=2),
-            nn.ReLU(),
+            nn.LeakyReLU(),
 
             nn.Conv2d(32, 32, kernel_size=5, stride=2),
-            nn.ReLU(),
+            nn.LeakyReLU(),
 
             nn.Conv2d(32, 32, kernel_size=4, stride=2),
-            nn.ReLU()
+            nn.LeakyReLU(),
+
+            Flatten(),
+
+            nn.Linear(32 * 7 * 5, self.image_embedding_size),
+            nn.LeakyReLU()
         )
-
-        self.image_embedding_size = 7 * 5 * 32
-
-        self.memory_size = memory_size
 
         # Define memory
         if self.use_memory:
@@ -58,7 +84,7 @@ class ACModel(nn.Module, torch_rl.RecurrentACModel):
         if isinstance(action_space, gym.spaces.Discrete):
             self.actor = nn.Sequential(
                 nn.Linear(self.embedding_size, 64),
-                nn.Tanh(),
+                nn.LeakyReLU(),
                 nn.Linear(64, action_space.n)
             )
         else:
@@ -67,7 +93,7 @@ class ACModel(nn.Module, torch_rl.RecurrentACModel):
         # Define critic's model
         self.critic = nn.Sequential(
             nn.Linear(self.embedding_size, 64),
-            nn.Tanh(),
+            nn.LeakyReLU(),
             nn.Linear(64, 1)
         )
 
