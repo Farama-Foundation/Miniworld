@@ -67,7 +67,7 @@ def print_model_info(model):
 def make_var(arr):
     arr = np.ascontiguousarray(arr)
     arr = torch.from_numpy(arr).float()
-    arr = Variable(arr)
+    arr = Variable(arr, requires_grad=False)
     if torch.cuda.is_available():
         arr = arr.cuda()
     return arr
