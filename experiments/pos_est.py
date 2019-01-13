@@ -63,7 +63,7 @@ class Model(nn.Module):
 
 ##############################################################################
 
-env = gym.make('MiniWorld-OneRoom-v0')
+env = gym.make('MiniWorld-MazeS3-v0')
 
 num_actions = env.action_space.n
 print('num actions:', num_actions)
@@ -84,13 +84,13 @@ def gen_trajs(num_episodes=128):
     global cur_idx, num_demos
 
     for i in range(num_episodes):
-        #print(i)
-
         active[cur_idx, :] = 0
 
         obs = env.reset()
-
         start_pos = env.agent.pos
+
+        cur_action = None
+        steps_left = 0
 
         for step_idx in range(max_steps):
             obs = obs.transpose(2, 0, 1)
@@ -102,32 +102,37 @@ def gen_trajs(num_episodes=128):
             poss[cur_idx, step_idx] = rel_pos
             active[cur_idx, step_idx] = 1
 
-            # TODO: bias towards forward movement
-            # or repetition of actions for multiple time steps
-            action = np.random.randint(0, env.actions.move_forward+1)
+            # Repeat turn_left, turn_right or move_forward for N steps
+            if steps_left == 0:
+                cur_action = np.random.choice([
+                    env.actions.turn_left,
+                    env.actions.turn_right,
+                    env.actions.move_forward]
+                )
+                steps_left = np.random.randint(1, 17)
 
-            obs, reward, done, info = env.step(action)
+            obs, reward, done, info = env.step(cur_action)
+            steps_left -= 1
 
             if done:
                 break
 
+        num_demos = max(num_demos, cur_idx+1)
         cur_idx = (cur_idx + 1) % max_demos
-        num_demos = max(num_demos, cur_idx)
-
 
 model = Model(num_actions)
 model.cuda()
 
 optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
-batch_size = 32
+batch_size = 48
 
 running_loss = 0
 
 gen_trajs(batch_size)
 
 # For each batch
-for batch_idx in range(50000):
+for batch_idx in range(500000):
     print('batch #{}'.format(batch_idx+1))
 
     # Select a valid demo index in function of the batch size
@@ -165,17 +170,21 @@ for batch_idx in range(50000):
 
         pos_out, memory = model(obs_step, memory)
 
-        pos_loss = (pos_out - pos_step)
-        pos_loss = (pos_loss * active_step).abs().sum()
+        pos_err = pos_out - pos_step
+        pos_err = pos_err * active_step
+        pos_err_sqr = pos_err * pos_err
+        pos_loss = pos_err_sqr.sum()
+
         total_loss += pos_loss
         total_steps += active_step.sum().item()
 
     optimizer.zero_grad()
     total_loss.backward()
-    optimizer.step()
 
-    # Generate new data
+    # Generate new data while computations are happening on the GPU
     gen_trajs(4)
+
+    optimizer.step()
 
     mean_loss = total_loss.item() / total_steps
 
@@ -184,4 +193,11 @@ for batch_idx in range(50000):
     else:
         running_loss = running_loss * 0.99 + mean_loss * 0.01
 
-    print('{:.4f}'.format(running_loss))
+    mean_loss_sqrt = math.sqrt(running_loss)
+
+    #print('{:.4f}'.format(running_loss))
+    print('{:.4f}'.format(mean_loss_sqrt))
+
+    if batch_idx % 100 == 0:
+        torch.save(model.state_dict(), 'pos_est_model.pkl')
+
