@@ -18,7 +18,7 @@ sim_params.set('cam_fwd_disp', 0, -0.02, 0.02)
 
 # TODO: modify lighting parameters
 
-class SimToReal1Env(MiniWorldEnv):
+class SimToRealGoToEnv(MiniWorldEnv):
     """
     Environment designed for sim-to-real transfer.
     In this environment, the robot has to go to the red box.

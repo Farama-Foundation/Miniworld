@@ -17,7 +17,7 @@ sim_params.set('cam_height', 0.18, 0.17, 0.19)
 sim_params.set('cam_fwd_disp', 0, -0.02, 0.02)
 # TODO: modify lighting parameters
 
-class SimToReal2Env(MiniWorldEnv):
+class SimToRealPushEnv(MiniWorldEnv):
     """
     Environment designed for sim-to-real transfer.
     In this environment, the robot has to push the
@@ -72,11 +72,22 @@ class SimToReal2Env(MiniWorldEnv):
             floor_tex=floor_tex
         )
 
-        # TODO: the box to be pushed can't be too close to the walls,
+        # FIXME: the box to be pushed can't be too close to the walls,
         # limit its spawn area
 
-        self.box1 = self.place_entity(Box(color='red', size=box1_size))
-        self.box2 = self.place_entity(Box(color='yellow', size=box2_size))
+        min_dist = box1_size + box2_size
+        self.goal_dist = 1.5 * min_dist
+
+        while True:
+            self.box1 = self.place_entity(Box(color='red', size=box1_size))
+            self.box2 = self.place_entity(Box(color='yellow', size=box2_size))
+
+            self.start_dist = np.linalg.norm(self.box1.pos - self.box2.pos)
+            if self.start_dist > self.goal_dist:
+                break
+
+            self.entities.remove(self.box1)
+            self.entities.remove(self.box2)
 
         # Place the agent a random distance away from the goal
         self.place_agent()
@@ -84,10 +95,12 @@ class SimToReal2Env(MiniWorldEnv):
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
-        """
-        if self.near(self.box):
-            reward += self._reward()
+        # TODO: sparse rewards?
+
+        dist = np.linalg.norm(self.box1.pos - self.box2.pos)
+
+        if dist < self.goal_dist:
+            reward = 1
             done = True
-        """
 
         return obs, reward, done, info

@@ -10,8 +10,8 @@ from .wallgap import *
 from .putnext import *
 from .maze import *
 from .collecthealth import *
-from .simtoreal1 import *
-from .simtoreal2 import *
+from .simtorealgoto import *
+from .simtorealpush import *
 
 # Registered environment ids
 env_ids = []
