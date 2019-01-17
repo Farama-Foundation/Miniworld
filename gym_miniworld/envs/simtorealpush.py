@@ -10,7 +10,7 @@ from gym import spaces
 sim_params = DEFAULT_PARAMS.copy()
 sim_params.set('forward_step', 0.035, 0.028, 0.042)
 sim_params.set('turn_step', 17, 13, 21)
-sim_params.set('bot_radius', 0.4, 0.38, 0.42) # FIXME: not used
+sim_params.set('bot_radius', 0.11, 0.11, 0.11)
 sim_params.set('cam_pitch', -10, -15, -3)
 sim_params.set('cam_fov_y', 49, 45, 55)
 sim_params.set('cam_height', 0.18, 0.17, 0.19)
@@ -36,9 +36,8 @@ class SimToRealPushEnv(MiniWorldEnv):
         self.action_space = spaces.Discrete(self.actions.move_forward+1)
 
     def _gen_world(self):
-        # ~1.2 meter wide rink
-        size = self.rand.float(1.1, 1.3)
-
+        # Size of the rink the robot is placed in
+        size = self.rand.float(1.6, 1.7)
         wall_height = self.rand.float(0.42, 0.50)
 
         box1_size = self.rand.float(0.075, 0.090)
@@ -55,7 +54,7 @@ class SimToRealPushEnv(MiniWorldEnv):
         wall_tex = self.rand.choice([
             'drywall',
             'stucco',
-            # Chosen because they have visible lines/seams
+            # Materials chosen because they have visible lines/seams
             'concrete_tiles',
             'ceiling_tiles',
         ])
@@ -72,16 +71,31 @@ class SimToRealPushEnv(MiniWorldEnv):
             floor_tex=floor_tex
         )
 
-        # FIXME: the box to be pushed can't be too close to the walls,
-        # limit its spawn area
-
+        # Target distance for the boxes
         min_dist = box1_size + box2_size
         self.goal_dist = 1.5 * min_dist
 
-        while True:
-            self.box1 = self.place_entity(Box(color='red', size=box1_size))
-            self.box2 = self.place_entity(Box(color='yellow', size=box2_size))
+        # Avoid spawning boxes in the corners (where they can't be pushed)
+        min_pos = 2 * self.params.get_max('bot_radius')
+        max_pos = size - 2 * self.params.get_max('bot_radius')
 
+        while True:
+            self.box1 = self.place_entity(
+                Box(color='red', size=box1_size),
+                min_x = min_pos,
+                min_z = min_pos,
+                max_x = max_pos,
+                max_z = max_pos
+            )
+            self.box2 = self.place_entity(
+                Box(color='yellow', size=box2_size),
+                min_x = min_pos,
+                min_z = min_pos,
+                max_x = max_pos,
+                max_z = max_pos
+            )
+
+            # Boxes can't start too close to each other
             self.start_dist = np.linalg.norm(self.box1.pos - self.box2.pos)
             if self.start_dist > self.goal_dist:
                 break
@@ -95,10 +109,14 @@ class SimToRealPushEnv(MiniWorldEnv):
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
+
+
+
+
+
+
         # TODO: sparse rewards?
-
         dist = np.linalg.norm(self.box1.pos - self.box2.pos)
-
         if dist < self.goal_dist:
             reward = 1
             done = True
