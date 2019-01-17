@@ -26,7 +26,7 @@ class SimToRealPushEnv(MiniWorldEnv):
 
     def __init__(self, **kwargs):
         super().__init__(
-            max_episode_steps=100,
+            max_episode_steps=150,
             params=sim_params,
             domain_rand=True,
             **kwargs
@@ -107,15 +107,26 @@ class SimToRealPushEnv(MiniWorldEnv):
         self.place_agent()
 
     def step(self, action):
+        # Very crude approximation the physics of box pushing
+        if action == self.actions.move_forward:
+            fwd_dist = self.params.get_max('forward_step')
+            delta_pos = self.agent.dir_vec * fwd_dist
+            next_pos = self.agent.pos + delta_pos
+
+            for box in [self.box1, self.box2]:
+                vec = box.pos - next_pos
+                dist = np.linalg.norm(vec)
+
+                if dist < self.agent.radius + box.radius:
+                    #print('collision')
+                    next_box_pos = box.pos + vec
+                    if not self.intersect(box, next_box_pos, box.radius):
+                        box.pos = next_box_pos
+                        box.dir += self.rand.float(-math.pi/5, math.pi/5)
+
         obs, reward, done, info = super().step(action)
 
-
-
-
-
-
-
-        # TODO: sparse rewards?
+        # TODO: give sparse rewards?
         dist = np.linalg.norm(self.box1.pos - self.box2.pos)
         if dist < self.goal_dist:
             reward = 1
