@@ -988,6 +988,51 @@ class MiniWorldEnv(gym.Env):
         self.room_probs = np.array([r.area for r in self.rooms], dtype=float)
         self.room_probs /= np.sum(self.room_probs)
 
+    def gen_grid(self, cell_size=0.25):
+        """
+        Generate an occupancy grid for the map
+        """
+
+        # Compute width and height of grid
+        width = math.ceil((self.max_x - self.min_x) / cell_size)
+        height = math.ceil((self.max_z - self.min_z) / cell_size)
+        print(width, height)
+
+        grid = np.zeros(shape=(width, height))
+
+        for j in range(height):
+            for i in range(width):
+                min_x = self.min_x + i * cell_size
+                max_x = min_x + cell_size
+                min_z = self.min_z + j * cell_size
+                max_z = min_z + cell_size
+
+                # TODO: check for segment intersection
+                # For each wall segment
+                # wall_segs has shape <n,2,3>
+                for k in range(self.wall_segs.shape[0]):
+                    seg = self.wall_segs[k]
+                    p0 = seg[0]
+                    p1 = seg[1]
+                    x0, _, z0 = p0
+                    dx, _, dz = p1 - p0
+
+                    if dx > 0:
+                        # Change in z for each unit of x
+                        sz = dz / dx
+                        # z = z0 + x * sz
+                        s_min_z = z0 + min_x * sz
+                        s_max_z = z0 + max_x * sz
+                        if s_min_z >= min_z and s_min_z <= max_z and s_max_z >= min_z and s_max_z <= max_z:
+                            grid[i, j] = 1
+
+                    # TODO: x
+
+
+
+
+        return grid
+
     def _gen_world(self):
         """
         Generate the world. Derived classes must implement this method.

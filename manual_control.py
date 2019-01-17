@@ -23,6 +23,14 @@ args = parser.parse_args()
 
 env = gym.make(args.env_name)
 
+
+grid = env.gen_grid()
+# TODO: print grid using #s
+print(grid)
+
+
+
+
 if args.no_time_limit:
     env.max_episode_steps = math.inf
 if args.domain_rand:
