@@ -996,40 +996,67 @@ class MiniWorldEnv(gym.Env):
         # Compute width and height of grid
         width = math.ceil((self.max_x - self.min_x) / cell_size)
         height = math.ceil((self.max_z - self.min_z) / cell_size)
-        print(width, height)
+
+        print('num segs:', self.wall_segs.shape[0])
+        print('min_x={}, max_x={}, min_z={}, max_z={}'.format(self.min_x, self.max_x, self.min_z, self.max_z))
+
+        def intersect(p0, p1, min_x, max_x, min_z, max_z):
+            x0, _, z0 = p0
+            dx, _, dz = p1 - p0
+
+            if dx:
+                # Find z at min_x
+                t = (min_x - x0) / dx
+                t = max(min(t, 1), 0)
+                z = z0 + t * dz
+                if z >= min_z and z <= max_z:
+                    return True
+
+                # Find z at max_x
+                t = (max_x - x0) / dx
+                t = max(min(t, 1), 0)
+                z = z0 + t * dz
+                if z >= min_z and z <= max_z:
+                    return True
+
+            if dz:
+                # Find x at min_z
+                t = (min_z - z0) / dz
+                t = max(min(t, 1), 0)
+                x = x0 + t * dx
+                if x >= min_x and x <= max_x:
+                    return True
+
+                # Find x at max_z
+                t = (max_z - z0) / dz
+                t = max(min(t, 1), 0)
+                x = x0 + t * dx
+                if x >= min_x and x <= max_x:
+                    return True
+
+            return False
 
         grid = np.zeros(shape=(width, height))
 
-        for j in range(height):
+        # TODO: check for segment intersection
+        # For each wall segment
+        # wall_segs has shape <n,2,3>
+        for k in range(self.wall_segs.shape[0]):
+            seg = self.wall_segs[k]
+            p0 = seg[0]
+            p1 = seg[1]
+
+            print(p0, p1)
+
             for i in range(width):
-                min_x = self.min_x + i * cell_size
-                max_x = min_x + cell_size
-                min_z = self.min_z + j * cell_size
-                max_z = min_z + cell_size
-
-                # TODO: check for segment intersection
-                # For each wall segment
-                # wall_segs has shape <n,2,3>
-                for k in range(self.wall_segs.shape[0]):
-                    seg = self.wall_segs[k]
-                    p0 = seg[0]
-                    p1 = seg[1]
-                    x0, _, z0 = p0
-                    dx, _, dz = p1 - p0
-
-                    if dx > 0:
-                        # Change in z for each unit of x
-                        sz = dz / dx
-                        # z = z0 + x * sz
-                        s_min_z = z0 + min_x * sz
-                        s_max_z = z0 + max_x * sz
-                        if s_min_z >= min_z and s_min_z <= max_z and s_max_z >= min_z and s_max_z <= max_z:
-                            grid[i, j] = 1
-
-                    # TODO: x
-
-
-
+                for j in range(height):
+                    min_x = self.min_x + i * cell_size
+                    max_x = min_x + cell_size
+                    min_z = self.min_z + j * cell_size
+                    max_z = min_z + cell_size
+                    test = intersect(p0, p1, min_x, max_x, min_z, max_z)
+                    if test:
+                        grid[i,j] = True
 
         return grid
 

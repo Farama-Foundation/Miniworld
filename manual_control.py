@@ -24,9 +24,21 @@ args = parser.parse_args()
 env = gym.make(args.env_name)
 
 
+
+env.reset()
+
 grid = env.gen_grid()
-# TODO: print grid using #s
-print(grid)
+print(grid.shape)
+
+for j in range(grid.shape[1]):
+    s = ''
+    for i in range(grid.shape[0]):
+        if grid[i,j]:
+            s += '#'
+        else:
+            s += ' '
+    print(s)
+
 
 
 
