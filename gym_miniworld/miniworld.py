@@ -459,8 +459,8 @@ class MiniWorldEnv(gym.Env):
         max_episode_steps=1500,
         obs_width=80,
         obs_height=60,
-        window_width=800,
-        window_height=600,
+        window_width=200,
+        window_height=200,
         params=DEFAULT_PARAMS,
         domain_rand=False
     ):
@@ -1203,8 +1203,8 @@ class MiniWorldEnv(gym.Env):
             return
 
         # Render the human-view image
-        img = self.render_obs(self.vis_fb)
-        #img = self.render_top_view(self.vis_fb)
+        #img = self.render_obs(self.vis_fb)
+        img = self.render_top_view(self.vis_fb)
         img_width = img.shape[1]
         img_height = img.shape[0]
 
