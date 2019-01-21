@@ -112,7 +112,7 @@ class Model(nn.Module):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch-size", default=32, type=int)
-parser.add_argument("--buffer-size", default=2028, type=int)
+parser.add_argument("--buffer-size", default=2048, type=int)
 parser.add_argument("--env", default="MiniWorld-MazeS2-v0")
 args = parser.parse_args()
 
@@ -226,5 +226,7 @@ for i in range(1000000):
     print('running loss: {:.1f}'.format(running_loss))
 
     if i % 100 == 0:
+        print('saving images and model')
         save_img('pred_out_map.png', pred_out_map[0])
         save_img('batch_out_map.png', batch_out_map[0])
+        torch.save(model.state_dict(), 'map_gen_model.torch')
