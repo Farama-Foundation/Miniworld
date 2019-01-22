@@ -161,6 +161,13 @@ def gen_data(num_episodes=1):
             angle = env.agent.dir
             pos = np.array([*pos] + [angle])
 
+            # Pick a random transition index. Prioritize expanding the set.
+            if num_trans < args.buffer_size and np.random.uniform(0, 1) < 0.5:
+                cur_idx = num_trans
+            else:
+                cur_idx = np.random.randint(0, num_trans + 1) % args.buffer_size
+            num_trans = max(num_trans, cur_idx+1)
+
             input_obs[cur_idx] = obs
             input_pos[cur_idx] = pos
             input_map[cur_idx] = map.cpu().numpy()
@@ -168,9 +175,6 @@ def gen_data(num_episodes=1):
             # Generate output map, store it
             top_view = env.render_top_view(env.vis_fb).transpose(2, 0, 1)
             output_map[cur_idx] = top_view
-
-            num_trans = max(num_trans, cur_idx+1)
-            cur_idx = (cur_idx + 1) % args.buffer_size
 
             with torch.no_grad():
                 obs = make_var(obs).unsqueeze(0)
@@ -228,7 +232,7 @@ for i in range(1000000):
     if i % 100 == 0:
         print('saving images and model')
 
-        for img_idx in range(10):
+        for img_idx in range(20):
             save_img('img_{:02d}_batch.png'.format(img_idx), batch_out_map[img_idx])
             save_img('img_{:02d}_pred.png'.format(img_idx), pred_out_map[img_idx])
 
