@@ -227,6 +227,9 @@ for i in range(1000000):
 
     if i % 100 == 0:
         print('saving images and model')
-        save_img('pred_out_map.png', pred_out_map[0])
-        save_img('batch_out_map.png', batch_out_map[0])
+
+        for img_idx in range(10):
+            save_img('img_{:02d}_batch.png'.format(img_idx), batch_out_map[img_idx])
+            save_img('img_{:02d}_pred.png'.format(img_idx), pred_out_map[img_idx])
+
         torch.save(model.state_dict(), 'map_gen_model.torch')
