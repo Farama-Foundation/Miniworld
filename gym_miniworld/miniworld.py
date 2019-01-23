@@ -1092,30 +1092,10 @@ class MiniWorldEnv(gym.Env):
         glClearDepth(1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        # Scene extents to render
-        min_x = self.min_x - 1
-        max_x = self.max_x + 1
-        min_z = self.min_z - 1
-        max_z = self.max_z + 1
-
-        width = max_x - min_x
-        height = max_z - min_z
-        aspect = width / height
-        fb_aspect = frame_buffer.width / frame_buffer.height
-
-        # Adjust the aspect extents to match the frame buffer aspect
-        if aspect > fb_aspect:
-            # Want to add to denom, add to height
-            new_h = width / fb_aspect
-            h_diff = new_h - height
-            min_z -= h_diff / 2
-            max_z += h_diff / 2
-        elif aspect < fb_aspect:
-            # Want to add to num, add to width
-            new_w = height * fb_aspect
-            w_diff = new_w - width
-            min_x -= w_diff / 2
-            max_x += w_diff / 2
+        min_x = -2
+        max_x = 2
+        min_z = -4
+        max_z = 0
 
         # Set the projection matrix
         glMatrixMode(GL_PROJECTION)
@@ -1139,6 +1119,9 @@ class MiniWorldEnv(gym.Env):
             0, 0, 0, 1,
         ]
         glLoadMatrixf((GLfloat * len(m))(*m))
+
+        glRotatef(90 - (self.agent.dir * 180/math.pi), 0, 1, 0)
+        glTranslatef(*-self.agent.pos)
 
         return self._render_world(
             frame_buffer,
