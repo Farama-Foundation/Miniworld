@@ -113,7 +113,7 @@ class Model(nn.Module):
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch-size", default=32, type=int)
 parser.add_argument("--buffer-size", default=2048, type=int)
-parser.add_argument("--env", default="MiniWorld-MazeS2-v0")
+parser.add_argument("--env", default="MiniWorld-MazeS3-v0")
 args = parser.parse_args()
 
 env = gym.make(args.env)

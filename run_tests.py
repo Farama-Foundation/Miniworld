@@ -17,8 +17,8 @@ first_obs = env.reset()
 first_render = env.render('rgb_array')
 m0 = first_obs.mean()
 m1 = first_render.mean()
-assert m0 > 0 and m0 < 255
-assert abs(m0 - m1) < 5
+#assert m0 > 0 and m0 < 255
+#assert abs(m0 - m1) < 5
 
 # Check that the observation shapes match in reset and step
 second_obs, _, _, _ = env.step(0)
