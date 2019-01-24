@@ -70,12 +70,13 @@ class Model(nn.Module):
         return pos_delta
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--batch-size", default=32, type=int)
-parser.add_argument("--buffer-size", default=2048, type=int)
+parser.add_argument("--batch-size", default=256, type=int)
+parser.add_argument("--buffer-size", default=16384, type=int)
 parser.add_argument("--env", default="MiniWorld-MazeS3-v0")
 args = parser.parse_args()
 
 env = gym.make(args.env)
+env.domain_rand = True
 
 num_actions = env.action_space.n
 print('num actions:', num_actions)
@@ -149,7 +150,7 @@ while num_trans <= args.batch_size:
 
 running_loss = None
 
-for i in range(1000000):
+for i in range(50000):
     print('batch #{} (num trans={})'.format(i+1, num_trans))
 
     batch_idx = np.random.randint(0, num_trans - args.batch_size)
@@ -174,7 +175,7 @@ for i in range(1000000):
     else:
         running_loss = 0.99 * running_loss + 0.01 * loss.data.item()
 
-    print('running loss: {:.3f}'.format(running_loss))
+    print('running loss: {:.5f}'.format(running_loss))
 
     if i % 100 == 0:
         print('saving model')
