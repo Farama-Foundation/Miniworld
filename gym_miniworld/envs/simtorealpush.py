@@ -32,8 +32,8 @@ class SimToRealPushEnv(MiniWorldEnv):
             **kwargs
         )
 
-        # Allow only the movement actions
-        self.action_space = spaces.Discrete(self.actions.move_forward+1)
+        # Allow only the movement actions (left, right, forward, back)
+        self.action_space = spaces.Discrete(self.actions.move_back+1)
 
     def _gen_world(self):
         # Size of the rink the robot is placed in
