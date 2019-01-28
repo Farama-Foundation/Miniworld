@@ -1092,10 +1092,10 @@ class MiniWorldEnv(gym.Env):
         glClearDepth(1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        min_x = -2
-        max_x = 2
-        min_z = -4
-        max_z = 0
+        min_x = -3
+        max_x = 3
+        min_z = -3
+        max_z = 3
 
         # Set the projection matrix
         glMatrixMode(GL_PROJECTION)
@@ -1120,7 +1120,8 @@ class MiniWorldEnv(gym.Env):
         ]
         glLoadMatrixf((GLfloat * len(m))(*m))
 
-        glRotatef(90 - (self.agent.dir * 180/math.pi), 0, 1, 0)
+        # Translate/rotate relative to the agent
+        #glRotatef(90 - (self.agent.dir * 180/math.pi), 0, 1, 0)
         glTranslatef(*-self.agent.pos)
 
         return self._render_world(
