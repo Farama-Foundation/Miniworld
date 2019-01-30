@@ -37,18 +37,17 @@ class Model(nn.Module):
             nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
-            # TODO: add some FC layers here, reduce size to 512?
-
             #Print(),
             Flatten(),
+
+            nn.Linear(1120, 512)
+            nn.LeakyReLU(),
         )
 
-        self.enc_size = 2240
-
         self.enc_to_delta = nn.Sequential(
-            nn.Linear(self.enc_size, 1024),
+            nn.Linear(2 * 512, 512),
             nn.LeakyReLU(),
-            nn.Linear(1024, 512),
+            nn.Linear(512, 512),
             nn.LeakyReLU(),
             nn.Linear(512, 4),
         )
@@ -72,10 +71,12 @@ class Model(nn.Module):
 parser = argparse.ArgumentParser()
 parser.add_argument("--batch-size", default=256, type=int)
 parser.add_argument("--buffer-size", default=16384, type=int)
-parser.add_argument("--env", default="MiniWorld-MazeS3-v0")
+parser.add_argument("--env", default="MiniWorld-SimToRealOdo-v0")
 args = parser.parse_args()
 
 env = gym.make(args.env)
+
+# Make sure domain randomization is always enabled while training
 env.domain_rand = True
 
 num_actions = env.action_space.n
