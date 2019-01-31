@@ -34,15 +34,7 @@ if args.domain_rand:
 
 def reset_env():
     global prev_obs
-    global prev_pos
-    global prev_dir
-    global prev_dv
-    global prev_rv
     prev_obs = env.reset()
-    prev_pos = env.agent.pos
-    prev_dir = env.agent.dir
-    prev_dv = env.agent.dir_vec
-    prev_rv = env.agent.right_vec
 
 reset_env()
 
@@ -56,12 +48,13 @@ model.cuda()
 
 def step(action):
     global prev_obs
-    global prev_pos
-    global prev_dir
-    global prev_dv
-    global prev_rv
 
     print('step {}: {}'.format(env.step_count, env.actions(action).name))
+
+    prev_pos = env.agent.pos
+    prev_dir = env.agent.dir
+    prev_dv = env.agent.dir_vec
+    prev_rv = env.agent.right_vec
 
     obs, reward, done, info = env.step(action)
 
@@ -79,10 +72,6 @@ def step(action):
     print()
 
     prev_obs = obs
-    prev_pos = env.agent.pos
-    prev_dir = env.agent.dir
-    prev_dv = env.agent.dir_vec
-    prev_rv = env.agent.right_vec
 
     if done:
         print('done! reward={:.2f}'.format(reward))
