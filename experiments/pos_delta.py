@@ -175,13 +175,12 @@ if __name__ == "__main__":
 
         # Compute an L2 loss
         # Rescale the position loss so the magnitude is similar to the rotation loss
-        dp = 10 * (pred_posd[:, 0:2] - batch_posd[:, 0:2])
-        dd = pred_posd[:, 2] - batch_posd[:, 2]
-        loss = (dp * dp).mean() + (dd * dd).mean() # L2 loss
-
+        d0 = pred_posd[:, 0] - batch_posd[:, 0]
+        d1 = pred_posd[:, 1] - batch_posd[:, 1]
+        d2 = pred_posd[:, 2] - batch_posd[:, 2]
+        loss = 10 * (d0*d0).mean() + 30 * (d1*d1).mean() + (d2*d2).mean() # L2 loss
         #diff = pred_posd - batch_posd
         #loss = (diff * diff).mean() # L2 loss
-
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
