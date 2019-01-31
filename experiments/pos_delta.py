@@ -152,7 +152,7 @@ if __name__ == "__main__":
 
     running_loss = None
 
-    for i in range(50000):
+    for i in range(5000000):
         print('batch #{} (num trans={})'.format(i+1, num_trans))
 
         batch_idx = np.random.randint(0, num_trans - args.batch_size)
