@@ -32,8 +32,19 @@ if args.no_time_limit:
 if args.domain_rand:
     env.domain_rand = True
 
-prev_obs = env.reset()
-prev_pos = np.array([*env.agent.pos] + [env.agent.dir])
+def reset_env():
+    global prev_obs
+    global prev_pos
+    global prev_dir
+    global prev_dv
+    global prev_rv
+    prev_obs = env.reset()
+    prev_pos = env.agent.pos
+    prev_dir = env.agent.dir
+    prev_dv = env.agent.dir_vec
+    prev_rv = env.agent.right_vec
+
+reset_env()
 
 # Create the display window
 env.render('pyglet')
@@ -46,6 +57,9 @@ model.cuda()
 def step(action):
     global prev_obs
     global prev_pos
+    global prev_dir
+    global prev_dv
+    global prev_rv
 
     print('step {}: {}'.format(env.step_count, env.actions(action).name))
 
@@ -56,29 +70,23 @@ def step(action):
     posd = model(obs0, obs1)
     posd = posd.squeeze().cpu().detach().numpy()
 
+    delta_dir = env.agent.dir - prev_dir
+    delta_dv = np.dot(env.agent.pos - prev_pos, prev_dv)
+    delta_rv = np.dot(env.agent.pos - prev_pos, prev_rv)
 
-    # TODO: actual position delta
-
-
-    pos = np.array([*env.agent.pos] + [env.agent.dir])
-    actual_posd = pos - prev_pos
-
-    err = np.abs(actual_posd - posd)
-
-    print('{:+.3f} {:+.3f} {:+.3f} {:+.3f}'.format(*posd))
-    print('{:+.3f} {:+.3f} {:+.3f} {:+.3f}'.format(*actual_posd))
-    print('{:+.3f} {:+.3f} {:+.3f} {:+.3f}'.format(*err))
+    print('{:+.3f} {:+.3f} {:+.3f}'.format(*posd))
+    print('{:+.3f} {:+.3f} {:+.3f}'.format(delta_dv, delta_rv, delta_dir))
     print()
 
-
-
     prev_obs = obs
-    prev_pos = pos
+    prev_pos = env.agent.pos
+    prev_dir = env.agent.dir
+    prev_dv = env.agent.dir_vec
+    prev_rv = env.agent.right_vec
 
     if done:
         print('done! reward={:.2f}'.format(reward))
-        prev_obs = env.reset()
-        prev_pos = np.array([*env.agent.pos] + [env.agent.dir])
+        reset_env()
 
     env.render('pyglet')
 
@@ -91,8 +99,7 @@ def on_key_press(symbol, modifiers):
 
     if symbol == key.BACKSPACE or symbol == key.SLASH:
         print('RESET')
-        prev_obs = env.reset()
-        prev_pos = np.array([*env.agent.pos] + [env.agent.dir])
+        reset_env()
         env.render('pyglet')
         return
 

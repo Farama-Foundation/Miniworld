@@ -49,7 +49,7 @@ class Model(nn.Module):
             nn.LeakyReLU(),
             nn.Linear(512, 512),
             nn.LeakyReLU(),
-            nn.Linear(512, 4),
+            nn.Linear(512, 3),
         )
 
         self.apply(init_weights)
@@ -77,9 +77,6 @@ if __name__ == "__main__":
 
     env = gym.make(args.env)
 
-    # Make sure domain randomization is always enabled while training
-    env.domain_rand = True
-
     num_actions = env.action_space.n
     print('num actions:', num_actions)
 
@@ -93,7 +90,7 @@ if __name__ == "__main__":
     # Done indicates that we become done after the current step
     buf_obs0 = np.zeros(shape=(args.buffer_size, 3, 80, 60), dtype=np.uint8)
     buf_obs1 = np.zeros(shape=(args.buffer_size, 3, 80, 60), dtype=np.uint8)
-    buf_posd = np.zeros(shape=(args.buffer_size, 4), dtype=np.float32)
+    buf_posd = np.zeros(shape=(args.buffer_size, 3), dtype=np.float32)
 
     model = Model()
     model.cuda()
@@ -134,16 +131,26 @@ if __name__ == "__main__":
                     ])
                     steps_left = np.random.randint(1, 17)
 
-                pos0 = np.array([*env.agent.pos] + [env.agent.dir])
                 buf_obs0[cur_idx] = obs
+
+                pos0 = env.agent.pos
+                dir0 = env.agent.dir
+                dir_vec = env.agent.dir_vec
+                right_vec = env.agent.right_vec
 
                 obs, reward, done, info = env.step(cur_action)
                 obs = obs.transpose(2, 1, 0)
                 steps_left -= 1
 
-                pos1 = np.array([*env.agent.pos] + [env.agent.dir])
                 buf_obs1[cur_idx] = obs
-                buf_posd[cur_idx] = pos1 - pos0
+
+                pos1 = env.agent.pos
+                dir1 = env.agent.dir
+                buf_posd[cur_idx] = [
+                    np.dot(pos1 - pos0, dir_vec),
+                    np.dot(pos1 - pos0, right_vec),
+                    dir1 - dir0
+                ]
 
                 if done:
                     break
@@ -157,7 +164,6 @@ if __name__ == "__main__":
         print('batch #{} (num trans={})'.format(i+1, num_trans))
 
         batch_idx = np.random.randint(0, num_trans - args.batch_size)
-
         batch_obs0 = make_var(buf_obs0[batch_idx:(batch_idx+args.batch_size)])
         batch_obs1 = make_var(buf_obs1[batch_idx:(batch_idx+args.batch_size)])
         batch_posd = make_var(buf_posd[batch_idx:(batch_idx+args.batch_size)])
@@ -167,9 +173,16 @@ if __name__ == "__main__":
         # Generate data while the GPU is computing
         gen_data()
 
+        # Compute an L2 loss
+        # Rescale the position loss so the magnitude is similar to the rotation loss
+        dp = 10 * (pred_posd[:, 0:2] - batch_posd[:, 0:2])
+        dd = pred_posd[:, 2] - batch_posd[:, 2]
+        loss = (dp * dp).mean() + (dd * dd).mean() # L2 loss
+
+        #diff = pred_posd - batch_posd
+        #loss = (diff * diff).mean() # L2 loss
+
         optimizer.zero_grad()
-        diff = pred_posd - batch_posd
-        loss = (diff * diff).mean() # L2 loss
         loss.backward()
         optimizer.step()
 
