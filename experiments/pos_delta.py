@@ -25,22 +25,22 @@ class Model(nn.Module):
         super().__init__()
 
         self.obs_to_enc = nn.Sequential(
-            nn.Conv2d(3, 32, kernel_size=5, stride=2),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(3, 64, kernel_size=5, stride=2),
+            nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
-            nn.Conv2d(32, 32, kernel_size=5, stride=2),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(64, 64, kernel_size=5, stride=2),
+            nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
-            nn.Conv2d(32, 32, kernel_size=4, stride=2),
-            nn.BatchNorm2d(32),
+            nn.Conv2d(64, 64, kernel_size=4, stride=2),
+            nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
             #Print(),
             Flatten(),
 
-            nn.Linear(1120, 512),
+            nn.Linear(2240, 512),
             nn.LeakyReLU(),
         )
 

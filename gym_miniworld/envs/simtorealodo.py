@@ -9,6 +9,7 @@ from gym import spaces
 # These assume a robot about 15cm tall with a pi camera module v2
 sim_params = DEFAULT_PARAMS.copy()
 sim_params.set('forward_step', 0.035, 0.025, 0.045)
+sim_params.set('forward_drift', 0, -0.01, 0.01)
 sim_params.set('turn_step', 17, 10, 22)
 sim_params.set('bot_radius', 0.11, 0.11, 0.11)
 sim_params.set('cam_pitch', -5, -8, -2)
