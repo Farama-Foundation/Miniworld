@@ -605,12 +605,16 @@ class MiniWorldEnv(gym.Env):
 
         return pos
 
-    def move_agent(self, fwd_dist):
+    def move_agent(self, fwd_dist, fwd_drift):
         """
         Move the agent forward
         """
 
-        next_pos = self.agent.pos + self.agent.dir_vec * fwd_dist
+        next_pos = (
+            self.agent.pos +
+            self.agent.dir_vec * fwd_dist +
+            self.agent.right_vec * fwd_drift
+        )
 
         if self.intersect(self.agent, next_pos, self.agent.radius):
             return False
@@ -660,13 +664,14 @@ class MiniWorldEnv(gym.Env):
 
         rand = self.rand if self.domain_rand else None
         fwd_step = self.params.sample(rand, 'forward_step')
+        fwd_drift = self.params.sample(rand, 'forward_drift')
         turn_step = self.params.sample(rand, 'turn_step')
 
         if action == self.actions.move_forward:
-            self.move_agent(fwd_step)
+            self.move_agent(fwd_step, fwd_drift)
 
         elif action == self.actions.move_back:
-            self.move_agent(-fwd_step)
+            self.move_agent(-fwd_step, fwd_drift)
 
         elif action == self.actions.turn_left:
             self.turn_agent(turn_step)
