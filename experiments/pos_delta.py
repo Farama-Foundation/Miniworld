@@ -129,7 +129,7 @@ if __name__ == "__main__":
                     cur_action = np.random.choice([
                         env.actions.turn_left,
                         env.actions.turn_right,
-                        env.actions.move_forward
+                        env.actions.move_forward,
                         env.actions.move_back
                     ])
                     steps_left = np.random.randint(1, 17)
