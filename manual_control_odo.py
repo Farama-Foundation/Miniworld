@@ -33,6 +33,7 @@ if args.domain_rand:
     env.domain_rand = True
 
 prev_obs = env.reset()
+prev_pos = np.array([*env.agent.pos] + [env.agent.dir])
 
 # Create the display window
 env.render('pyglet')
@@ -44,6 +45,7 @@ model.cuda()
 
 def step(action):
     global prev_obs
+    global prev_pos
 
     print('step {}: {}'.format(env.step_count, env.actions(action).name))
 
@@ -53,20 +55,30 @@ def step(action):
     obs1 = make_var(obs.transpose(2, 1, 0)).unsqueeze(0)
     posd = model(obs0, obs1)
     posd = posd.squeeze().cpu().detach().numpy()
-    print(posd)
 
 
     # TODO: actual position delta
 
 
+    pos = np.array([*env.agent.pos] + [env.agent.dir])
+    actual_posd = pos - prev_pos
+
+    err = np.abs(actual_posd - posd)
+
+    print('{:+.3f} {:+.3f} {:+.3f} {:+.3f}'.format(*posd))
+    print('{:+.3f} {:+.3f} {:+.3f} {:+.3f}'.format(*actual_posd))
+    print('{:+.3f} {:+.3f} {:+.3f} {:+.3f}'.format(*err))
+    print()
 
 
 
     prev_obs = obs
+    prev_pos = pos
 
     if done:
         print('done! reward={:.2f}'.format(reward))
         prev_obs = env.reset()
+        prev_pos = np.array([*env.agent.pos] + [env.agent.dir])
 
     env.render('pyglet')
 
@@ -80,6 +92,7 @@ def on_key_press(symbol, modifiers):
     if symbol == key.BACKSPACE or symbol == key.SLASH:
         print('RESET')
         prev_obs = env.reset()
+        prev_pos = np.array([*env.agent.pos] + [env.agent.dir])
         env.render('pyglet')
         return
 
