@@ -8,9 +8,9 @@ from gym import spaces
 # Simulation parameters
 # These assume a robot about 15cm tall with a pi camera module v2
 sim_params = DEFAULT_PARAMS.copy()
-sim_params.set('forward_step', 0.035, 0.025, 0.045)
-sim_params.set('forward_drift', 0, -0.01, 0.01)
-sim_params.set('turn_step', 17, 10, 22)
+sim_params.set('forward_step', 0.035, 0.020, 0.050)
+sim_params.set('forward_drift', 0, -0.011, 0.011)
+sim_params.set('turn_step', 15, 8, 22)
 sim_params.set('bot_radius', 0.11, 0.11, 0.11)
 sim_params.set('cam_pitch', -5, -8, -2)
 sim_params.set('cam_fov_y', 49, 46, 53)
@@ -56,6 +56,7 @@ class SimToRealOdoEnv(MiniWorldEnv):
             # Materials chosen because they have visible lines/seams
             'concrete_tiles',
             'ceiling_tiles',
+            'floor_tiles_bw',
             # Chosen because of random/slanted edges
             'marble',
             'rock',
