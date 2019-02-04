@@ -46,7 +46,6 @@ class SimToRealOdoEnv(MiniWorldEnv):
         floor_tex = self.rand.choice([
             'concrete',
             'concrete_tiles',
-
             #'wood',
             #'wood_planks',
         ])
@@ -57,6 +56,8 @@ class SimToRealOdoEnv(MiniWorldEnv):
             # Materials chosen because they have visible lines/seams
             'concrete_tiles',
             'ceiling_tiles',
+            # Chosen because of random/slanted edges
+            'marble',
         ])
 
         room = self.add_rect_room(
