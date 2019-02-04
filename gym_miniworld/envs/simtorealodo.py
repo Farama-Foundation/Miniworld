@@ -58,6 +58,7 @@ class SimToRealOdoEnv(MiniWorldEnv):
             'ceiling_tiles',
             # Chosen because of random/slanted edges
             'marble',
+            'rock',
         ])
 
         room = self.add_rect_room(
