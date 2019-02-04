@@ -51,10 +51,11 @@ def step(action):
 
     print('step {}: {}'.format(env.step_count, env.actions(action).name))
 
-    prev_pos = env.agent.pos
-    prev_dir = env.agent.dir
-    prev_dv = env.agent.dir_vec
-    prev_rv = env.agent.right_vec
+    if hasattr(env, 'agent'):
+        prev_pos = env.agent.pos
+        prev_dir = env.agent.dir
+        prev_dv = env.agent.dir_vec
+        prev_rv = env.agent.right_vec
 
     obs, reward, done, info = env.step(action)
 
@@ -63,12 +64,14 @@ def step(action):
     posd = model(obs0, obs1)
     posd = posd.squeeze().cpu().detach().numpy()
 
-    delta_dir = env.agent.dir - prev_dir
-    delta_dv = np.dot(env.agent.pos - prev_pos, prev_dv)
-    delta_rv = np.dot(env.agent.pos - prev_pos, prev_rv)
-
     print('{:+.3f} {:+.3f} {:+.3f}'.format(*posd))
-    print('{:+.3f} {:+.3f} {:+.3f}'.format(delta_dv, delta_rv, delta_dir))
+
+    if hasattr(env, 'agent'):
+        delta_dir = env.agent.dir - prev_dir
+        delta_dv = np.dot(env.agent.pos - prev_pos, prev_dv)
+        delta_rv = np.dot(env.agent.pos - prev_pos, prev_rv)
+        print('{:+.3f} {:+.3f} {:+.3f}'.format(delta_dv, delta_rv, delta_dir))
+
     print()
 
     prev_obs = obs
