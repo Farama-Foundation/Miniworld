@@ -53,6 +53,7 @@ class SimToRealOdoEnv(MiniWorldEnv):
         wall_tex = self.rand.choice([
             'drywall',
             'stucco',
+            'white',
             # Materials chosen because they have visible lines/seams
             'concrete_tiles',
             'ceiling_tiles',
