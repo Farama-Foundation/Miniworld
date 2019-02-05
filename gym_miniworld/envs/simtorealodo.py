@@ -8,6 +8,9 @@ from gym import spaces
 # Simulation parameters
 # These assume a robot about 15cm tall with a pi camera module v2
 sim_params = DEFAULT_PARAMS.copy()
+sim_params.set('light_pos', [0, 2.5, 0], [-40, 1.0, -40], [40, 7, 40])
+sim_params.set('light_color', [0.7, 0.7, 0.7], [0.3, 0.3, 0.3], [1.2, 1.2, 1.2])
+sim_params.set('light_ambient', [0.45, 0.45, 0.45], [0.2, 0.2, 0.2], [1.0, 1.0, 1.0])
 sim_params.set('forward_step', 0.035, 0.020, 0.050)
 sim_params.set('forward_drift', 0, -0.011, 0.011)
 sim_params.set('turn_step', 15, 8, 22)

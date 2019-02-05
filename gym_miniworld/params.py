@@ -50,7 +50,7 @@ class DomainParams:
             p = self.params[name]
             assert type == p.type
             if isinstance(p.default, np.ndarray):
-                assert default.shape == p.shape
+                assert default.shape == p.default.shape
 
         self.params[name] = DomainParam(default, min, max, type)
 
