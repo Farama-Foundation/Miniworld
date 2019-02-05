@@ -81,7 +81,8 @@ def save_img(file_name, img):
     if len(img.shape) == 4:
         img = img.squeeze(0)
 
-    img = img.transpose(2, 1, 0)
+    #img = img.transpose(2, 1, 0)
+    img = np.flip(img, 0)
     img = img.clip(0, 255)
     img = img.astype(np.uint8)
 

@@ -17,13 +17,16 @@ import gym_miniworld
 
 import torch
 from experiments.pos_delta import Model
-from experiments.utils import make_var
+from experiments.utils import make_var, save_img
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--env-name', default='MiniWorld-SimToRealOdo-v0')
 parser.add_argument('--domain-rand', action='store_true', help='enable domain randomization')
 parser.add_argument('--no-time-limit', action='store_true', help='ignore time step limits')
+parser.add_argument('--save-imgs', action='store_true', help='save images')
 args = parser.parse_args()
+
+img_idx = 0
 
 env = gym.make(args.env_name)
 
@@ -42,12 +45,13 @@ reset_env()
 env.render('pyglet')
 
 model = Model()
-model.load_state_dict(torch.load('pos_delta_model.torch'))
+model.load_state_dict(torch.load('pos_delta.torch'))
 model.eval()
 model.cuda()
 
 def step(action):
     global prev_obs
+    global img_idx
 
     print('step {}: {}'.format(env.step_count, env.actions(action).name))
 
@@ -75,6 +79,10 @@ def step(action):
     print()
 
     prev_obs = obs
+
+    if args.save_imgs:
+        save_img('img_{:03d}.png'.format(img_idx), obs)
+        img_idx += 1
 
     if done:
         print('done! reward={:.2f}'.format(reward))
