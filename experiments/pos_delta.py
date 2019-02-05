@@ -70,9 +70,12 @@ class Model(nn.Module):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch-size", default=256, type=int)
-    parser.add_argument("--buffer-size", default=16384, type=int)
+    parser.add_argument("--batch-size", default=1024, type=int)
+    parser.add_argument("--buffer-size", default=500000, type=int)
+    parser.add_argument("--weight-decay", default=0, type=float)
     parser.add_argument("--env", default="MiniWorld-SimToRealOdo-v0")
+    parser.add_argument("--model-path", default="pos_delta.torch")
+
     args = parser.parse_args()
 
     env = gym.make(args.env)
@@ -96,7 +99,11 @@ if __name__ == "__main__":
     model.cuda()
     print_model_info(model)
 
-    optimizer = optim.Adam(model.parameters(), lr=1e-4)
+    optimizer = optim.Adam(
+        model.parameters(),
+        lr=1e-4,
+        weight_decay=args.weight_decay
+    )
 
     def gen_data(num_episodes=1):
         global cur_idx, num_trans
@@ -195,4 +202,4 @@ if __name__ == "__main__":
 
         if i % 100 == 0:
             print('saving model')
-            torch.save(model.state_dict(), 'pos_delta_model.torch')
+            torch.save(model.state_dict(), args.model_path)
