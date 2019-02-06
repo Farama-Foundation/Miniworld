@@ -34,7 +34,7 @@ env.reset()
 env.render('pyglet')
 
 def step(action):
-    print('step {}: {}'.format(env.step_count, env.actions(action).name))
+    print('step {}/{}: {}'.format(env.step_count+1, env.max_episode_steps, env.actions(action).name))
 
     obs, reward, done, info = env.step(action)
 

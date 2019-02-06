@@ -102,3 +102,8 @@ DEFAULT_PARAMS.set('cam_pitch', 0, -5, 5)
 DEFAULT_PARAMS.set('cam_fov_y', 60, 55, 65)
 DEFAULT_PARAMS.set('cam_height', 1.5, 1.45, 1.55)
 DEFAULT_PARAMS.set('cam_fwd_disp', 0, -0.05, 0.10)
+
+# Parameters for larger movement steps, fast stepping
+BIG_STEP_PARAMS = DEFAULT_PARAMS.copy()
+BIG_STEP_PARAMS.set('forward_step', 0.70, 0.60, 0.80)
+BIG_STEP_PARAMS.set('turn_step', 45, 40, 50)
