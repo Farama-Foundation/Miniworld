@@ -93,13 +93,13 @@ def load_img(file_name):
 
     # Drop the alpha channel
     img = io.imread(file_name)
-    img = img[:,:,0:3] / 255
+    #img = img[:,:,0:3] / 255
 
     # Flip the image vertically
     img = np.flip(img, 0)
 
     # Transpose the rows and columns
-    img = img.transpose(2, 0, 1)
+    img = img.transpose(2, 1, 0)
 
     # Make it a batch of size 1
     var = make_var(img)

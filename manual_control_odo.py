@@ -16,7 +16,7 @@ import gym
 import gym_miniworld
 
 import torch
-from experiments.pos_delta import Model
+from experiments.pos_delta_6chan import Model
 from experiments.utils import make_var, save_img
 
 parser = argparse.ArgumentParser()
