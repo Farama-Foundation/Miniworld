@@ -3,6 +3,7 @@ import math
 from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box, ImageFrame
+from ..params import BIG_STEP_PARAMS
 
 class MazeEnv(MiniWorldEnv):
     """
@@ -14,6 +15,7 @@ class MazeEnv(MiniWorldEnv):
         num_rows=8,
         num_cols=8,
         room_size=3,
+        max_episode_steps=None,
         **kwargs
     ):
         self.num_rows = num_rows
@@ -22,7 +24,7 @@ class MazeEnv(MiniWorldEnv):
         self.gap_size = 0.25
 
         super().__init__(
-            max_episode_steps=num_rows * num_cols * 24,
+            max_episode_steps = max_episode_steps or num_rows * num_cols * 24,
             **kwargs
         )
 
@@ -117,3 +119,12 @@ class MazeS2Env(MazeEnv):
 class MazeS3Env(MazeEnv):
     def __init__(self):
         super().__init__(num_rows=3, num_cols=3)
+
+class MazeS3FastEnv(MazeEnv):
+    def __init__(self):
+        super().__init__(
+            num_rows=3,
+            num_cols=3,
+            params=BIG_STEP_PARAMS,
+            max_episode_steps=150
+        )
