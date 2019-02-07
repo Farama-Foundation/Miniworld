@@ -81,6 +81,16 @@ class SimToRealOdoEnv(MiniWorldEnv):
         # Place the agent a random distance away from the goal
         self.place_agent()
 
+    def render_obs(self, frame_buffer=None):
+        obs = super().render_obs(frame_buffer)
+
+        # Add gaussian noise to observations, and exposure noise
+        noise = np.random.normal(loc=0, scale=5, size=obs.shape)
+        fact = np.random.normal(loc=1, scale=0.05)
+        obs = (fact * obs + noise).clip(0, 255).astype(np.uint8)
+
+        return obs
+
     def step(self, action):
         obs, reward, done, info = super().step(action)
 
