@@ -72,8 +72,8 @@ class Model(nn.Module):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch-size", default=1024, type=int)
-    parser.add_argument("--buffer-size", default=500000, type=int)
+    parser.add_argument("--batch-size", default=2048, type=int)
+    parser.add_argument("--buffer-size", default=1000000, type=int)
     parser.add_argument("--weight-decay", default=0, type=float)
     parser.add_argument("--env", default="MiniWorld-SimToRealOdo-v0")
     parser.add_argument("--model-path", default="pos_delta.torch")
