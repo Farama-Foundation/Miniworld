@@ -79,7 +79,7 @@ if args.env_name.find('Bullet') > -1:
 while True:
     with torch.no_grad():
         value, action, _, recurrent_hidden_states = actor_critic.act(
-            obs, recurrent_hidden_states, masks, deterministic=True)
+            obs, recurrent_hidden_states, masks, deterministic=False)
 
     # Obser reward and next obs
     obs, reward, done, _ = env.step(action)
