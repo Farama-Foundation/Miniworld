@@ -23,8 +23,8 @@ if sys.version_info > (3,):
     buffer = memoryview
 
 # Rendering window size
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 160
+WINDOW_HEIGHT = 120
 
 # Camera image size
 CAMERA_WIDTH = 80

@@ -57,6 +57,7 @@ class SimToRealOdoEnv(MiniWorldEnv):
             'drywall',
             'stucco',
             'white',
+            'shadow',
             # Materials chosen because they have visible lines/seams
             'concrete_tiles',
             'ceiling_tiles',
