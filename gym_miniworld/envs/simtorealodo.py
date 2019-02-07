@@ -85,8 +85,8 @@ class SimToRealOdoEnv(MiniWorldEnv):
         obs = super().render_obs(frame_buffer)
 
         # Add gaussian noise to observations, and exposure noise
-        noise = np.random.normal(loc=0, scale=5, size=obs.shape)
-        fact = np.random.normal(loc=1, scale=0.05)
+        noise = np.random.normal(loc=0, scale=4, size=obs.shape)
+        fact = np.random.normal(loc=1, scale=0.02, size=(1,1,3)).clip(0.95, 1.05)
         obs = (fact * obs + noise).clip(0, 255).astype(np.uint8)
 
         return obs
