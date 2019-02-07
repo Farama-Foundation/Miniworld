@@ -28,6 +28,8 @@ if args.no_time_limit:
 if args.domain_rand:
     env.domain_rand = True
 
+print('max_episode_steps={}'.format(env.max_episode_steps))
+
 env.reset()
 
 # Create the display window

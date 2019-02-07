@@ -18,6 +18,7 @@ from envs import make_vec_envs
 from model import Policy
 from storage import RolloutStorage
 #from visualize import visdom_plot
+from multiprocessing import Process, Pipe, set_start_method
 
 args = get_args()
 
@@ -48,8 +49,9 @@ except OSError:
     for f in files:
         os.remove(f)
 
-
 def main():
+    set_start_method('forkserver')
+
     torch.set_num_threads(1)
     device = torch.device("cuda:0" if args.cuda else "cpu")
 
@@ -60,8 +62,27 @@ def main():
         win = None
     """
 
+    step_sizes = [
+        (0.70, 45),
+        (0.65, 45),
+        (0.65, 40),
+        (0.60, 35),
+        (0.55, 30),
+        (0.50, 25),
+        (0.45, 20),
+        (0.40, 20),
+        (0.35, 20),
+        (0.30, 20),
+        (0.25, 20),
+        (0.20, 20),
+        (0.20, 15),
+        (0.15, 15),
+    ]
+
+    forward_step, turn_step = step_sizes[0]
+    step_sizes = step_sizes[1:]
     envs = make_vec_envs(args.env_name, args.seed, args.num_processes,
-                        args.gamma, args.log_dir, args.add_timestep, device, False)
+                        args.gamma, args.log_dir, args.add_timestep, device, False, forward_step, turn_step)
 
     actor_critic = Policy(envs.observation_space.shape, envs.action_space,
         base_kwargs={'recurrent': args.recurrent_policy})
@@ -155,6 +176,10 @@ def main():
 
         if j % args.log_interval == 0 and len(episode_rewards) > 1:
             end = time.time()
+
+            success_rate = np.count_nonzero(np.greater(episode_rewards, 0)) / len(episode_rewards)
+
+            print('forward_step={}, turn_step={}'.format(forward_step, turn_step))
             print("Updates {}, num timesteps {}, FPS {} \n Last {} training episodes: mean/median reward {:.2f}/{:.2f}, min/max reward {:.2f}/{:.2f}, success rate {:.2f}\n".
                 format(
                     j, total_num_steps,
@@ -164,9 +189,30 @@ def main():
                     np.median(episode_rewards),
                     np.min(episode_rewards),
                     np.max(episode_rewards),
-                    np.count_nonzero(np.greater(episode_rewards, 0)) / len(episode_rewards)
+                    success_rate
                 )
             )
+
+            if len(episode_rewards) >= 100 and success_rate >= 0.98:
+                print('next step')
+
+                forward_step, turn_step = step_sizes[0]
+                step_sizes = step_sizes[1:]
+
+                episode_rewards.clear()
+                envs.close()
+                envs = make_vec_envs(
+                    args.env_name,
+                    args.seed,
+                    args.num_processes,
+                    args.gamma,
+                    args.log_dir,
+                    args.add_timestep,
+                    device,
+                    False,
+                    forward_step,
+                    turn_step
+                )
 
         if args.eval_interval is not None and len(episode_rewards) > 1 and j % args.eval_interval == 0:
             eval_envs = make_vec_envs(args.env_name, args.seed + args.num_processes, args.num_processes,

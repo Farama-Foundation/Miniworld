@@ -125,15 +125,16 @@ class MazeS3FastEnv(MazeEnv):
 
         # Parameters for larger movement steps, fast stepping
         params = DEFAULT_PARAMS.no_random()
-        params.set('forward_step', forward_step)
-        params.set('turn_step', turn_step)
+        params.set('forward_step', forward_step, 0.95 * forward_step, forward_step)
+        params.set('turn_step', turn_step, 0.95 * turn_step, turn_step)
 
-        max_steps = 300
+        # Same as MazeS3 for now
+        max_steps = 216
 
         super().__init__(
             num_rows=3,
             num_cols=3,
             params=params,
             max_episode_steps=max_steps,
-            domain_rand=False
+            domain_rand=True
         )
