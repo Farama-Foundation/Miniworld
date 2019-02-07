@@ -19,6 +19,20 @@ class DomainParams:
     def copy(self):
         return deepcopy(self)
 
+    def no_random(self):
+        """
+        Make a copy in which randomization is disabled for all parameters
+        This is useful to then selectively enable randomization on a
+        limited subset of the parameters.
+        """
+
+        copy = self.copy()
+
+        for name, p in copy.params.items():
+            copy.params[name] = DomainParam(p.default, p.default, p.default, p.type)
+
+        return copy
+
     def set(self, name, default, min=None, max=None, type='float'):
         """
         Register/modify a named parameter
@@ -30,6 +44,11 @@ class DomainParams:
             min = np.array(min)
         if isinstance(max, list):
             max = np.array(max)
+
+        if min is None:
+            min = default
+        if max is None:
+            max = default
 
         if isinstance(default, np.ndarray):
             assert max.shape == default.shape
@@ -102,8 +121,3 @@ DEFAULT_PARAMS.set('cam_pitch', 0, -5, 5)
 DEFAULT_PARAMS.set('cam_fov_y', 60, 55, 65)
 DEFAULT_PARAMS.set('cam_height', 1.5, 1.45, 1.55)
 DEFAULT_PARAMS.set('cam_fwd_disp', 0, -0.05, 0.10)
-
-# Parameters for larger movement steps, fast stepping
-BIG_STEP_PARAMS = DEFAULT_PARAMS.copy()
-BIG_STEP_PARAMS.set('forward_step', 0.70, 0.60, 0.80)
-BIG_STEP_PARAMS.set('turn_step', 45, 40, 50)

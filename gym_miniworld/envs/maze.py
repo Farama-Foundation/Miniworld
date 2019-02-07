@@ -3,7 +3,7 @@ import math
 from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box, ImageFrame
-from ..params import BIG_STEP_PARAMS
+from ..params import DEFAULT_PARAMS
 
 class MazeEnv(MiniWorldEnv):
     """
@@ -121,10 +121,19 @@ class MazeS3Env(MazeEnv):
         super().__init__(num_rows=3, num_cols=3)
 
 class MazeS3FastEnv(MazeEnv):
-    def __init__(self):
+    def __init__(self, forward_step=0.7, turn_step=45):
+
+        # Parameters for larger movement steps, fast stepping
+        params = DEFAULT_PARAMS.no_random()
+        params.set('forward_step', forward_step)
+        params.set('turn_step', turn_step)
+
+        max_steps = 300
+
         super().__init__(
             num_rows=3,
             num_cols=3,
-            params=BIG_STEP_PARAMS,
-            max_episode_steps=150
+            params=params,
+            max_episode_steps=max_steps,
+            domain_rand=False
         )
