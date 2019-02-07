@@ -193,7 +193,7 @@ def main():
                 )
             )
 
-            if len(episode_rewards) >= 100 and success_rate >= 0.98:
+            if len(episode_rewards) >= 100 and success_rate >= 0.98 and len(step_sizes) > 0:
                 print('next step')
 
                 forward_step, turn_step = step_sizes[0]

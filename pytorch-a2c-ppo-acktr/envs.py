@@ -26,13 +26,18 @@ except ImportError:
 
 try:
     import gym_miniworld
+    from gym_miniworld.envs import MazeS3FastEnv
 except ImportError:
     pass
 
 
 def make_env(env_id, seed, rank, log_dir, add_timestep, allow_early_resets, forward_step, turn_step):
     def _thunk():
-        env = gym.make(env_id)
+        if env_id == 'MiniWorld-MazeS3Fast-v0':
+            env = MazeS3FastEnv(forward_step, turn_step)
+        else:
+            env = gym.make(env_id)
+
         env.seed(seed + rank)
 
         obs_shape = env.observation_space.shape
