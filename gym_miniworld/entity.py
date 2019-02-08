@@ -67,7 +67,7 @@ class Entity:
             cz = z + self.radius * math.sin(a)
             glVertex3f(cx, 0.01, cz)
 
-        glEnd(GL_LINES)
+        glEnd()
 
     @property
     def dir_vec(self):
@@ -200,7 +200,7 @@ class ImageFrame(Entity):
         glVertex3f(sx, -hy, +hz)
         glTexCoord2f(1, 0)
         glVertex3f(sx, -hy, -hz)
-        glEnd(GL_QUADS)
+        glEnd()
 
         # Black frame/border
         glDisable(GL_TEXTURE_2D)
@@ -236,7 +236,7 @@ class ImageFrame(Entity):
         glVertex3f(0  , -hy, +hz)
         glVertex3f(0  , -hy, -hz)
 
-        glEnd(GL_QUADS)
+        glEnd()
 
         glPopMatrix()
 
@@ -317,7 +317,7 @@ class TextFrame(Entity):
             glVertex3f(sx, -hy, z_1)
             glTexCoord2f(1, 0)
             glVertex3f(sx, -hy, z_0)
-            glEnd(GL_QUADS)
+            glEnd()
 
         # Black frame/border
         glDisable(GL_TEXTURE_2D)
@@ -353,7 +353,7 @@ class TextFrame(Entity):
         glVertex3f(0  , -hy, +hz)
         glVertex3f(0  , -hy, -hz)
 
-        glEnd(GL_QUADS)
+        glEnd()
 
         glPopMatrix()
 
@@ -426,7 +426,7 @@ class Box(Entity):
         glVertex3f(+hx, +sy, -hz)
         glVertex3f(-hx, +sy, -hz)
         glVertex3f(-hx, +sy, +hz)
-        glEnd(GL_QUADS)
+        glEnd()
 
         glPopMatrix()
 
