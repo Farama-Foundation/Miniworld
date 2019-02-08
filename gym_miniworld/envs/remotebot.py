@@ -22,13 +22,13 @@ import sys
 if sys.version_info > (3,):
     buffer = memoryview
 
-# Rendering window size
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
-
 # Camera image size
 CAMERA_WIDTH = 80
 CAMERA_HEIGHT = 60
+
+# Rendering window size
+WINDOW_WIDTH = 256
+WINDOW_HEIGHT = int(WINDOW_WIDTH * (CAMERA_HEIGHT/CAMERA_WIDTH))
 
 # Port to connect to on the server
 SERVER_PORT = 7777
@@ -121,9 +121,6 @@ class RemoteBotEnv(gym.Env):
         # Receive a camera image from the server
         img = recv_array(self.socket)
 
-        # Flip vertically
-        img = numpy.flip(img, axis=0)
-
         self.img = img
 
     def reset(self):
@@ -192,13 +189,14 @@ class RemoteBotEnv(gym.Env):
         glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, 0, 10)
 
         # Draw the image to the rendering window
-        width = self.img.shape[1]
-        height = self.img.shape[0]
+        img = np.ascontiguousarray(np.flip(self.img, axis=0))
+        width = img.shape[1]
+        height = img.shape[0]
         imgData = pyglet.image.ImageData(
             width,
             height,
             'RGB',
-            self.img.tobytes(),
+            img.tobytes(),
             #self.img.ctypes.data_as(POINTER(GLubyte)),
             pitch = width * 3,
         )
