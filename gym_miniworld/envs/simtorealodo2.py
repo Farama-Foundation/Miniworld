@@ -96,8 +96,6 @@ class SimToRealOdo2Env(MiniWorldEnv):
         self.connect_rooms(room0, room1, min_x=-5.25, max_x=-2.75)
         self.connect_rooms(room0, room2, min_x=2.75, max_x=5.25)
 
-        self.place_entity(Box(color='grey', size=[0.8, 1.2, 0.5]))
-
         # Mila logo image on the wall
         self.entities.append(ImageFrame(
             pos=[0, 1.35, room0.max_z],
@@ -111,6 +109,30 @@ class SimToRealOdo2Env(MiniWorldEnv):
             height=0.25,
             static=False
         ))
+
+        for i in range(self.rand.int(0, 10)):
+            self.place_entity(Box(
+                color='grey',
+                size=[
+                    self.rand.float(0.05, 0.4),
+                    self.rand.float(0.5, 1.4),
+                    self.rand.float(0.05, 0.4)
+                ]
+            ))
+
+        for i in range(self.rand.int(0, 10)):
+            self.place_entity(MeshEnt(
+                mesh_name='office_chair',
+                height=self.rand.float(1.1, 1.3),
+                static=False
+            ))
+
+        for i in range(self.rand.int(0, 4)):
+            self.place_entity(MeshEnt(
+                mesh_name='office_desk',
+                height=self.rand.float(1.7, 2.0),
+                static=False
+            ))
 
         self.place_agent()
 
