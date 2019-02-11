@@ -13,6 +13,7 @@ from .collecthealth import *
 from .simtorealgoto import *
 from .simtorealpush import *
 from .simtorealodo import *
+from .simtorealodo2 import *
 
 # Registered environment ids
 env_ids = []
