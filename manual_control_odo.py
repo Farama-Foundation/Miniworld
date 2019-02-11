@@ -74,8 +74,10 @@ def angle_to_rv(a):
 
 fig = plt.figure()
 axe = fig.add_subplot(111)
-axe.set_xlim(-1.2, 1.2)
-axe.set_ylim(-1.2, 1.2)
+axe.set_xlim(-abs(env.min_z) - abs(env.max_z), abs(env.min_z) + abs(env.max_z))
+axe.set_ylim(-abs(env.min_x) - abs(env.max_x), abs(env.min_x) + abs(env.max_x))
+axe.set_xlabel('dz')
+axe.set_ylabel('dx')
 sp, = axe.plot([],[], label='toto', markersize=4, color='k', marker='o', ls='')
 fig.show()
 fig.canvas.draw()

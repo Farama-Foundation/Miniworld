@@ -37,47 +37,56 @@ class SimToRealOdo2Env(MiniWorldEnv):
         self.action_space = spaces.Discrete(self.actions.move_forward+1)
 
     def _gen_world(self):
+        # FIXME: not currently possible to set this through domain params
+        self.agent.radius = 0.11
+
         floor_tex = self.rand.choice([
             'concrete',
-            'white',
+            'asphalt',
+            #'white',
             #'concrete_tiles',
         ])
 
         wall_tex = self.rand.choice([
             'drywall',
             'stucco',
-            'white',
+            #'white',
             # Materials chosen because they have visible lines/seams
             'concrete_tiles',
             'ceiling_tiles',
-            'floor_tiles_bw',
             # Chosen because of random/slanted edges
-            'marble',
-            'rock',
+            #'marble',
+            #'rock',
         ])
 
         wall_height = self.rand.float(2, 5)
 
         # Top room
         room0 = self.add_rect_room(
-            min_x=-7, max_x=7,
-            min_z=0.5 , max_z=7,
+            min_x=self.rand.float(-10, -7),
+            max_x=self.rand.float(7, 10),
+            min_z=0.5,
+            max_z=self.rand.float(4, 10),
             wall_tex=wall_tex,
             floor_tex=floor_tex,
             wall_height=wall_height
         )
         # Bottom-left room
         room1 = self.add_rect_room(
-            min_x=-7, max_x=-1,
-            min_z=-7, max_z=-0.5,
+            min_x=self.rand.float(-10, -7),
+            max_x=-1,
+            min_z=-7,
+            max_z=-0.5,
             wall_tex=wall_tex,
             floor_tex=floor_tex,
             wall_height=wall_height
         )
         # Bottom-right room
         room2 = self.add_rect_room(
-            min_x=1 , max_x=7,
-            min_z=-7, max_z=-0.5,
+            min_x=1,
+            max_x=self.rand.float(7, 10),
+            min_z=-7,
+            max_z=-0.5,
             wall_tex=wall_tex,
             floor_tex=floor_tex,
             wall_height=wall_height
@@ -87,13 +96,11 @@ class SimToRealOdo2Env(MiniWorldEnv):
         self.connect_rooms(room0, room1, min_x=-5.25, max_x=-2.75)
         self.connect_rooms(room0, room2, min_x=2.75, max_x=5.25)
 
-        self.box = self.place_entity(Box(color='red'))
-        self.yellow_box = self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))
-        self.place_entity(Box(color='green', size=0.6))
+        self.place_entity(Box(color='grey', size=[0.8, 1.2, 0.5]))
 
         # Mila logo image on the wall
         self.entities.append(ImageFrame(
-            pos=[0, 1.35, 7],
+            pos=[0, 1.35, room0.max_z],
             dir=math.pi/2,
             width=1.8,
             tex_name='logo_mila'
