@@ -19,7 +19,7 @@ import gym
 import gym_miniworld
 from gym_miniworld.wrappers import *
 
-from utils import *
+from .utils import *
 
 class Model(nn.Module):
     def __init__(self):
@@ -82,16 +82,16 @@ class Model(nn.Module):
         #print(x.size())
         y = self.decoder(x)
 
-        print(y.size())
+        #print(y.size())
         y = 255 * y[:, :, 2:82, 3:63]
         #print(y.size())
 
         return y
 
 
-batch_size = 128
+batch_size = 64
 
-buffer = np.zeros(shape=(32768, 3, 80, 60))
+buffer = np.zeros(shape=(65536, 3, 80, 60), dtype=np.uint8)
 cur_gen_idx = 0
 idx_avail = 0
 
@@ -100,7 +100,7 @@ def gen_data():
     global idx_avail
 
     for _ in range(32):
-        buffer[cur_gen_idx] = env.reset()
+        buffer[cur_gen_idx] = env.reset().transpose(2, 1, 0)
         cur_gen_idx = (cur_gen_idx + 1) % buffer.shape[0]
         idx_avail = max(idx_avail, cur_gen_idx)
 
@@ -109,9 +109,7 @@ if __name__ == "__main__":
     #parser.add_argument('--map-name', required=True)
     #args = parser.parse_args()
 
-    env = gym.make('MiniWorld-SimToRealOdo-v0')
-    env.domain_rand = True
-    env = PyTorchObsWrapper(env)
+    env = gym.make('MiniWorld-SimToRealOdo2-v0')
 
     model = Model()
     model.cuda()
@@ -123,7 +121,7 @@ if __name__ == "__main__":
         gen_data()
 
     for i in range(10000000):
-        print('batch #{}'.format(i+1))
+        print('batch #{} (imgs avail {})'.format(i+1, idx_avail-1))
 
         #print(i, cur_gen_idx)
 
@@ -139,12 +137,13 @@ if __name__ == "__main__":
         optimizer.zero_grad()
         diff = y - batch
         loss = (diff * diff).mean() # L2 loss
-        #loss = (y - batch).abs().mean()
+        #loss = (y - batch).abs().mean() # L1 loss
         loss.backward()
         optimizer.step()
 
         print(loss.data.item())
 
-        if i % 50 == 0:
+        if i > 0 and i % 100 == 0:
+            # TODO: save model
             save_img('test_obs.png', batch[0])
             save_img('test_out.png', y[0])
