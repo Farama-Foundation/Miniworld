@@ -74,6 +74,11 @@ def angle_to_rv(a):
 
 fig = plt.figure()
 axe = fig.add_subplot(111)
+if 'RemoteBot' in args.env_name:
+    env.min_x = -5
+    env.max_x = 5
+    env.min_z = -5
+    env.max_z = 5
 axe.set_xlim(-abs(env.min_z) - abs(env.max_z), abs(env.min_z) + abs(env.max_z))
 axe.set_ylim(-abs(env.min_x) - abs(env.max_x), abs(env.min_x) + abs(env.max_x))
 axe.set_xlabel('dz')
