@@ -77,7 +77,6 @@ if __name__ == "__main__":
     parser.add_argument("--weight-decay", default=0, type=float)
     parser.add_argument("--env", default="MiniWorld-SimToRealOdo2-v0")
     parser.add_argument("--model-path", default="pos_delta.torch")
-
     args = parser.parse_args()
 
     env = gym.make(args.env)

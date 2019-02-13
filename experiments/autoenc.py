@@ -88,13 +88,6 @@ class Model(nn.Module):
 
         return y
 
-
-batch_size = 64
-
-buffer = np.zeros(shape=(65536, 3, 80, 60), dtype=np.uint8)
-cur_gen_idx = 0
-idx_avail = 0
-
 def gen_data():
     global cur_gen_idx
     global idx_avail
@@ -105,11 +98,18 @@ def gen_data():
         idx_avail = max(idx_avail, cur_gen_idx)
 
 if __name__ == "__main__":
-    #parser = argparse.ArgumentParser()
-    #parser.add_argument('--map-name', required=True)
-    #args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--batch-size", default=64, type=int)
+    parser.add_argument("--buffer-size", default=65536, type=int)
+    parser.add_argument("--env", default="MiniWorld-SimToRealOdo2-v0")
+    parser.add_argument("--model-path", default="pos_delta.torch")
+    args = parser.parse_args()
 
-    env = gym.make('MiniWorld-SimToRealOdo2-v0')
+    buffer = np.zeros(shape=(args.buffer_size, 3, 80, 60), dtype=np.uint8)
+    cur_gen_idx = 0
+    idx_avail = 0
+
+    env = gym.make(args.env)
 
     model = Model()
     model.cuda()
@@ -117,16 +117,18 @@ if __name__ == "__main__":
 
     optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
-    while idx_avail <= batch_size:
+    while idx_avail <= args.batch_size:
         gen_data()
+
+    running_loss = None
 
     for i in range(10000000):
         print('batch #{} (imgs avail {})'.format(i+1, idx_avail-1))
 
         #print(i, cur_gen_idx)
 
-        batch_idx = np.random.randint(0, idx_avail - batch_size)
-        batch = buffer[batch_idx:(batch_idx+batch_size)]
+        batch_idx = np.random.randint(0, idx_avail - args.batch_size)
+        batch = buffer[batch_idx:(batch_idx+args.batch_size)]
         batch = make_var(batch)
 
         y = model(batch)
@@ -141,9 +143,24 @@ if __name__ == "__main__":
         loss.backward()
         optimizer.step()
 
-        print(loss.data.item())
+        if i == 0:
+            running_loss = loss.data.item()
+        else:
+            running_loss = 0.99 * running_loss + 0.01 * loss.data.item()
+
+        print('running loss: {:.5f}'.format(running_loss))
 
         if i > 0 and i % 100 == 0:
             # TODO: save model
+
             save_img('test_obs.png', batch[0])
             save_img('test_out.png', y[0])
+
+            try:
+                for i in range(0, 100):
+                    img = load_img('robot_imgs/img_{:03d}.png'.format(i))
+                    y = model(img)
+                    save_img('img_{:03d}_in.png'.format(i), img[0])
+                    save_img('img_{:03d}_out.png'.format(i), y[0])
+            except:
+                pass

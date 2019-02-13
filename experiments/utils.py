@@ -97,9 +97,6 @@ def load_img(file_name):
     img = io.imread(file_name)
     #img = img[:,:,0:3] / 255
 
-    # Flip the image vertically
-    img = np.flip(img, 0)
-
     # Transpose the rows and columns
     img = img.transpose(2, 1, 0)
 
