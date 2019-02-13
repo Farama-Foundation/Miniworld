@@ -20,7 +20,7 @@ from experiments.utils import make_var, save_img
 import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--env-name', default='MiniWorld-SimToRealOdo-v0')
+parser.add_argument('--env-name', default='MiniWorld-SimToRealOdo2-v0')
 parser.add_argument('--domain-rand', action='store_true', help='enable domain randomization')
 parser.add_argument('--no-time-limit', action='store_true', default=True, help='ignore time step limits')
 parser.add_argument('--save-imgs', action='store_true', help='save images')
@@ -74,13 +74,6 @@ def angle_to_rv(a):
 
 fig = plt.figure()
 axe = fig.add_subplot(111)
-if 'RemoteBot' in args.env_name:
-    env.min_x = -2
-    env.max_x = 2
-    env.min_z = -2
-    env.max_z = 2
-axe.set_xlim(-abs(env.min_z) - abs(env.max_z), abs(env.min_z) + abs(env.max_z))
-axe.set_ylim(-abs(env.min_x) - abs(env.max_x), abs(env.min_x) + abs(env.max_x))
 axe.set_xlabel('dz')
 axe.set_ylabel('dx')
 sp, = axe.plot([],[], label='toto', markersize=4, color='k', marker='o', ls='')
@@ -132,6 +125,8 @@ def step(action):
     xs = [ p[2] for p,a in poss ]
     ys = [ p[0] for p,a in poss ]
     sp.set_data(xs, ys)
+    axe.set_xlim(min(min(xs), -1), max(max(xs), 1))
+    axe.set_ylim(min(min(ys), -1), max(max(ys), 1))
     fig.canvas.draw()
 
     if args.save_imgs:
