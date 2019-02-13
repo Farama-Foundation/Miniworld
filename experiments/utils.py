@@ -82,7 +82,9 @@ def save_img(file_name, img):
         img = img.squeeze(0)
 
     # scipy expects shape (W, H, 3)
-    img = img.transpose(2, 1, 0)
+    if img.shape[0] == 3:
+        img = img.transpose(2, 1, 0)
+
     img = img.clip(0, 255)
     img = img.astype(np.uint8)
 
