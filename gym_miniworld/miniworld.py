@@ -1074,8 +1074,10 @@ class MiniWorldEnv(gym.Env):
         if render_agent:
             self.agent.render()
 
-        # Resolve the rendered imahe into a numpy array
-        return frame_buffer.resolve()
+        # Resolve the rendered image into a numpy array
+        img = frame_buffer.resolve()
+
+        return img
 
     def render_top_view(self, frame_buffer=None):
         """

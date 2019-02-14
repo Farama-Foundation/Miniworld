@@ -171,7 +171,7 @@ class FrameBuffer:
             depth_rb = GLuint(0)
             glGenRenderbuffers(1, byref(depth_rb))
             glBindRenderbuffer(GL_RENDERBUFFER, depth_rb)
-            glRenderbufferStorageMultisample(GL_RENDERBUFFER, num_samples, GL_DEPTH_COMPONENT, width, height)
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, num_samples, GL_DEPTH_COMPONENT16, width, height)
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rb)
 
             # Check that the frame buffer creation succeeded
@@ -208,7 +208,7 @@ class FrameBuffer:
             depth_rb = GLuint(0)
             glGenRenderbuffers(1, byref(depth_rb))
             glBindRenderbuffer(GL_RENDERBUFFER, depth_rb)
-            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height)
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height)
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rb)
 
         # Sanity check
@@ -243,6 +243,13 @@ class FrameBuffer:
             0
         )
 
+        # Create a depth buffer for the final frame buffer
+        depth_rb = GLuint(0)
+        glGenRenderbuffers(1, byref(depth_rb))
+        glBindRenderbuffer(GL_RENDERBUFFER, depth_rb)
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, width, height)
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_rb)
+
         # Sanity check
         res = glCheckFramebufferStatus(GL_FRAMEBUFFER)
         assert res == GL_FRAMEBUFFER_COMPLETE, FB_ERROR_ENUMS.get(res, res)
@@ -256,8 +263,6 @@ class FrameBuffer:
         # Array to render the image into (for observation rendering)
         # The array is stored in column-major order
         self.img_array = np.zeros(shape=(height, width, 3), dtype=np.uint8)
-        #print(self.img_array.strides)
-        #print(self.img_array.flags)
 
     def bind(self):
         """
@@ -286,6 +291,16 @@ class FrameBuffer:
             GL_LINEAR
         )
 
+        # Resolve the depth component as well
+        glBlitFramebuffer(
+            0, 0,
+            self.width, self.height,
+            0, 0,
+            self.width, self.height,
+            GL_DEPTH_BUFFER_BIT,
+            GL_NEAREST
+        )
+
         # Copy the frame buffer contents into a numpy array
         # Note: glReadPixels reads starting from the lower left corner
         glBindFramebuffer(GL_FRAMEBUFFER, self.final_fbo)
@@ -311,3 +326,40 @@ class FrameBuffer:
         img = np.ascontiguousarray(np.flip(self.img_array, axis=0))
 
         return img
+
+    def get_depth_map(self, z_near=0.04, z_far=1.0):
+        """
+        Read the depth buffer into a depth map
+        The values returned are real-world z-distance from the observer
+        """
+
+        depth_map = np.zeros(shape=(self.height, self.width, 1), dtype=np.uint16)
+
+        glBindFramebuffer(GL_FRAMEBUFFER, self.final_fbo)
+        glPixelStorei(GL_PACK_ALIGNMENT, 1)
+        glReadPixels(
+            0,
+            0,
+            self.width,
+            self.height,
+            GL_DEPTH_COMPONENT,
+            GL_UNSIGNED_SHORT,
+            depth_map.ctypes.data_as(POINTER(GLushort))
+        )
+
+        # Unbind the frame buffer
+        glBindFramebuffer(GL_FRAMEBUFFER, 0)
+
+        # Flip the depth map vertically to map OpenAI gym conventions
+        depth_map = np.flip(depth_map, axis=0)
+
+        # Transform into floating-point values
+        depth_map = depth_map.astype(np.float32) / 65536
+
+        # Convert to real-world z-distances
+        clip_z = (depth_map - 0.5) * 2.0;
+        world_z = -2*z_far*z_near/(clip_z*(z_far-z_near)-(z_far+z_near))
+
+        depth_map = np.ascontiguousarray(world_z)
+
+        return depth_map
