@@ -38,6 +38,7 @@ Features:
 - Fully observable [top-down/overhead view](images/maze_top_view.jpg) available
 - [Domain randomization](https://blog.openai.com/generalizing-from-simulation/) support, for sim-to-real transfer
 - Ability to [display alphanumeric strings](images/textframe.jpg) on walls
+- Ability to produce depth maps matching camera images (RGB-D)
 
 Limitations:
 - Graphics are basic, nowhere near photorealism
