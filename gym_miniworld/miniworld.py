@@ -1074,8 +1074,10 @@ class MiniWorldEnv(gym.Env):
         if render_agent:
             self.agent.render()
 
-        # Resolve the rendered imahe into a numpy array
-        return frame_buffer.resolve()
+        # Resolve the rendered image into a numpy array
+        img = frame_buffer.resolve()
+
+        return img
 
     def render_top_view(self, frame_buffer=None):
         """
@@ -1180,6 +1182,21 @@ class MiniWorldEnv(gym.Env):
             frame_buffer,
             render_agent=False
         )
+
+    def render_depth(self, frame_buffer=None):
+        """
+        Produce a depth map
+        Values are floating-point, map shape is (H,W,1)
+        Distances are in meters from the observer
+        """
+
+        if frame_buffer == None:
+            frame_buffer = self.obs_fb
+
+        # Render the world
+        self.render_obs(frame_buffer)
+
+        return frame_buffer.get_depth_map(0.04, 100.0)
 
     def render(self, mode='human', close=False):
         """
