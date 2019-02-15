@@ -354,7 +354,7 @@ class FrameBuffer:
         depth_map = np.flip(depth_map, axis=0)
 
         # Transform into floating-point values
-        depth_map = depth_map.astype(np.float32) / 65536
+        depth_map = depth_map.astype(np.float32) / 65535
 
         # Convert to real-world z-distances
         clip_z = (depth_map - 0.5) * 2.0;
