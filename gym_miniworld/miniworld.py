@@ -1199,6 +1199,21 @@ class MiniWorldEnv(gym.Env):
             render_agent=False
         )
 
+    def render_depth(self, frame_buffer=None):
+        """
+        Produce a depth map
+        Values are floating-point, map shape is (H,W,1)
+        Distances are in meters from the observer
+        """
+
+        if frame_buffer == None:
+            frame_buffer = self.obs_fb
+
+        # Render the world
+        self.render_obs(frame_buffer)
+
+        return frame_buffer.get_depth_map(0.04, 100.0)
+
     def render(self, mode='human', close=False):
         """
         Render the environment for human viewing
