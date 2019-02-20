@@ -125,8 +125,10 @@ def step(action):
     xs = [ p[2] for p,a in poss ]
     ys = [ p[0] for p,a in poss ]
     sp.set_data(xs, ys)
-    axe.set_xlim(min(min(xs), -1), max(max(xs), 1))
-    axe.set_ylim(min(min(ys), -1), max(max(ys), 1))
+    ax_min = min(min(xs), min(ys), -1)
+    ax_max = max(max(xs), max(ys), 1)
+    axe.set_xlim(ax_min, ax_max)
+    axe.set_ylim(ax_min, ax_max)
     fig.canvas.draw()
 
     if args.save_imgs:
