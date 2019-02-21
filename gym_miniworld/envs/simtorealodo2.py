@@ -27,7 +27,7 @@ class SimToRealOdo2Env(MiniWorldEnv):
 
     def __init__(self, **kwargs):
         super().__init__(
-            max_episode_steps=400,
+            max_episode_steps=2000,
             params=sim_params,
             domain_rand=True,
             **kwargs
@@ -147,5 +147,16 @@ class SimToRealOdo2Env(MiniWorldEnv):
         return obs
 
     def step(self, action):
+        pos0 = self.agent.pos
+
         obs, reward, done, info = super().step(action)
+
+        pos1 = self.agent.pos
+
+        if action == self.actions.move_forward:
+            if np.array_equal(pos0, pos1):
+                reward = -1
+            else:
+                reward = 1
+
         return obs, reward, done, info

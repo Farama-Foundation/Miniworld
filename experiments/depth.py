@@ -81,7 +81,7 @@ class Model(nn.Module):
         y = self.decoder(x)
 
         #print(y.size())
-        y = 255 * y[:, :, 2:82, 3:63]
+        y = 1 * y[:, :, 2:82, 3:63]
         #print(y.size())
 
         return y
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--batch-size", default=64, type=int)
     parser.add_argument("--buffer-size", default=65536, type=int)
-    parser.add_argument("--env", default="MiniWorld-SimToRealOdo2-v0")
+    parser.add_argument("--env", default="MiniWorld-SimToRealOdo-v0")
     parser.add_argument("--model-path", default="pos_delta.torch")
     args = parser.parse_args()
 
@@ -165,8 +165,10 @@ if __name__ == "__main__":
             # TODO: save model
 
             save_img('test_obs.png', batch_obs[0])
+            save_img('test_dpt.png', depth_to_img(batch_dpt[0]))
             save_img('test_out.png', depth_to_img(y[0]))
 
+            """
             try:
                 for i in range(0, 100):
                     img = load_img('robot_imgs/img_{:03d}.png'.format(i))
@@ -174,3 +176,4 @@ if __name__ == "__main__":
                     save_img('img_{:03d}_out.png'.format(i), depth_to_img(y[0]))
             except:
                 pass
+            """
