@@ -26,7 +26,7 @@ class Model(nn.Module):
         super().__init__()
 
         self.obs_to_enc = nn.Sequential(
-            nn.Conv2d(1, 64, kernel_size=5, stride=2),
+            nn.Conv2d(3, 64, kernel_size=5, stride=2),
             #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
@@ -65,8 +65,7 @@ class Model(nn.Module):
         self.apply(init_weights)
 
     def forward(self, img):
-        #img = img / 255
-        img = img / 5
+        img = img / 255
 
         x = self.obs_to_enc(img)
 
@@ -139,9 +138,9 @@ if __name__ == "__main__":
         batch_obs = make_var(buf_obs[batch_idx:(batch_idx+args.batch_size)])
         batch_dpt = make_var(buf_dpt[batch_idx:(batch_idx+args.batch_size)])
 
-        batch_dpt = batch_dpt.log()
-        #y = model(batch_obs)
-        y = model(batch_dpt)
+        y = model(batch_obs)
+        #batch_dpt = batch_dpt.log()
+        #y = model(batch_dpt)
 
         # Generate data while the GPU is computing
         gen_data()
@@ -164,9 +163,9 @@ if __name__ == "__main__":
             # TODO: save model
 
             for img_idx in range(32):
-                #save_img('test_{:03d}_obs.png'.format(img_idx), batch_obs[img_idx])
-                save_img('test_{:03d}_depth.png'.format(img_idx), depth_to_img(batch_dpt[img_idx].exp()))
-                save_img('test_{:03d}_dpred.png'.format(img_idx), depth_to_img(y[img_idx].exp()))
+                save_img('test_{:03d}_0_obs.png'.format(img_idx), batch_obs[img_idx])
+                save_img('test_{:03d}_1_depth.png'.format(img_idx), depth_to_img(batch_dpt[img_idx].exp()))
+                save_img('test_{:03d}_2_pred.png'.format(img_idx), depth_to_img(y[img_idx].exp()))
 
             """
             try:
