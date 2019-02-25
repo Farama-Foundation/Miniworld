@@ -66,7 +66,7 @@ class Model(nn.Module):
 
     def forward(self, img):
         #img = img / 255
-        img = img.clamp(0, 100) / 100
+        img = img / 5
 
         x = self.obs_to_enc(img)
 
@@ -78,7 +78,7 @@ class Model(nn.Module):
         y = self.decoder(x)
 
         #print(y.size())
-        y = 100 * y[:, :, 2:82, 3:63]
+        y = 5 * y[:, :, 2:82, 3:63]
         #print(y.size())
 
         return y
@@ -96,7 +96,7 @@ def gen_data():
         buf_avail = max(buf_avail, buf_idx+1)
 
         buf_obs[buf_idx] = env.reset().transpose(2, 1, 0)
-        buf_dpt[buf_idx] = env.render_depth().transpose(2, 1, 0)
+        buf_dpt[buf_idx] = env.render_depth().transpose(2, 1, 0).clip(0, 100)
 
 def depth_to_img(depth):
     depth = depth.clamp(0, 2.5)
@@ -139,6 +139,7 @@ if __name__ == "__main__":
         batch_obs = make_var(buf_obs[batch_idx:(batch_idx+args.batch_size)])
         batch_dpt = make_var(buf_dpt[batch_idx:(batch_idx+args.batch_size)])
 
+        batch_dpt = batch_dpt.log()
         #y = model(batch_obs)
         y = model(batch_dpt)
 
@@ -146,8 +147,7 @@ if __name__ == "__main__":
         gen_data()
 
         optimizer.zero_grad()
-        diff = y.clamp(0.001, 100).log() - batch_dpt.clamp(0.001, 100).log()
-        #diff = y - batch_obs
+        diff = y - batch_dpt
         loss = (diff * diff).mean() # L2 loss
         #loss = (y - batch).abs().mean() # L1 loss
         loss.backward()
@@ -165,8 +165,8 @@ if __name__ == "__main__":
 
             for img_idx in range(32):
                 #save_img('test_{:03d}_obs.png'.format(img_idx), batch_obs[img_idx])
-                save_img('test_{:03d}_depth.png'.format(img_idx), depth_to_img(batch_dpt[img_idx]))
-                save_img('test_{:03d}_dpred.png'.format(img_idx), depth_to_img(y[img_idx]))
+                save_img('test_{:03d}_depth.png'.format(img_idx), depth_to_img(batch_dpt[img_idx].exp()))
+                save_img('test_{:03d}_dpred.png'.format(img_idx), depth_to_img(y[img_idx].exp()))
 
             """
             try:
