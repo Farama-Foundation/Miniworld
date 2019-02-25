@@ -26,40 +26,40 @@ class Model(nn.Module):
         super().__init__()
 
         self.obs_to_enc = nn.Sequential(
-            nn.Conv2d(1, 64, kernel_size=5, stride=2),
+            nn.Conv2d(1, 128, kernel_size=5, stride=2),
             #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
-            nn.Conv2d(64, 64, kernel_size=5, stride=2),
+            nn.Conv2d(128, 128, kernel_size=5, stride=2),
             #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
-            nn.Conv2d(64, 64, kernel_size=4, stride=2),
+            nn.Conv2d(128, 128, kernel_size=4, stride=2),
             #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
             #Print(),
             Flatten(),
-            nn.Linear(2240, 512),
+            nn.Linear(4480, 512),
             nn.LeakyReLU(),
-            nn.Linear(512, 2240),
+            nn.Linear(512, 4480),
             nn.LeakyReLU(),
         )
 
         self.decoder = nn.Sequential(
             #Print(),
 
-            nn.ConvTranspose2d(64, 64, kernel_size=6, stride=2),
+            nn.ConvTranspose2d(128, 128, kernel_size=6, stride=2),
             nn.LeakyReLU(),
 
-            nn.ConvTranspose2d(64, 64, kernel_size=6, stride=2),
+            nn.ConvTranspose2d(128, 128, kernel_size=6, stride=2),
             nn.LeakyReLU(),
 
-            nn.ConvTranspose2d(64, 64, kernel_size=4, stride=2),
+            nn.ConvTranspose2d(128, 128, kernel_size=4, stride=2),
             nn.LeakyReLU(),
 
-            nn.ConvTranspose2d(64, 1, kernel_size=2, stride=1),
-            nn.LeakyReLU(),
+            nn.ConvTranspose2d(128, 1, kernel_size=2, stride=1),
+            #nn.LeakyReLU(),
         )
 
         self.apply(init_weights)
@@ -71,7 +71,7 @@ class Model(nn.Module):
         x = self.obs_to_enc(img)
 
         #print(x.size())
-        x = x.view(x.size(0), 64, 7, 5)
+        x = x.view(x.size(0), 128, 7, 5)
         #print(x.size())
 
         #print(x.size())
@@ -106,7 +106,7 @@ def depth_to_img(depth):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch-size", default=64, type=int)
+    parser.add_argument("--batch-size", default=48, type=int)
     parser.add_argument("--buffer-size", default=65536, type=int)
     parser.add_argument("--env", default="MiniWorld-SimToRealOdo-v0")
     parser.add_argument("--model-path", default="pos_delta.torch")
@@ -163,9 +163,10 @@ if __name__ == "__main__":
         if i % 100 == 0:
             # TODO: save model
 
-            save_img('test_obs.png', batch_obs[0])
-            save_img('test_depth.png', depth_to_img(batch_dpt[0]))
-            save_img('test_dpred.png', depth_to_img(y[0]))
+            for img_idx in range(32):
+                #save_img('test_{:03d}_obs.png'.format(img_idx), batch_obs[img_idx])
+                save_img('test_{:03d}_depth.png'.format(img_idx), depth_to_img(batch_dpt[img_idx]))
+                save_img('test_{:03d}_dpred.png'.format(img_idx), depth_to_img(y[img_idx]))
 
             """
             try:
