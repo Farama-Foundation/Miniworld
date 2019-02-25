@@ -26,62 +26,59 @@ class Model(nn.Module):
         super().__init__()
 
         self.obs_to_enc = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=5, stride=2),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(1, 64, kernel_size=5, stride=2),
+            #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
             nn.Conv2d(64, 64, kernel_size=5, stride=2),
-            nn.BatchNorm2d(64),
+            #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
             nn.Conv2d(64, 64, kernel_size=4, stride=2),
-            nn.BatchNorm2d(64),
+            #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
             #Print(),
-            #Flatten(),
-            #nn.Linear(2240, 512),
-            #nn.LeakyReLU(),
-            #nn.Linear(512, 2240),
-            #nn.LeakyReLU(),
+            Flatten(),
+            nn.Linear(2240, 512),
+            nn.LeakyReLU(),
+            nn.Linear(512, 2240),
+            nn.LeakyReLU(),
         )
 
         self.decoder = nn.Sequential(
             #Print(),
 
             nn.ConvTranspose2d(64, 64, kernel_size=6, stride=2),
-            #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
             nn.ConvTranspose2d(64, 64, kernel_size=6, stride=2),
-            #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
             nn.ConvTranspose2d(64, 64, kernel_size=4, stride=2),
-            #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
             nn.ConvTranspose2d(64, 1, kernel_size=2, stride=1),
-            #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
         )
 
         self.apply(init_weights)
 
     def forward(self, img):
-        img = img / 255
+        #img = img / 255
+        img = img.clamp(0, 100) / 100
 
         x = self.obs_to_enc(img)
 
         #print(x.size())
-        #x = x.view(x.size(0), 64, 7, 5)
+        x = x.view(x.size(0), 64, 7, 5)
         #print(x.size())
 
         #print(x.size())
         y = self.decoder(x)
 
         #print(y.size())
-        y = 1 * y[:, :, 2:82, 3:63]
+        y = 100 * y[:, :, 2:82, 3:63]
         #print(y.size())
 
         return y
@@ -102,9 +99,9 @@ def gen_data():
         buf_dpt[buf_idx] = env.render_depth().transpose(2, 1, 0)
 
 def depth_to_img(depth):
-    depth = 255 * depth / depth.max()
+    depth = depth.clamp(0, 2.5)
+    depth = 255 * (depth / 2.5)
     img = torch.cat([depth, depth, depth], dim=0)
-    #print(img.size())
     return img
 
 if __name__ == "__main__":
@@ -142,13 +139,15 @@ if __name__ == "__main__":
         batch_obs = make_var(buf_obs[batch_idx:(batch_idx+args.batch_size)])
         batch_dpt = make_var(buf_dpt[batch_idx:(batch_idx+args.batch_size)])
 
-        y = model(batch_obs)
+        #y = model(batch_obs)
+        y = model(batch_dpt)
 
         # Generate data while the GPU is computing
         gen_data()
 
         optimizer.zero_grad()
         diff = y - batch_dpt
+        #diff = y - batch_obs
         loss = (diff * diff).mean() # L2 loss
         #loss = (y - batch).abs().mean() # L1 loss
         loss.backward()
@@ -161,12 +160,12 @@ if __name__ == "__main__":
 
         print('running loss: {:.5f}'.format(running_loss))
 
-        if i > 0 and i % 100 == 0:
+        if i % 100 == 0:
             # TODO: save model
 
             save_img('test_obs.png', batch_obs[0])
-            save_img('test_dpt.png', depth_to_img(batch_dpt[0]))
-            save_img('test_out.png', depth_to_img(y[0]))
+            save_img('test_depth.png', depth_to_img(batch_dpt[0]))
+            save_img('test_dpred.png', depth_to_img(y[0]))
 
             """
             try:
