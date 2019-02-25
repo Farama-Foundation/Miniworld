@@ -26,39 +26,39 @@ class Model(nn.Module):
         super().__init__()
 
         self.obs_to_enc = nn.Sequential(
-            nn.Conv2d(1, 128, kernel_size=5, stride=2),
+            nn.Conv2d(1, 64, kernel_size=5, stride=2),
             #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
-            nn.Conv2d(128, 128, kernel_size=5, stride=2),
+            nn.Conv2d(64, 64, kernel_size=5, stride=2),
             #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
-            nn.Conv2d(128, 128, kernel_size=4, stride=2),
+            nn.Conv2d(64, 64, kernel_size=4, stride=2),
             #nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
             #Print(),
             Flatten(),
-            nn.Linear(4480, 512),
+            nn.Linear(2240, 512),
             nn.LeakyReLU(),
-            nn.Linear(512, 4480),
+            nn.Linear(512, 2240),
             nn.LeakyReLU(),
         )
 
         self.decoder = nn.Sequential(
             #Print(),
 
-            nn.ConvTranspose2d(128, 128, kernel_size=6, stride=2),
+            nn.ConvTranspose2d(64, 64, kernel_size=6, stride=2),
             nn.LeakyReLU(),
 
-            nn.ConvTranspose2d(128, 128, kernel_size=6, stride=2),
+            nn.ConvTranspose2d(64, 64, kernel_size=6, stride=2),
             nn.LeakyReLU(),
 
-            nn.ConvTranspose2d(128, 128, kernel_size=4, stride=2),
+            nn.ConvTranspose2d(64, 64, kernel_size=4, stride=2),
             nn.LeakyReLU(),
 
-            nn.ConvTranspose2d(128, 1, kernel_size=2, stride=1),
+            nn.ConvTranspose2d(64, 1, kernel_size=2, stride=1),
             #nn.LeakyReLU(),
         )
 
@@ -71,7 +71,7 @@ class Model(nn.Module):
         x = self.obs_to_enc(img)
 
         #print(x.size())
-        x = x.view(x.size(0), 128, 7, 5)
+        x = x.view(x.size(0), 64, 7, 5)
         #print(x.size())
 
         #print(x.size())
@@ -106,7 +106,7 @@ def depth_to_img(depth):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch-size", default=48, type=int)
+    parser.add_argument("--batch-size", default=64, type=int)
     parser.add_argument("--buffer-size", default=65536, type=int)
     parser.add_argument("--env", default="MiniWorld-SimToRealOdo-v0")
     parser.add_argument("--model-path", default="pos_delta.torch")
@@ -146,7 +146,7 @@ if __name__ == "__main__":
         gen_data()
 
         optimizer.zero_grad()
-        diff = y - batch_dpt
+        diff = y.clamp(0.001, 100).log() - batch_dpt.clamp(0.001, 100).log()
         #diff = y - batch_obs
         loss = (diff * diff).mean() # L2 loss
         #loss = (y - batch).abs().mean() # L1 loss
