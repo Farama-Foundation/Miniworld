@@ -430,6 +430,32 @@ class Box(Entity):
 
         glPopMatrix()
 
+class Key(MeshEnt):
+    """
+    Key the agent can pick up, carry, and use to open doors
+    """
+
+    def __init__(self, color):
+        assert color in COLOR_NAMES
+        super().__init__(
+            mesh_name='key_{}'.format(color),
+            height=0.35,
+            static=False
+        )
+
+class Ball(MeshEnt):
+    """
+    Ball (sphere) the agent can pick up and carry
+    """
+
+    def __init__(self, color):
+        assert color in COLOR_NAMES
+        super().__init__(
+            mesh_name='ball_{}'.format(color),
+            height=0.6,
+            static=False
+        )
+
 class Agent(Entity):
     def __init__(self):
         super().__init__()
