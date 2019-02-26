@@ -549,6 +549,7 @@ class MiniWorldEnv(gym.Env):
         self.rooms = []
 
         # Wall segments for collision detection
+        # Shape is (N, 2, 3)
         self.wall_segs = []
 
         # Generate the world
