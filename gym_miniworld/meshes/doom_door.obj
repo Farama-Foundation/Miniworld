@@ -1,0 +1,43 @@
+mtllib doom_door.mtl
+usemtl TheMaterial
+
+# Front face
+v 0 1 0
+v 0 1 1
+v 0 0 1
+v 0 0 0
+
+# Back face
+v 0.1 1 0
+v 0.1 1 1
+v 0.1 0 1
+v 0.1 0 0
+
+# Tex coords
+vt 0 1
+vt 1 1
+vt 1 0
+vt 0 0
+# Bottom face
+vt 0 0.9
+vt 1 0.9
+vt 1 1
+vt 0 1
+
+# Normals
+vn -1 0 0
+vn 1 0 0
+vn 0 -1 0
+
+# Faces, format is: v1/vt1/vn1
+# Front face
+f 2/2/1 1/1/1 3/3/1
+f 1/1/1 4/4/1 3/3/1
+
+# Back face
+f 5/2/2 6/1/2 8/3/2
+f 6/1/2 7/4/2 8/3/2
+
+# Bottom face
+f 3/6/2 4/5/2 7/7/2
+f 4/5/2 8/8/2 7/7/2
