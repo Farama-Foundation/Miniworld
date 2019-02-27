@@ -18,7 +18,7 @@ sim_params.set('cam_height', 0.18, 0.17, 0.19)
 sim_params.set('cam_fwd_disp', 0, -0.02, 0.02)
 # TODO: modify lighting parameters
 
-class SimToRealPushEnv(MiniWorldEnv):
+class SimToRealPush(MiniWorldEnv):
     """
     Environment designed for sim-to-real transfer.
     In this environment, the robot has to push the

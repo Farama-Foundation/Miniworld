@@ -3,7 +3,7 @@ import math
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 
-class OneRoomEnv(MiniWorldEnv):
+class OneRoom(MiniWorldEnv):
     """
     Environment in which the goal is to go to a red box
     placed randomly in one big room.

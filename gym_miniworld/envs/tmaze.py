@@ -4,7 +4,7 @@ from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 from gym import spaces
 
-class TMazeEnv(MiniWorldEnv):
+class TMaze(MiniWorldEnv):
     """
     Two hallways connected in a T-junction
     """

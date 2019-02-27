@@ -4,7 +4,7 @@ from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 from gym import spaces
 
-class HallwayEnv(MiniWorldEnv):
+class Hallway(MiniWorldEnv):
     """
     Environment in which the goal is to go to a red box
     at the end of a hallway

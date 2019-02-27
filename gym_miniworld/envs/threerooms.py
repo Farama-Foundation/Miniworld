@@ -4,7 +4,7 @@ from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import ImageFrame, MeshEnt, Box, Key, Ball, COLOR_NAMES
 
-class ThreeRoomsEnv(MiniWorldEnv):
+class ThreeRooms(MiniWorldEnv):
     """
     Two small rooms connected to one large room
     """

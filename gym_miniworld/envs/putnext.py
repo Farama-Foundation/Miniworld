@@ -3,7 +3,7 @@ import math
 from ..miniworld import MiniWorldEnv, Room, COLOR_NAMES
 from ..entity import Box
 
-class PutNextEnv(MiniWorldEnv):
+class PutNext(MiniWorldEnv):
     """
     Single-room environment where a red box must be placed next
     to a yellow box.

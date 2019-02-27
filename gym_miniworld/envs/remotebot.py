@@ -45,7 +45,7 @@ def recv_array(socket):
     A = A.reshape(md['shape'])
     return A
 
-class RemoteBotEnv(gym.Env):
+class RemoteBot(gym.Env):
     """
     An environment that is an interface to remotely
     control an actual real robot

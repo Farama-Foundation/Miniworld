@@ -4,7 +4,7 @@ from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
 
-class FourRoomsEnv(MiniWorldEnv):
+class FourRooms(MiniWorldEnv):
     """
     Two small rooms conected
     """

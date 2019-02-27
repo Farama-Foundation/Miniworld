@@ -3,7 +3,7 @@ import math
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box, Ball, Key
 
-class RoomObjsEnv(MiniWorldEnv):
+class RoomObjs(MiniWorldEnv):
     """
     Single room with multiple objects
     Inspired by the single room environment of

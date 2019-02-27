@@ -4,7 +4,7 @@ from gym import spaces
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box, ImageFrame, MeshEnt
 
-class WallGapEnv(MiniWorldEnv):
+class WallGap(MiniWorldEnv):
     """
     Outside environment with two rooms connected by a gap in a wall
     """

@@ -3,7 +3,7 @@ import math
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import MeshEnt
 
-class CollectHealthEnv(MiniWorldEnv):
+class CollectHealth(MiniWorldEnv):
     """
     Environment where the agent has to collect healthkits and stay
     alive as long as possible. This is inspired from the VizDoom

@@ -5,7 +5,7 @@ from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box, ImageFrame
 from ..params import DEFAULT_PARAMS
 
-class MazeEnv(MiniWorldEnv):
+class Maze(MiniWorldEnv):
     """
     Maze environment in which the agent has to reach a red box
     """
@@ -112,15 +112,15 @@ class MazeEnv(MiniWorldEnv):
 
         return obs, reward, done, info
 
-class MazeS2Env(MazeEnv):
+class MazeS2(Maze):
     def __init__(self):
         super().__init__(num_rows=2, num_cols=2)
 
-class MazeS3Env(MazeEnv):
+class MazeS3(Maze):
     def __init__(self):
         super().__init__(num_rows=3, num_cols=3)
 
-class MazeS3FastEnv(MazeEnv):
+class MazeS3Fast(Maze):
     def __init__(self, forward_step=0.7, turn_step=45):
 
         # Parameters for larger movement steps, fast stepping
