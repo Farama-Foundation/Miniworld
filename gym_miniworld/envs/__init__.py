@@ -3,6 +3,7 @@ import gym
 from .remotebot import *
 from .hallway import *
 from .oneroom import *
+from .roomobjs import *
 from .tmaze import *
 from .fourrooms import *
 from .threerooms import *
