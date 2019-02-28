@@ -893,7 +893,7 @@ class MiniWorldEnv(gym.Env):
                 continue
 
             # Pick a direction
-            d = dir if dir else self.rand.float(-math.pi, math.pi)
+            d = dir if dir != None else self.rand.float(-math.pi, math.pi)
 
             ent.pos = pos
             ent.dir = d
