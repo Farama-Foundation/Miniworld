@@ -864,7 +864,7 @@ class MiniWorldEnv(gym.Env):
 
         # If an exact position if specified
         if pos is not None:
-            ent.dir = dir if dir else self.rand.float(-math.pi, math.pi)
+            ent.dir = dir if dir != None else self.rand.float(-math.pi, math.pi)
             ent.pos = pos
             self.entities.append(ent)
             return
@@ -893,7 +893,7 @@ class MiniWorldEnv(gym.Env):
                 continue
 
             # Pick a direction
-            d = dir if dir else self.rand.float(-math.pi, math.pi)
+            d = dir if dir != None else self.rand.float(-math.pi, math.pi)
 
             ent.pos = pos
             ent.dir = d
