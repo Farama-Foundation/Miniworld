@@ -867,7 +867,7 @@ class MiniWorldEnv(gym.Env):
             ent.dir = dir if dir != None else self.rand.float(-math.pi, math.pi)
             ent.pos = pos
             self.entities.append(ent)
-            return
+            return ent
 
         # Keep retrying until we find a suitable position
         while True:
