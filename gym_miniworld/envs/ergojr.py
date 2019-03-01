@@ -11,14 +11,12 @@ sim_params.set('forward_step', 0.035, 0.028, 0.042)
 sim_params.set('forward_drift', 0, -0.005, 0.005)
 sim_params.set('turn_step', 17, 13, 21)
 sim_params.set('bot_radius', 0.11, 0.11, 0.11)
-sim_params.set('cam_pitch', -10, -15, -3)
+sim_params.set('cam_pitch', -15)
 sim_params.set('cam_fov_y', 49, 45, 55)
 sim_params.set('cam_height', 0.25)
 sim_params.set('cam_fwd_disp', 0, -0.02, 0.02)
 
-
 def drawAxes(len=0.1):
-
     glBegin(GL_LINES)
 
     glColor3f(1, 0, 0)
@@ -298,13 +296,9 @@ class TableTopRobot(MiniWorldEnv):
         self.ergojr.angles = [ self.rand.float(-10, 10) for i in range(6) ]
 
         self.agent.radius = 0.15
-        self.place_agent(
-            dir = -3 * math.pi / 4,
-            min_x = 0.3,
-            max_x = 0.3,
-            min_z = -0.3,
-            max_z = -0.3
-        )
+        self.agent.pos = np.array([0.3, 0, -0.3])
+        self.agent.dir = -2.1
+        self.entities.append(self.agent)
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
