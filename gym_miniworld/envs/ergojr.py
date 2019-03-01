@@ -3,7 +3,7 @@ import math
 from ..opengl import *
 from ..miniworld import MiniWorldEnv, Room
 from ..params import DEFAULT_PARAMS
-from ..entity import Entity
+from ..entity import Entity, Box
 
 # Simulation parameters
 sim_params = DEFAULT_PARAMS.copy()
@@ -91,15 +91,54 @@ class ErgoJr(Entity):
         self.angles = [0] * 6
 
     def drawGripper(self):
-        # TODO: last motor, rotate right plate around the Y axis
-        # TODO: just hack the visuals for now, can refine later
+        """
+        Gripper. Right plate rotates around the Y axis
+        """
 
-        pass
+        #glColor3f(0.9, 0.9, 0.9)
+        glColor3f(1, 0, 0)
 
+        drawBox(
+            x_min=+0,
+            x_max=+0.05,
+            y_min=+0.00,
+            y_max=+0.02,
+            z_min=-0.015,
+            z_max=-0.010
+        )
 
+        glRotatef(self.angles[5], 0, 1, 0)
+        drawBox(
+            x_min=+0,
+            x_max=+0.05,
+            y_min=+0.00,
+            y_max=+0.02,
+            z_min=+0.01,
+            z_max=+0.015
+        )
 
+    def drawSeg5(self):
+        """
+        Fifth segment, horizontal, rotates around +Z axis
+        """
 
+        glRotatef(self.angles[4], 0, 0, 1)
+        drawAxes()
 
+        glColor3f(1, 1, 1)
+        drawBox(
+            x_min=-0.01,
+            x_max=+0.04,
+            y_min=+0.00,
+            y_max=+0.02,
+            z_min=-0.01,
+            z_max=+0.01
+        )
+
+        glPushMatrix()
+        glTranslatef(0.03, 0, 0)
+        self.drawGripper()
+        glPopMatrix()
 
     def drawSeg4(self):
         """
@@ -109,23 +148,20 @@ class ErgoJr(Entity):
         glRotatef(self.angles[3], 0, 1, 0)
         drawAxes()
 
-        glPushMatrix()
         glColor3f(0.7, 0.7, 0.7)
-        glTranslatef(0.015, 0.01, 0)
-        drawBoxOld(0.05, 0.02, 0.02)
+        drawBox(
+            x_min=-0.01,
+            x_max=+0.04,
+            y_min=+0.00,
+            y_max=+0.02,
+            z_min=-0.01,
+            z_max=+0.01
+        )
+
+        glPushMatrix()
+        glTranslatef(0.03, 0, 0)
+        self.drawSeg5()
         glPopMatrix()
-
-        #glPushMatrix()
-        #glTranslatef(0, 0.07, 0)
-        #self.drawSeg4()
-        #glPopMatrix()
-
-
-
-
-
-
-
 
     def drawSeg3(self):
         """
@@ -135,11 +171,15 @@ class ErgoJr(Entity):
         glRotatef(self.angles[2], 0, 0, 1)
         drawAxes()
 
-        glPushMatrix()
         glColor3f(1, 1, 1)
-        glTranslatef(0, 0.015, 0)
-        drawBoxOld(0.02, 0.04, 0.02)
-        glPopMatrix()
+        drawBox(
+            x_min=-0.01,
+            x_max=+0.01,
+            y_min=+0.00,
+            y_max=+0.04,
+            z_min=-0.01,
+            z_max=+0.01
+        )
 
         glPushMatrix()
         glTranslatef(0, 0.04, 0)
@@ -154,20 +194,20 @@ class ErgoJr(Entity):
         glRotatef(self.angles[1], 0, 0, 1)
         drawAxes()
 
-        glPushMatrix()
         glColor3f(0.6, 0.6, 0.6)
-        glTranslatef(0, 0.03, 0)
-        drawBoxOld(0.02, 0.07, 0.02)
-        glPopMatrix()
+        drawBox(
+            x_min=-0.01,
+            x_max=+0.01,
+            y_min=+0.00,
+            y_max=+0.07,
+            z_min=-0.01,
+            z_max=+0.01
+        )
 
         glPushMatrix()
-        glTranslatef(0, 0.07, 0)
+        glTranslatef(0, 0.06, 0)
         self.drawSeg3()
         glPopMatrix()
-
-
-
-
 
     def drawSeg1(self):
         """
@@ -188,8 +228,8 @@ class ErgoJr(Entity):
         )
 
         glPushMatrix()
-        glTranslatef(0, 0.03, 0)
-        #self.drawSeg2()
+        glTranslatef(0, 0.02, 0)
+        self.drawSeg2()
         glPopMatrix()
 
     def drawBase(self):
@@ -252,16 +292,18 @@ class TableTopRobot(MiniWorldEnv):
             floor_tex='concrete'
         )
 
+        self.place_entity(Box(color='red', size=0.03), pos=[0.5, 0, 0.25])
+
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
         self.ergojr.angles = [ self.rand.float(-10, 10) for i in range(6) ]
 
         self.agent.radius = 0.15
         self.place_agent(
-            dir = -math.pi / 4,
-            min_x = -0.8,
-            max_x = -0.8,
-            min_z = -0.8,
-            max_z = -0.8
+            dir = -3 * math.pi / 4,
+            min_x = 0.3,
+            max_x = 0.3,
+            min_z = -0.3,
+            max_z = -0.3
         )
 
     def step(self, action):
