@@ -7,14 +7,14 @@ from ..entity import Entity, Box
 
 # Simulation parameters
 sim_params = DEFAULT_PARAMS.copy()
-sim_params.set('forward_step', 0.035, 0.028, 0.042)
-sim_params.set('forward_drift', 0, -0.005, 0.005)
-sim_params.set('turn_step', 17, 13, 21)
+sim_params.set('forward_step', 0.035)
+sim_params.set('forward_drift', 0)
+sim_params.set('turn_step', 17)
 sim_params.set('bot_radius', 0.11, 0.11, 0.11)
 sim_params.set('cam_pitch', -25)
-sim_params.set('cam_fov_y', 49, 45, 55)
+sim_params.set('cam_fov_y', 49, 48, 50)
 sim_params.set('cam_height', 0.25)
-sim_params.set('cam_fwd_disp', 0, -0.02, 0.02)
+sim_params.set('cam_fwd_disp', 0)
 
 def drawAxes(len=0.1):
     glBegin(GL_LINES)
@@ -296,7 +296,7 @@ class TableTopRobot(MiniWorldEnv):
             floor_tex='concrete'
         )
 
-        self.place_entity(
+        self.box = self.place_entity(
             Box(color='green', size=0.03),
             min_x=0.05,
             max_x=0.2,
