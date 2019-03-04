@@ -296,7 +296,7 @@ class TableTopRobot(MiniWorldEnv):
             floor_tex='concrete'
         )
 
-        self.place_entity(Box(color='green', size=0.03), pos=[0.2, 0, 0.2])
+        self.place_entity(Box(color='green', size=0.03), pos=[0.2, 0, 0.2], dir=0)
 
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
         self.ergojr.angles = [
