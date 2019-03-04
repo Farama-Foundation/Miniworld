@@ -124,10 +124,11 @@ if __name__ == "__main__":
         obs = obs.transpose(2, 1, 0)
 
         # Pick a random entry index. Prioritize expanding the set.
-        if buf_num < args.buffer_size and np.random.uniform(0, 1) < 0.5:
-            cur_idx = buf_num
-        else:
-            cur_idx = np.random.randint(0, buf_num + 1) % args.buffer_size
+        #if buf_num < args.buffer_size and np.random.uniform(0, 1) < 0.5:
+        #    cur_idx = buf_num
+        #else:
+        #    cur_idx = np.random.randint(0, buf_num + 1) % args.buffer_size
+        cur_idx = buf_num
         buf_num = max(buf_num, cur_idx+1)
 
         buf_obs[cur_idx] = obs
@@ -150,7 +151,7 @@ if __name__ == "__main__":
         pred_ang = model(batch_obs)
 
         # Generate data while the GPU is computing
-        for i in range(8):
+        for i in range(16):
             gen_data()
 
         # Compute an L2 loss
