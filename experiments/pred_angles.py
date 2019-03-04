@@ -142,6 +142,8 @@ if __name__ == "__main__":
 
     running_loss = None
 
+    start_time = time.time()
+
     for batch_no in range(1, 5000000):
         print('batch #{} (num entries={})'.format(batch_no, buf_num))
 
@@ -167,7 +169,12 @@ if __name__ == "__main__":
         else:
             running_loss = 0.99 * running_loss + 0.01 * loss.data.item()
 
-        print('frames: {}'.format(batch_no * args.batch_size))
+        frame_count = batch_no * args.batch_size
+        total_time = time.time() - start_time
+        fps = int(frame_count / total_time)
+
+        print('fps: {}'.format(fps))
+        print('frames: {}'.format(frame_count))
         print('running loss: {:.5f}'.format(running_loss))
         print('running rms: {:.5f}'.format(math.sqrt(running_loss)))
 
