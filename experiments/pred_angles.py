@@ -152,7 +152,7 @@ if __name__ == "__main__":
         pred_ang = model(batch_obs)
 
         # Generate data while the GPU is computing
-        for i in range(8):
+        for i in range(16):
             gen_data()
 
         # Compute an L2 loss
@@ -167,7 +167,7 @@ if __name__ == "__main__":
         else:
             running_loss = 0.99 * running_loss + 0.01 * loss.data.item()
 
-        print('frames: {}'.format((i+1) * args.batch_size))
+        print('frames: {}'.format(batch_no * args.batch_size))
         print('running loss: {:.5f}'.format(running_loss))
         print('running rms: {:.5f}'.format(math.sqrt(running_loss)))
 
