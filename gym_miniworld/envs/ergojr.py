@@ -11,7 +11,7 @@ sim_params.set('forward_step', 0.035, 0.028, 0.042)
 sim_params.set('forward_drift', 0, -0.005, 0.005)
 sim_params.set('turn_step', 17, 13, 21)
 sim_params.set('bot_radius', 0.11, 0.11, 0.11)
-sim_params.set('cam_pitch', -15)
+sim_params.set('cam_pitch', -25)
 sim_params.set('cam_fov_y', 49, 45, 55)
 sim_params.set('cam_height', 0.25)
 sim_params.set('cam_fwd_disp', 0, -0.02, 0.02)
@@ -73,6 +73,12 @@ def drawBox(
     glVertex3f(x_min, y_max, z_min)
     glVertex3f(x_min, y_max, z_max)
 
+    glNormal3f(0, -1, 0)
+    glVertex3f(x_max, y_min, z_min)
+    glVertex3f(x_max, y_min, z_max)
+    glVertex3f(x_min, y_min, z_max)
+    glVertex3f(x_min, y_min, z_min)
+
     glEnd()
 
 class ErgoJr(Entity):
@@ -121,7 +127,7 @@ class ErgoJr(Entity):
         """
 
         glRotatef(self.angles[4], 0, 0, 1)
-        drawAxes()
+        #drawAxes()
 
         glColor3f(1, 1, 1)
         drawBox(
@@ -144,9 +150,9 @@ class ErgoJr(Entity):
         """
 
         glRotatef(self.angles[3], 0, 1, 0)
-        drawAxes()
+        #drawAxes()
 
-        glColor3f(0.7, 0.7, 0.7)
+        glColor3f(0.4, 0.4, 0.4)
         drawBox(
             x_min=-0.01,
             x_max=+0.04,
@@ -167,7 +173,7 @@ class ErgoJr(Entity):
         """
 
         glRotatef(self.angles[2], 0, 0, 1)
-        drawAxes()
+        #drawAxes()
 
         glColor3f(1, 1, 1)
         drawBox(
@@ -190,20 +196,20 @@ class ErgoJr(Entity):
         """
 
         glRotatef(self.angles[1], 0, 0, 1)
-        drawAxes()
+        #drawAxes()
 
-        glColor3f(0.6, 0.6, 0.6)
+        glColor3f(0.4, 0.4, 0.4)
         drawBox(
             x_min=-0.01,
             x_max=+0.01,
             y_min=+0.00,
-            y_max=+0.07,
+            y_max=+0.06,
             z_min=-0.01,
             z_max=+0.01
         )
 
         glPushMatrix()
-        glTranslatef(0, 0.06, 0)
+        glTranslatef(0, 0.05, 0)
         self.drawSeg3()
         glPopMatrix()
 
@@ -213,7 +219,7 @@ class ErgoJr(Entity):
         """
 
         glRotatef(self.angles[0], 0, 1, 0)
-        drawAxes()
+        #drawAxes()
 
         glColor3f(1, 1, 1)
         drawBox(
@@ -238,7 +244,7 @@ class ErgoJr(Entity):
         #drawAxes()
 
         # Base sits above Y=0
-        glColor3f(0.5, 0.5, 0.5)
+        glColor3f(0.4, 0.4, 0.4)
         drawBox(
             x_min=-0.02,
             x_max=+0.01,
@@ -290,14 +296,21 @@ class TableTopRobot(MiniWorldEnv):
             floor_tex='concrete'
         )
 
-        self.place_entity(Box(color='red', size=0.03), pos=[0.5, 0, 0.25])
+        self.place_entity(Box(color='green', size=0.03), pos=[0.2, 0, 0.2])
 
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
-        self.ergojr.angles = [ self.rand.float(-10, 10) for i in range(6) ]
+        self.ergojr.angles = [
+            self.rand.float(-90, 90),
+            self.rand.float(-40, 40),
+            self.rand.float(-40, 40),
+            0,
+            self.rand.float(-40, 40),
+            self.rand.float(-30, 30),
+        ]
 
         self.agent.radius = 0.15
-        self.agent.pos = np.array([0.3, 0, -0.3])
-        self.agent.dir = -2.1
+        self.agent.pos = np.array([0.25, 0, -0.25])
+        self.agent.dir = -2.2
         self.entities.append(self.agent)
 
     def step(self, action):
