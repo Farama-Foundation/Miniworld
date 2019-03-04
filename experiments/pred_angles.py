@@ -62,7 +62,6 @@ class Model(nn.Module):
 
         return ang
 
-
 def recon_test(env, model):
 
     for i in range(10):
@@ -83,9 +82,6 @@ def recon_test(env, model):
 
         save_img('test_{:03d}_orig.png'.format(i), img_orig)
         save_img('test_{:03d}_pred.png'.format(i), img_pred)
-
-
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -154,7 +150,7 @@ if __name__ == "__main__":
         pred_ang = model(batch_obs)
 
         # Generate data while the GPU is computing
-        for i in range(16):
+        for i in range(8):
             gen_data()
 
         # Compute an L2 loss
@@ -178,7 +174,7 @@ if __name__ == "__main__":
         print('running loss: {:.5f}'.format(running_loss))
         print('running rms: {:.5f}'.format(math.sqrt(running_loss)))
 
-        if i % 100 == 0:
+        if batch_no % 100 == 0:
             print('saving model')
             torch.save(model.state_dict(), args.model_path)
 
