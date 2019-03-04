@@ -296,12 +296,14 @@ class TableTopRobot(MiniWorldEnv):
             floor_tex='concrete'
         )
 
+        # The box looks the same from all sides, so restrict angles to [0, 90]
         self.box = self.place_entity(
             Box(color='green', size=0.03),
             min_x=0.05,
             max_x=0.2,
             min_z=-0.1,
-            max_z=+0.1
+            max_z=+0.1,
+            dir=self.rand.float(0, math.pi/2)
         )
 
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
