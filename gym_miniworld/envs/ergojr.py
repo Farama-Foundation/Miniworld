@@ -305,6 +305,7 @@ class TableTopRobot(MiniWorldEnv):
             max_z=+0.1,
             dir=self.rand.float(0, math.pi/2)
         )
+        self.box.pos[1] = self.rand.float(0, 0.15)
 
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
         self.ergojr.angles = [

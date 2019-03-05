@@ -77,8 +77,8 @@ def recon_test(env, model):
 
         img_pred = env.render_obs()
 
-        save_img('test_{:03d}_orig.png'.format(i), img_orig)
-        save_img('test_{:03d}_pred.png'.format(i), img_pred)
+        save_img('boxpos_{:03d}_orig.png'.format(i), img_orig)
+        save_img('boxpos_{:03d}_pred.png'.format(i), img_pred)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
