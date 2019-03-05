@@ -24,7 +24,7 @@ class Model(nn.Module):
     def __init__(self):
         super().__init__()
 
-        self.obs_to_ang = nn.Sequential(
+        self.obs_to_out = nn.Sequential(
             nn.Conv2d(3, 128, kernel_size=5, stride=2),
             nn.BatchNorm2d(128),
             nn.LeakyReLU(),
@@ -44,37 +44,36 @@ class Model(nn.Module):
             #Print(),
             Flatten(),
 
-            nn.Linear(768, 512),
+            nn.Linear(768, 64),
             nn.LeakyReLU(),
 
-            nn.Linear(512, 512),
+            nn.Linear(64, 32),
             nn.LeakyReLU(),
 
-            nn.Linear(512, 6),
-            nn.Tanh()
+            nn.Linear(32, 4),
+            nn.Tanh(),
         )
 
         self.apply(init_weights)
 
     def forward(self, obs):
         obs = obs / 255
-        return self.obs_to_ang(obs) * 100
+        return self.obs_to_out(obs) * 0.5
 
 def recon_test(env, model):
-
     for i in range(10):
-
         obs = env.reset()
         obs = obs.transpose(2, 1, 0)
         obs = make_var(obs).unsqueeze(0)
 
-        pred_angles = model(obs)
-
+        env.ergojr.angles = [0]*6
         img_orig = env.render_obs()
 
-        pred_angles = pred_angles.reshape(-1)
-        pred_angles = pred_angles.detach().cpu().numpy()
-        env.ergojr.angles = pred_angles
+        pred_pos = model(obs)
+        pred_pos = pred_pos.reshape(-1)
+        pred_pos = pred_pos.detach().cpu().numpy()
+        env.box.pos = pred_pos[0:3]
+        env.box.dir = pred_pos[3]
 
         img_pred = env.render_obs()
 
@@ -83,11 +82,11 @@ def recon_test(env, model):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch-size", default=2048, type=int)
-    parser.add_argument("--buffer-size", default=1000000, type=int)
+    parser.add_argument("--batch-size", default=64, type=int)
+    parser.add_argument("--buffer-size", default=100000, type=int)
     parser.add_argument("--weight-decay", default=0, type=float)
     parser.add_argument("--env", default="MiniWorld-TableTopRobot-v0")
-    parser.add_argument("--model-path", default="pos_delta.torch")
+    parser.add_argument("--model-path", default="pred_boxpos.torch")
     args = parser.parse_args()
 
     env = gym.make(args.env)
@@ -100,7 +99,7 @@ if __name__ == "__main__":
 
     # Done indicates that we become done after the current step
     buf_obs = np.zeros(shape=(args.buffer_size, 3, 80, 60), dtype=np.uint8)
-    buf_ang = np.zeros(shape=(args.buffer_size, 6), dtype=np.float32)
+    buf_pos = np.zeros(shape=(args.buffer_size, 4), dtype=np.float32)
 
     buf_num = 0
     cur_idx = 0
@@ -130,7 +129,8 @@ if __name__ == "__main__":
         buf_num = max(buf_num, cur_idx+1)
 
         buf_obs[cur_idx] = obs
-        buf_ang[cur_idx] = env.ergojr.angles
+        #buf_pos[cur_idx] = [*env.box.pos] + [env.box.dir]
+        buf_pos[cur_idx] = [*env.box.pos] + [0]
 
     while buf_num <= args.batch_size:
         gen_data()
@@ -144,16 +144,17 @@ if __name__ == "__main__":
 
         batch_idx = np.random.randint(0, buf_num - args.batch_size)
         batch_obs = make_var(buf_obs[batch_idx:(batch_idx+args.batch_size)])
-        batch_ang = make_var(buf_ang[batch_idx:(batch_idx+args.batch_size)])
+        batch_pos = make_var(buf_pos[batch_idx:(batch_idx+args.batch_size)])
 
-        pred_ang = model(batch_obs)
+        pred_pos = model(batch_obs)
 
         # Generate data while the GPU is computing
         for i in range(16):
             gen_data()
 
         # Compute an L2 loss
-        diff = pred_ang - batch_ang
+        diff = pred_pos - batch_pos
+        #diff = diff * torch.FloatTensor([30, 30, 30, 1]).cuda()
         loss = (diff * diff).mean() # L2 loss
         optimizer.zero_grad()
         loss.backward()

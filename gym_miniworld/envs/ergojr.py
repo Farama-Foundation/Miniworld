@@ -10,9 +10,9 @@ sim_params = DEFAULT_PARAMS.copy()
 sim_params.set('forward_step', 0.035)
 sim_params.set('forward_drift', 0)
 sim_params.set('turn_step', 17)
-sim_params.set('bot_radius', 0.11, 0.11, 0.11)
+sim_params.set('bot_radius', 0.11)
 sim_params.set('cam_pitch', -25)
-sim_params.set('cam_fov_y', 49, 48, 50)
+sim_params.set('cam_fov_y', 49)
 sim_params.set('cam_height', 0.25)
 sim_params.set('cam_fwd_disp', 0)
 
@@ -281,7 +281,7 @@ class TableTopRobot(MiniWorldEnv):
         super().__init__(
             max_episode_steps=math.inf,
             params=sim_params,
-            domain_rand=False,
+            domain_rand=True,
             **kwargs
         )
 
