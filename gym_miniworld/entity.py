@@ -386,8 +386,6 @@ class Box(Entity):
         """
 
         sx, sy, sz = self.size
-        hx = sx / 2
-        hz = sz / 2
 
         glDisable(GL_TEXTURE_2D)
         glColor3f(*self.color_vec)
@@ -396,37 +394,14 @@ class Box(Entity):
         glTranslatef(*self.pos)
         glRotatef(self.dir * (180/math.pi), 0, 1, 0)
 
-        glBegin(GL_QUADS)
-        glNormal3f(0, 0, 1)
-        glVertex3f(+hx, +sy, +hz)
-        glVertex3f(-hx, +sy, +hz)
-        glVertex3f(-hx, 0  , +hz)
-        glVertex3f(+hx, 0  , +hz)
-
-        glNormal3f(0, 0, -1)
-        glVertex3f(-hx, +sy, -hz)
-        glVertex3f(+hx, +sy, -hz)
-        glVertex3f(+hx, 0  , -hz)
-        glVertex3f(-hx, 0  , -hz)
-
-        glNormal3f(-1, 0, 0)
-        glVertex3f(-hx, +sy, +hz)
-        glVertex3f(-hx, +sy, -hz)
-        glVertex3f(-hx, 0  , -hz)
-        glVertex3f(-hx, 0  , +hz)
-
-        glNormal3f(1, 0, 0)
-        glVertex3f(+hx, +sy, -hz)
-        glVertex3f(+hx, +sy, +hz)
-        glVertex3f(+hx, 0  , +hz)
-        glVertex3f(+hx, 0  , -hz)
-
-        glNormal3f(0, 1, 0)
-        glVertex3f(+hx, +sy, +hz)
-        glVertex3f(+hx, +sy, -hz)
-        glVertex3f(-hx, +sy, -hz)
-        glVertex3f(-hx, +sy, +hz)
-        glEnd()
+        drawBox(
+            x_min=-sx/2,
+            x_max=+sx/2,
+            y_min=0,
+            y_max=sy,
+            z_min=-sz/2,
+            z_max=+sz/2
+        )
 
         glPopMatrix()
 
