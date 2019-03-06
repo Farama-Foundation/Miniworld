@@ -31,7 +31,8 @@ class ErgoJr(Entity):
 
     def drawGripper(self):
         """
-        Gripper. Right plate rotates around the Y axis
+        Gripper. Right plate rotates around the -Y axis
+        Positive angles open the gripper
         """
 
         #glColor3f(0.9, 0.9, 0.9)
@@ -46,7 +47,9 @@ class ErgoJr(Entity):
             z_max=-0.010
         )
 
-        glRotatef(self.angles[5], 0, 1, 0)
+        glColor3f(1, 1, 0)
+        angle = np.clip(self.angles[5], -25, 90)
+        glRotatef(angle, 0, -1, 0)
         drawBox(
             x_min=+0,
             x_max=+0.05,
@@ -58,10 +61,11 @@ class ErgoJr(Entity):
 
     def drawSeg5(self):
         """
-        Fifth segment, horizontal, rotates around +Z axis
+        Fifth segment, horizontal, rotates around -Z axis
+        Positive angles rotate segment downwards
         """
 
-        glRotatef(self.angles[4], 0, 0, 1)
+        glRotatef(self.angles[4], 0, 0, -1)
         #drawAxes()
 
         glColor3f(1, 1, 1)
@@ -104,10 +108,11 @@ class ErgoJr(Entity):
 
     def drawSeg3(self):
         """
-        Third segment, vertical, rotates around +Z axis
+        Third segment, vertical, rotates around -Z axis
+        Positive angles rotate segment downwards
         """
 
-        glRotatef(self.angles[2], 0, 0, 1)
+        glRotatef(self.angles[2], 0, 0, -1)
         #drawAxes()
 
         glColor3f(1, 1, 1)
@@ -127,10 +132,11 @@ class ErgoJr(Entity):
 
     def drawSeg2(self):
         """
-        Second segment, vertical, rotates around +Z axis
+        Second segment, vertical, rotates around -Z axis
+        Positive angles rotate segment downwards
         """
 
-        glRotatef(self.angles[1], 0, 0, 1)
+        glRotatef(self.angles[1], 0, 0, -1)
         #drawAxes()
 
         glColor3f(0.4, 0.4, 0.4)
@@ -175,8 +181,6 @@ class ErgoJr(Entity):
         """
         Robot base, sits on the ground plane, doesn't move
         """
-
-        #drawAxes()
 
         # Base sits above Y=0
         glColor3f(0.4, 0.4, 0.4)
@@ -243,6 +247,8 @@ class TableTopRobot(MiniWorldEnv):
         self.box.pos[1] = self.rand.float(0, 0.15)
 
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
+
+        """
         self.ergojr.angles = [
             self.rand.float(-90, 90),
             self.rand.float(-40, 40),
@@ -251,6 +257,7 @@ class TableTopRobot(MiniWorldEnv):
             self.rand.float(-40, 40),
             self.rand.float(-30, 30),
         ]
+        """
 
         self.agent.radius = 0.15
         self.agent.pos = np.array([0.25, 0, -0.25])
