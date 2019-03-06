@@ -66,7 +66,7 @@ class RemoteBot(gym.Env):
         assert zmq is not None, "Please install zmq (pip3 install zmq)"
 
         # Action enumeration for this environment
-        self.actions = RemoteBotEnv.Actions
+        self.actions = RemoteBot.Actions
 
         # Actions are discrete integer values
         self.action_space = spaces.Discrete(len(self.actions))
@@ -144,7 +144,7 @@ class RemoteBot(gym.Env):
         # Send the action to the server
         self.socket.send_json({
             "command": "action",
-            "action": RemoteBotEnv.Actions(action).name
+            "action": RemoteBot.Actions(action).name
         })
 
         # Receive a camera image from the server
