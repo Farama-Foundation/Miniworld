@@ -76,6 +76,9 @@ def on_key_press(symbol, modifiers):
     elif symbol == key.PAGEDOWN or symbol == key.D:
         step(env.actions.drop)
 
+    elif symbol == key.ENTER:
+        step(env.actions.done)
+
 @env.unwrapped.window.event
 def on_key_release(symbol, modifiers):
     pass
