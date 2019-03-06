@@ -11,9 +11,9 @@ sim_params.set('forward_step', 0.035)
 sim_params.set('forward_drift', 0)
 sim_params.set('turn_step', 17)
 sim_params.set('bot_radius', 0.11)
-sim_params.set('cam_pitch', -25)
+sim_params.set('cam_pitch', -10)
 sim_params.set('cam_fov_y', 49)
-sim_params.set('cam_height', 0.25)
+sim_params.set('cam_height', 0.18)
 sim_params.set('cam_fwd_disp', 0)
 
 class ErgoJr(Entity):
@@ -193,6 +193,17 @@ class ErgoJr(Entity):
             z_max=+0.01
         )
 
+        # Base plate
+        glColor3f(1, 1, 1)
+        drawBox(
+            x_min=-0.15,
+            x_max=+0.01,
+            y_min=-0.00,
+            y_max=+0.003,
+            z_min=-0.08,
+            z_max=+0.08
+        )
+
         # First segment rotates above base
         glPushMatrix()
         glTranslatef(0, 0.02, 0)
@@ -226,13 +237,13 @@ class TableTopRobot(MiniWorldEnv):
 
     def _gen_world(self):
         room = self.add_rect_room(
-            min_x=-0.7,
+            min_x=-0.15,
             max_x=0.7,
             min_z=-0.7,
             max_z=0.7,
             wall_height=0,
             no_ceiling=True,
-            floor_tex='concrete'
+            floor_tex=self.rand.choice(['concrete', 'white', 'drywall'])
         )
 
         # The box looks the same from all sides, so restrict angles to [0, 90]
@@ -248,7 +259,6 @@ class TableTopRobot(MiniWorldEnv):
 
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
 
-        """
         self.ergojr.angles = [
             self.rand.float(-90, 90),
             self.rand.float(-40, 40),
@@ -257,12 +267,15 @@ class TableTopRobot(MiniWorldEnv):
             self.rand.float(-40, 40),
             self.rand.float(-30, 30),
         ]
-        """
 
-        self.agent.radius = 0.15
-        self.agent.pos = np.array([0.25, 0, -0.25])
-        self.agent.dir = -2.2
         self.entities.append(self.agent)
+        self.agent.radius = 0.15
+        self.agent.dir = self.rand.float(-2.0, -2.4)
+        self.agent.pos = np.array([
+            self.rand.float(0.28, 0.32),
+            0,
+            self.rand.float(-0.28, -0.32)
+        ])
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
