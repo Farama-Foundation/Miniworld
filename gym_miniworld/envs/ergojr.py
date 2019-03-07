@@ -187,8 +187,8 @@ class ErgoJr(Entity):
         drawBox(
             x_min=-0.02,
             x_max=+0.01,
-            y_min=-0.00,
-            y_max=+0.02,
+            y_min=+0.003,
+            y_max=+0.023,
             z_min=-0.01,
             z_max=+0.01
         )
@@ -206,7 +206,7 @@ class ErgoJr(Entity):
 
         # First segment rotates above base
         glPushMatrix()
-        glTranslatef(0, 0.02, 0)
+        glTranslatef(0, 0.023, 0)
         self.drawSeg1()
         glPopMatrix()
 

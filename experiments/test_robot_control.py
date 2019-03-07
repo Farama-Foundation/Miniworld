@@ -1,12 +1,15 @@
 # ssh poppy@flogo.local
 # fuser -k /dev/ttyA*
 # poppy-services -vv --zmq poppy-ergo-jr
+#
+# python3 -m experiments.test_robot_control
+
 
 import time
 import random
 import zmq
 
-ROBOT = "flogo.local" # name of your robot
+ROBOT = "flogo.local"
 PORT = 5757
 
 context = zmq.Context()
@@ -20,18 +23,50 @@ print('connected')
 socket.send_json({"robot": {"set_max_speed": {"max_speed": 60}}})
 socket.send_json({"robot": {"set_compliant": {"trueorfalse": False}}})
 
+
+"""
 ## GET ALL MOTOR POSITIONS (6 values) AND VELOCITIES (6 values)
 ## IN A 12 ELEMENT ARRAY
 req = {"robot": {"get_pos_speed": {}}}
 socket.send_json(req)
 answer = socket.recv_json()
 print(answer)
+"""
+
 
 ## SET ALL MOTORS TO AN ANGLE (in degrees)
-req = {"robot": {"set_pos": {"positions":[0, 0, 0, 0, 0, -30]}}}
+req = {"robot": {"set_pos": {"positions":[0, 0, 0, 0, 0, 0]}}}
 socket.send_json(req)
 answer = socket.recv_json()
+print(answer)
+
 time.sleep(5)
+
+print('requesting pos')
+
+while True:
+
+    ## GET ALL MOTOR POSITIONS (6 values) AND VELOCITIES (6 values)
+    ## IN A 12 ELEMENT ARRAY
+    req = {"robot": {"get_pos_speed": {}}}
+    socket.send_json(req)
+    answer = socket.recv_json()
+
+    if type(answer) == type({}):
+        continue
+
+    print(answer[:6])
+
+    time.sleep(0.1)
+
+
+
+
+
+#socket.send_json({"robot": {"set_compliant": {"trueorfalse": True}}})
+
+
+
 
 """
 for i in range(0):
@@ -53,6 +88,3 @@ for i in range(0):
 
     time.sleep(2)
 """
-
-
-socket.send_json({"robot": {"set_compliant": {"trueorfalse": True}}})
