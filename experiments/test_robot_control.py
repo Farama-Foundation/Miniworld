@@ -32,21 +32,18 @@ print(answer)
 """
 
 ## SET ALL MOTORS TO AN ANGLE (in degrees)
-req = {"robot": {"set_pos": {"positions":[0, 0, 0, 0, 0, 0]}}}
-socket.send_json(req)
-answer = socket.recv_json()
-print(answer)
-
-time.sleep(5)
-
-
-
-#req = {"robot": {"set_pos": {"positions":[0, 20, 20, 0, 0, 0]}}}
+#req = {"robot": {"set_pos": {"positions":[0, 0, 0, 0, 0, 0]}}}
 #socket.send_json(req)
 #answer = socket.recv_json()
+#print(answer)
 #time.sleep(5)
 
-#socket.send_json({"robot": {"set_compliant": {"trueorfalse": True}}})
+req = {"robot": {"set_pos": {"positions":[0, 20, 20, 0, 0, 0]}}}
+socket.send_json(req)
+answer = socket.recv_json()
+time.sleep(5)
+
+socket.send_json({"robot": {"set_compliant": {"trueorfalse": True}}})
 
 
 
