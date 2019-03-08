@@ -22,13 +22,9 @@ import sys
 if sys.version_info > (3,):
     buffer = memoryview
 
-# Camera image size
-CAMERA_WIDTH = 80
-CAMERA_HEIGHT = 60
-
 # Rendering window size
-WINDOW_WIDTH = 256
-WINDOW_HEIGHT = int(WINDOW_WIDTH * (CAMERA_HEIGHT/CAMERA_WIDTH))
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 600
 
 # Port to connect to on the server
 SERVER_PORT = 7777
@@ -61,7 +57,9 @@ class RemoteBot(gym.Env):
     def __init__(
         self,
         serverAddr="minibot1.local",
-        serverPort=SERVER_PORT
+        serverPort=SERVER_PORT,
+        obs_width=80,
+        obs_height=60
     ):
         assert zmq is not None, "Please install zmq (pip3 install zmq)"
 
@@ -75,9 +73,12 @@ class RemoteBot(gym.Env):
         self.observation_space = spaces.Box(
             low=0,
             high=255,
-            shape=(CAMERA_HEIGHT, CAMERA_WIDTH, 3),
+            shape=(obs_height, obs_width, 3),
             dtype=np.uint8
         )
+
+        self.obs_width = obs_width
+        self.obs_height = obs_height
 
         self.reward_range = (0, 1)
 
@@ -112,7 +113,6 @@ class RemoteBot(gym.Env):
         print('Connected')
 
     def close(self):
-        # FIXME
         # Stop the motors
         #self.step(numpy.array([0, 0]))
         pass
@@ -128,7 +128,9 @@ class RemoteBot(gym.Env):
         self.step_count = 0
 
         self.socket.send_json({
-            "command": "reset"
+            "command": "reset",
+            "obs_width": self.obs_width,
+            "obs_height": self.obs_height
         })
 
         # Receive a camera image from the server
