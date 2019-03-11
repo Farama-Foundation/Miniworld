@@ -34,6 +34,7 @@ def get_angles(socket):
 parser = argparse.ArgumentParser()
 parser.add_argument("--first-img-idx", default=0, type=int, help='first image index to save to')
 parser.add_argument("--last-img-idx", default=50000, type=int)
+args = parser.parse_args()
 
 # Connect to the robot
 ROBOT = "flogo.local"
