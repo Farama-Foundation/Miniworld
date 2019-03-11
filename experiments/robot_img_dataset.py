@@ -59,7 +59,7 @@ while cur_img_idx <= args.last_img_idx:
 
     ## SET ALL MOTORS TO AN ANGLE (in degrees)
     pos = [
-        random.uniform(-60, 60),
+        random.uniform(-40, 40),
         random.uniform(-30, 20),
         random.uniform(-20, 20),
         0,

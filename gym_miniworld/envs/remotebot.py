@@ -56,10 +56,10 @@ class RemoteBot(gym.Env):
 
     def __init__(
         self,
-        serverAddr="minibot1.local",
+        serverAddr="flogo.local",
         serverPort=SERVER_PORT,
-        obs_width=80,
-        obs_height=60
+        obs_width=160,
+        obs_height=120
     ):
         assert zmq is not None, "Please install zmq (pip3 install zmq)"
 
