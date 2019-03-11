@@ -81,7 +81,7 @@ while cur_img_idx <= args.last_img_idx:
 
     pos = [round(a) for a in pos]
     angles = [round(a) for a in angles]
-    print('image #{}'.format(cur_img_idx+1))
+    print('image #{}'.format(cur_img_idx))
     print(pos)
     print(angles)
 
