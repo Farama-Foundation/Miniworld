@@ -4,6 +4,7 @@ from ..opengl import *
 from ..miniworld import MiniWorldEnv, Room
 from ..params import DEFAULT_PARAMS
 from ..entity import Entity, Box
+from ..math import *
 
 # Simulation parameters
 sim_params = DEFAULT_PARAMS.copy()
@@ -15,6 +16,63 @@ sim_params.set('cam_pitch', -10)
 sim_params.set('cam_fov_y', 49)
 sim_params.set('cam_height', 0.18)
 sim_params.set('cam_fwd_disp', 0)
+
+def gripper_pos(angles):
+    """
+    Compute the X/Y position of the end of the gripper relative to the base.
+    This doesn't take left/right rotations into account.
+    """
+
+    L1 = 0.055 # Segment 1 + distance from ground
+    L2 = 0.055 # Length of segment 2
+    L3 = 0.035 # Length of segment 3
+    L4 = 0.050 # Length of segment 4
+    L5 = 0.130 # Segment 5 + gripper length
+
+    # Segment 5 and gripper plates
+    pos = np.array((L5, 0, 0))
+    m = gen_rot_matrix(np.array((0, 0, 1)), angles[4] * math.pi/180)
+    pos = m.dot(pos)
+
+    # Segment 4, forward segment
+    # Segment 3, upwards
+    pos += np.array((L4, 0, 0))
+    pos += np.array((0, L3, 0))
+    m = gen_rot_matrix(np.array((0, 0, 1)), angles[2] * math.pi/180)
+    pos = m.dot(pos)
+
+    # Segment 2, upwards
+    pos += np.array((0, L2, 0))
+    m = gen_rot_matrix(np.array((0, 0, 1)), angles[1] * math.pi/180)
+    pos = m.dot(pos)
+
+    # Segment 1 + distance from ground
+    pos += np.array((0, L1, 0))
+
+    return pos
+
+def sample_angles():
+    """
+    Sample random joint angles that are likely to be visible to
+    the onboard camera and unlikely to result in a self-intersection.
+    """
+
+    while True:
+        angles = [
+            np.random.uniform(-70, 70),
+            np.random.uniform(-45, 90),
+            np.random.uniform(-90, 90),
+            0,
+            np.random.uniform(-90, 90),
+            np.random.uniform(-25, 25),
+        ]
+
+        pos = gripper_pos(angles)
+
+        if pos[0] > 0.01 and pos[1] > 0.015 and pos[1] < 0.15:
+            break
+
+    return angles
 
 class ErgoJr(Entity):
     """
@@ -258,15 +316,16 @@ class TableTopRobot(MiniWorldEnv):
         self.box.pos[1] = self.rand.float(0, 0.15)
 
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
+        self.ergojr.angles = sample_angles()
 
-        self.ergojr.angles = [
-            self.rand.float(-90, 90),
-            self.rand.float(-40, 40),
-            self.rand.float(-40, 40),
-            0,
-            self.rand.float(-40, 40),
-            self.rand.float(-30, 30),
-        ]
+        """
+        glColor3f(1, 0, 0)
+        glBegin(GL_LINES)
+        glVertex3f(*self.ergojr.pos)
+        glVertex3f(*(self.ergojr.pos + self.ergojr.gripper_pos()))
+        glEnd()
+        glColor3f(1, 1, 1)
+        """
 
         self.entities.append(self.agent)
         self.agent.radius = 0.15

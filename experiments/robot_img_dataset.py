@@ -11,6 +11,7 @@ import math
 import gym
 import gym_miniworld
 from gym_miniworld.envs import RemoteBot
+from gym_miniworld.envs import ergojr
 from .utils import *
 
 def get_angles(socket):
@@ -58,14 +59,9 @@ cur_img_idx = args.first_img_idx
 while cur_img_idx <= args.last_img_idx:
 
     ## SET ALL MOTORS TO AN ANGLE (in degrees)
-    pos = [
-        random.uniform(-40, 40),
-        random.uniform(-30, 20),
-        random.uniform(-20, 20),
-        0,
-        random.uniform(-20, 30),
-        random.uniform(-24, 25)
-    ]
+    pos = ergojr.sample_angles()
+    pos[0] = np.random.uniform(-40, 40)
+
     req = {"robot": {"set_pos": {"positions": pos}}}
     socket.send_json(req)
     answer = socket.recv_json()
