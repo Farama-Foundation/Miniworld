@@ -55,7 +55,7 @@ env = RemoteBot(obs_width=160, obs_height=120)
 
 cur_img_idx = args.first_img_idx
 
-while num_imgs <= args.last_img_idx:
+while cur_img_idx <= args.last_img_idx:
 
     ## SET ALL MOTORS TO AN ANGLE (in degrees)
     pos = [
