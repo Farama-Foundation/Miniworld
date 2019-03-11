@@ -55,7 +55,7 @@ class BoxPos(MiniWorldEnv):
 
         # Camera is 3.5cm forward
         self.entities.append(self.agent)
-        self.agent.radius = 0.15
+        self.agent.radius = 0
         self.agent.dir = 0
         self.agent.pos = np.array([
             0.035,
