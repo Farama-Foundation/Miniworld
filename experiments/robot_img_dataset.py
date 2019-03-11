@@ -4,6 +4,7 @@
 
 import time
 import random
+import argparse
 import zmq
 import numpy as np
 import math
@@ -30,6 +31,11 @@ def get_angles(socket):
 
     return answer[:6]
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--first-img-idx", default=0, type=int, help='first image index to save to')
+parser.add_argument("--last-img-idx", default=50000, type=int)
+
+# Connect to the robot
 ROBOT = "flogo.local"
 PORT = 5757
 context = zmq.Context()
@@ -43,11 +49,12 @@ print('connected')
 socket.send_json({"robot": {"set_max_speed": {"max_speed": 60}}})
 socket.send_json({"robot": {"set_compliant": {"trueorfalse": False}}})
 
+# Connect to the camera
 env = RemoteBot(obs_width=160, obs_height=120)
 
-num_imgs = 0
+cur_img_idx = args.first_img_idx
 
-while num_imgs < 10000:
+while num_imgs <= args.last_img_idx:
 
     ## SET ALL MOTORS TO AN ANGLE (in degrees)
     pos = [
@@ -67,7 +74,6 @@ while num_imgs < 10000:
     # Get an observation image
     obs, _, _, _ = env.step(env.actions.done)
     env.render('human')
-    num_imgs += 1
 
     for i in range(3):
         angles = get_angles(socket)
@@ -78,7 +84,7 @@ while num_imgs < 10000:
     print(pos)
     print(angles)
 
-    filename = 'robot_imgs/img{:05d}'.format(num_imgs-1)
+    filename = 'robot_imgs/img{:05d}'.format(cur_img_idx)
     for a in angles:
         if filename != '':
             filename += '_'
@@ -87,3 +93,5 @@ while num_imgs < 10000:
 
     print(filename)
     save_img(filename, obs)
+
+    cur_img_idx += 1
