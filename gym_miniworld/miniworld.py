@@ -1179,8 +1179,8 @@ class MiniWorldEnv(gym.Env):
         gluPerspective(
             self.agent.cam_fov_y,
             frame_buffer.width / float(frame_buffer.height),
-            0.04,
-            100.0
+            0.005,
+            10.0
         )
 
         # Setup the camera

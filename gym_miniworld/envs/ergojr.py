@@ -318,15 +318,6 @@ class TableTopRobot(MiniWorldEnv):
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
         self.ergojr.angles = sample_angles()
 
-        """
-        glColor3f(1, 0, 0)
-        glBegin(GL_LINES)
-        glVertex3f(*self.ergojr.pos)
-        glVertex3f(*(self.ergojr.pos + self.ergojr.gripper_pos()))
-        glEnd()
-        glColor3f(1, 1, 1)
-        """
-
         self.entities.append(self.agent)
         self.agent.radius = 0.15
         self.agent.dir = self.rand.float(-2.0, -2.4)
