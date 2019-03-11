@@ -66,7 +66,7 @@ def recon_test(env, model):
         obs = obs.transpose(2, 1, 0)
         obs = make_var(obs).unsqueeze(0)
 
-        env.ergojr.angles = [0]*6
+        #env.ergojr.angles = [0]*6
         img_orig = env.render_obs()
 
         pred_pos = model(obs)
