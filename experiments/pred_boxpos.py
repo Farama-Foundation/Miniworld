@@ -58,14 +58,22 @@ class Model(nn.Module):
 
     def forward(self, obs):
         obs = obs / 255
-        return self.obs_to_out(obs) * 0.4
+        return self.obs_to_out(obs) * torch.cuda.FloatTensor((0.35, 0.15, 0.2, 0))
 
-def recon_test(env, model):
-    for i in range(10):
+def recon_test(env, model, gen_imgs=10):
+    img_idx = 0
+    while img_idx < gen_imgs:
         env.draw_static = True
         obs = env.reset()
         obs = obs.transpose(2, 1, 0)
         obs = make_var(obs).unsqueeze(0)
+
+        # Check that the box is visible
+        env.sky_color = [0, 0, 0]
+        env.draw_static = False
+        seg = env.render_obs()
+        if not np.any(seg):
+            continue
 
         #env.ergojr.angles = [0]*6
         img_orig = env.render_obs()
@@ -78,8 +86,9 @@ def recon_test(env, model):
 
         img_pred = env.render_obs()
 
-        save_img('boxpos_{:03d}_orig.png'.format(i), img_orig)
-        save_img('boxpos_{:03d}_pred.png'.format(i), img_pred)
+        save_img('boxpos_{:03d}_orig.png'.format(img_idx), img_orig)
+        save_img('boxpos_{:03d}_pred.png'.format(img_idx), img_pred)
+        img_idx += 1
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
