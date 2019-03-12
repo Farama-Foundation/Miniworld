@@ -44,13 +44,13 @@ class Model(nn.Module):
             #Print(),
             Flatten(),
 
-            nn.Linear(768, 64),
+            nn.Linear(768, 256),
             nn.LeakyReLU(),
 
-            nn.Linear(64, 32),
+            nn.Linear(256, 64),
             nn.LeakyReLU(),
 
-            nn.Linear(32, 4),
+            nn.Linear(64, 4),
             nn.Tanh(),
         )
 
@@ -58,7 +58,7 @@ class Model(nn.Module):
 
     def forward(self, obs):
         obs = obs / 255
-        return self.obs_to_out(obs) * 0.5
+        return self.obs_to_out(obs) * 0.4
 
 def recon_test(env, model):
     for i in range(10):
@@ -117,6 +117,7 @@ if __name__ == "__main__":
     def gen_data():
         global cur_idx, buf_num
 
+        env.draw_static = True
         obs = env.reset()
         obs = obs.transpose(2, 1, 0)
 
