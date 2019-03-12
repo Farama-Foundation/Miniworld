@@ -17,13 +17,24 @@ sim_params.set('cam_fov_y', 49)
 sim_params.set('cam_height', 0.18)
 sim_params.set('cam_fwd_disp', 0)
 
-def gripper_pos(angles):
+def gripper_pos_xy(angles):
     """
-    Compute the X/Y position of the end of the gripper relative to the base.
+    Compute the XY position of the end of the gripper relative to the base.
     This doesn't take left/right rotations into account.
     """
 
-    L1 = 0.055 # Segment 1 + distance from ground
+    angles = angles[:]
+    angles[0] = 0
+    return gripper_pos(angles)
+
+def gripper_pos(angles):
+    """
+    Compute the XYZ position of the end of the gripper relative to the base.
+    This doesn't take left/right rotations into account.
+    """
+
+    L0 = 0.033 # Height of the base to first segment
+    L1 = 0.025 # Segment 1
     L2 = 0.055 # Length of segment 2
     L3 = 0.035 # Length of segment 3
     L4 = 0.050 # Length of segment 4
@@ -46,8 +57,13 @@ def gripper_pos(angles):
     m = gen_rot_matrix(np.array((0, 0, 1)), angles[1] * math.pi/180)
     pos = m.dot(pos)
 
-    # Segment 1 + distance from ground
-    pos += np.array((0, L1, 0))
+    # Segment 1, upwards, rotation around Y
+    pos += np.array((0, L0, 0))
+    m = gen_rot_matrix(np.array((0, 1, 0)), -angles[0] * math.pi/180)
+    pos = m.dot(pos)
+
+    # Base height
+    pos += np.array((0, L0, 0))
 
     return pos
 
@@ -67,12 +83,32 @@ def sample_angles():
             np.random.uniform(-25, 25),
         ]
 
-        pos = gripper_pos(angles)
+        pos = gripper_pos_xy(angles)
 
         if pos[0] > 0.01 and pos[1] > 0.015 and pos[1] < 0.15:
             break
 
     return angles
+
+def angles_near_pos(target):
+    """
+    Find the joint angles best matching a target gripper position
+    """
+
+    best_dist = math.inf
+    best_angles = [0] * 6
+
+    for i in range(500):
+        angles = sample_angles()
+        angles[-1] = 0
+        pos = gripper_pos(angles)
+        dist = np.linalg.norm(pos - target)
+
+        if dist < best_dist:
+            best_dist = dist
+            best_angles = angles
+
+    return best_angles
 
 class ErgoJr(Entity):
     """
@@ -317,6 +353,9 @@ class TableTopRobot(MiniWorldEnv):
 
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
         self.ergojr.angles = sample_angles()
+
+        pos = gripper_pos(self.ergojr.angles)
+        print(pos)
 
         self.entities.append(self.agent)
         self.agent.radius = 0.15
