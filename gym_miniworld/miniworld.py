@@ -489,6 +489,8 @@ class MiniWorldEnv(gym.Env):
         # Domain randomization enable/disable flag
         self.domain_rand = domain_rand
 
+        self.draw_static = False
+
         # Window for displaying the environment to humans
         self.window = None
 
@@ -1062,8 +1064,9 @@ class MiniWorldEnv(gym.Env):
         and produce a numpy image array as output.
         """
 
-        # Call the display list for the static parts of the environment
-        glCallList(1)
+        if self.draw_static:
+            # Call the display list for the static parts of the environment
+            glCallList(1)
 
         # TODO: keep the non-static entities in a different list for efficiency?
         # Render the non-static entities

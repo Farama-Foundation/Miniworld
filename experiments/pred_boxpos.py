@@ -120,6 +120,14 @@ if __name__ == "__main__":
         obs = env.reset()
         obs = obs.transpose(2, 1, 0)
 
+        # Check that the box is visible
+        env.sky_color = [0, 0, 0]
+        env.draw_static = False
+        seg = env.render_obs()
+        if not np.any(seg):
+            #print('box invisible')
+            return
+
         # Pick a random entry index. Prioritize expanding the set.
         #if buf_num < args.buffer_size and np.random.uniform(0, 1) < 0.5:
         if buf_num < args.buffer_size:
