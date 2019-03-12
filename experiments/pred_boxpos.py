@@ -62,6 +62,7 @@ class Model(nn.Module):
 
 def recon_test(env, model):
     for i in range(10):
+        env.draw_static = True
         obs = env.reset()
         obs = obs.transpose(2, 1, 0)
         obs = make_var(obs).unsqueeze(0)
