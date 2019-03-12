@@ -489,7 +489,7 @@ class MiniWorldEnv(gym.Env):
         # Domain randomization enable/disable flag
         self.domain_rand = domain_rand
 
-        self.draw_static = False
+        self.draw_static = True
 
         # Window for displaying the environment to humans
         self.window = None
