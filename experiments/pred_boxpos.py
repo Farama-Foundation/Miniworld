@@ -58,7 +58,16 @@ class Model(nn.Module):
 
     def forward(self, obs):
         obs = obs / 255
-        return self.obs_to_out(obs) * torch.cuda.FloatTensor((0.35, 0.15, 0.2, 0))
+        out = self.obs_to_out(obs)
+
+        min = torch.cuda.FloatTensor((0.00, 0.00, -0.20, 0))
+        max = torch.cuda.FloatTensor((0.35, 0.12, +0.20, 0))
+        range = max - min
+
+        out = (out + 1) / 2
+        out = min + out * range
+
+        return out
 
 def recon_test(env, model, gen_imgs=10):
     img_idx = 0
