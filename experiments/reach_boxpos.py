@@ -6,12 +6,17 @@
 
 import time
 import random
+import argparse
 import zmq
 import numpy as np
 from gym_miniworld.envs import ergojr
 from gym_miniworld.envs import RemoteBot
 from .utils import *
 from .pred_boxpos import Model
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--noreach", action='store_true')
+args = parser.parse_args()
 
 ROBOT = "flogo.local"
 PORT = 5757
@@ -34,6 +39,13 @@ model.load_state_dict(torch.load('pred_boxpos.torch'))
 model.cuda()
 model.eval()
 
+if args.noreach:
+    req = {"robot": {"set_pos": {"positions":[0,-85,90,0,-90,0]}}}
+    socket.send_json(req)
+    socket.recv_json()
+    time.sleep(3)
+    socket.send_json({"robot": {"set_compliant": {"trueorfalse": True}}})
+
 while True:
     obs, _, _, _ = env.step(env.actions.done)
     obs = obs.transpose(2, 1, 0)
@@ -48,8 +60,9 @@ while True:
     print(pos)
     env.render('human')
 
+    if args.noreach:
+        continue
     angles = ergojr.angles_near_pos(pos)
     req = {"robot": {"set_pos": {"positions":angles}}}
     socket.send_json(req)
     answer = socket.recv_json()
-    #time.sleep(3)
