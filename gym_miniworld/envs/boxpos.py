@@ -22,15 +22,21 @@ class BoxPos(MiniWorldEnv):
     Environment to train for box prediction
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, domain_rand=True, **kwargs):
         super().__init__(
             max_episode_steps=math.inf,
             params=sim_params,
-            domain_rand=True,
             **kwargs
         )
 
     def _gen_world(self):
+        if self.domain_rand:
+            wall_tex = self.rand.choice(['concrete', 'white', 'drywall', 'ceiling_tiles'])
+            floor_tex = self.rand.choice(['concrete', 'white', 'drywall', 'ceiling_tiles'])
+        else:
+            wall_tex = 'white'
+            floor_tex = 'white'
+
         room = self.add_rect_room(
             min_x=-0.40,
             max_x=self.rand.float(0.25, 0.35),
@@ -38,13 +44,13 @@ class BoxPos(MiniWorldEnv):
             max_z=+0.40,
             wall_height=0.45,
             no_ceiling=True,
-            wall_tex=self.rand.choice(['concrete', 'white', 'drywall', 'ceiling_tiles']),
-            floor_tex=self.rand.choice(['concrete', 'white', 'drywall', 'ceiling_tiles'])
+            wall_tex=wall_tex,
+            floor_tex=floor_tex
         )
 
         # The box looks the same from all sides, so restrict angles to [0, 90]
         self.box = self.place_entity(
-            Box(color='green', size=0.03),
+            Box(color='green', size=0.025),
             min_x=0.055,
             max_x=0.30,
             min_z=-0.15,
