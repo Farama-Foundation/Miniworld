@@ -25,31 +25,25 @@ class Model(nn.Module):
         super().__init__()
 
         self.obs_to_out = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=4, stride=2),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(3, 32, kernel_size=6, stride=2),
+            #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
-            nn.Conv2d(64, 64, kernel_size=4, stride=2),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(32, 32, kernel_size=6, stride=2),
+            #nn.BatchNorm2d(32),
             nn.LeakyReLU(),
 
-            nn.Conv2d(64, 64, kernel_size=4, stride=2),
-            nn.BatchNorm2d(64),
+            nn.Conv2d(32, 16, kernel_size=6, stride=2),
+            #nn.BatchNorm2d(16),
             nn.LeakyReLU(),
 
-            nn.Conv2d(64, 32, kernel_size=1, stride=1),
-            nn.BatchNorm2d(32),
-            nn.LeakyReLU(),
-
-            nn.Conv2d(32, 4, kernel_size=1, stride=1),
-            nn.BatchNorm2d(4),
-            nn.LeakyReLU(),
-
-            #Print(),
+            Print(),
             Flatten(),
 
-            nn.Linear(160, 4),
-            nn.Tanh(),
+            nn.Linear(384, 128),
+            nn.LeakyReLU(),
+            nn.Linear(128, 4),
+            nn.Sigmoid(),
         )
 
         self.apply(init_weights)
@@ -58,11 +52,9 @@ class Model(nn.Module):
         obs = obs / 255
         out = self.obs_to_out(obs)
 
-        min = torch.cuda.FloatTensor((0.00, 0.00, -0.20, 0))
-        max = torch.cuda.FloatTensor((0.35, 0.20, +0.20, 0))
+        min = torch.cuda.FloatTensor((0.00, -0.05, -0.20, 0))
+        max = torch.cuda.FloatTensor((0.35, +0.20, +0.20, 0))
         range = max - min
-
-        out = (out + 1) / 2
         out = min + out * range
 
         return out
