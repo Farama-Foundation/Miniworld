@@ -37,12 +37,16 @@ class Model(nn.Module):
             #nn.BatchNorm2d(16),
             nn.LeakyReLU(),
 
-            Print(),
+            #Print(),
             Flatten(),
 
             nn.Linear(384, 128),
             nn.LeakyReLU(),
-            nn.Linear(128, 4),
+
+            nn.Linear(128, 64),
+            nn.LeakyReLU(),
+
+            nn.Linear(64, 4),
             nn.Sigmoid(),
         )
 
@@ -52,8 +56,8 @@ class Model(nn.Module):
         obs = obs / 255
         out = self.obs_to_out(obs)
 
-        min = torch.cuda.FloatTensor((0.00, -0.05, -0.20, 0))
-        max = torch.cuda.FloatTensor((0.35, +0.20, +0.20, 0))
+        min = torch.cuda.FloatTensor((0.00, -0.00, -0.20, 0))
+        max = torch.cuda.FloatTensor((0.35, +0.15, +0.20, 0))
         range = max - min
         out = min + out * range
 
