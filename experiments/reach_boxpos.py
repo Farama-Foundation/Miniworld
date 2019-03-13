@@ -40,12 +40,13 @@ while True:
     obs = make_var(obs).unsqueeze(0)
 
     pos = model(obs)
-    pos = pos.detach().cpu().numpy()
-    pos = pos[:, :3]
-    pos[0,1] = 0.05
+    pos = pos.squeeze().detach().cpu().numpy()
+    pos = pos[:3]
+    # Avoid hitting the table or trying to go through it
+    pos[1] = max(0.03, pos[1])
 
-    env.render('human')
     print(pos)
+    env.render('human')
 
     angles = ergojr.angles_near_pos(pos)
     req = {"robot": {"set_pos": {"positions":angles}}}
