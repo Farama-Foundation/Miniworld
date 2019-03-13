@@ -26,6 +26,7 @@ class BoxPos(MiniWorldEnv):
         super().__init__(
             max_episode_steps=math.inf,
             params=sim_params,
+            domain_rand=domain_rand,
             **kwargs
         )
 
