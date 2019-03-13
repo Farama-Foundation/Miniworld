@@ -7,6 +7,8 @@
 import time
 import random
 import zmq
+import numpy as np
+from gym_miniworld.envs import ergojr
 
 ROBOT = "flogo.local"
 PORT = 5757
@@ -38,33 +40,23 @@ print(answer)
 #print(answer)
 #time.sleep(5)
 
-req = {"robot": {"set_pos": {"positions":[35, 20, 20, 0, 0, 0]}}}
+
+pos = np.array(([0.15, 0.15, -0.1]))
+angles = ergojr.angles_near_pos(pos)
+
+req = {"robot": {"set_pos": {"positions":angles}}}
 socket.send_json(req)
 answer = socket.recv_json()
 time.sleep(5)
 
+
+
+
+
+# Safely rest
+req = {"robot": {"set_pos": {"positions":[0, 0, 20, 0, 60, 0]}}}
+socket.send_json(req)
+answer = socket.recv_json()
+print(answer)
+time.sleep(2)
 socket.send_json({"robot": {"set_compliant": {"trueorfalse": True}}})
-
-
-
-
-"""
-for i in range(0):
-    print(i)
-
-    ## SET ALL MOTORS TO AN ANGLE (in degrees)
-    pos = [
-        random.uniform(-30, 30),
-        random.uniform(-20, 20),
-        random.uniform(-20, 20),
-        0,
-        random.uniform(-20, 20),
-        random.uniform(-20, 20)
-    ]
-
-    req = {"robot": {"set_pos": {"positions": pos}}}
-    socket.send_json(req)
-    answer = socket.recv_json()
-
-    time.sleep(2)
-"""

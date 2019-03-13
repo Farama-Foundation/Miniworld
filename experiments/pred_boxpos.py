@@ -25,32 +25,30 @@ class Model(nn.Module):
         super().__init__()
 
         self.obs_to_out = nn.Sequential(
-            nn.Conv2d(3, 64, kernel_size=5, stride=2),
+            nn.Conv2d(3, 64, kernel_size=4, stride=2),
             nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
-            nn.Conv2d(64, 64, kernel_size=5, stride=2),
+            nn.Conv2d(64, 64, kernel_size=4, stride=2),
             nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
-            nn.Conv2d(64, 64, kernel_size=5, stride=1),
+            nn.Conv2d(64, 64, kernel_size=4, stride=2),
             nn.BatchNorm2d(64),
             nn.LeakyReLU(),
 
-            nn.Conv2d(64, 16, kernel_size=5, stride=1),
-            nn.BatchNorm2d(16),
+            nn.Conv2d(64, 32, kernel_size=1, stride=1),
+            nn.BatchNorm2d(32),
+            nn.LeakyReLU(),
+
+            nn.Conv2d(32, 4, kernel_size=1, stride=1),
+            nn.BatchNorm2d(4),
             nn.LeakyReLU(),
 
             #Print(),
             Flatten(),
 
-            nn.Linear(576, 256),
-            nn.LeakyReLU(),
-
-            nn.Linear(256, 64),
-            nn.LeakyReLU(),
-
-            nn.Linear(64, 4),
+            nn.Linear(160, 4),
             nn.Tanh(),
         )
 
@@ -61,7 +59,7 @@ class Model(nn.Module):
         out = self.obs_to_out(obs)
 
         min = torch.cuda.FloatTensor((0.00, 0.00, -0.20, 0))
-        max = torch.cuda.FloatTensor((0.35, 0.12, +0.20, 0))
+        max = torch.cuda.FloatTensor((0.35, 0.20, +0.20, 0))
         range = max - min
 
         out = (out + 1) / 2
@@ -85,6 +83,7 @@ def recon_test(env, model, gen_imgs=10):
             continue
 
         #env.ergojr.angles = [0]*6
+        env.draw_static = True
         img_orig = env.render_obs()
 
         pred_pos = model(obs)
@@ -101,8 +100,8 @@ def recon_test(env, model, gen_imgs=10):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch-size", default=64, type=int)
-    parser.add_argument("--buffer-size", default=100000, type=int)
+    parser.add_argument("--batch-size", default=256, type=int)
+    parser.add_argument("--buffer-size", default=200000, type=int)
     parser.add_argument("--weight-decay", default=0, type=float)
     parser.add_argument("--env", default="MiniWorld-BoxPos-v0")
     parser.add_argument("--model-path", default="pred_boxpos.torch")

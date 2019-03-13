@@ -51,7 +51,7 @@ class BoxPos(MiniWorldEnv):
             max_z=+0.15,
             dir=self.rand.float(0, math.pi/2)
         )
-        self.box.pos[1] = self.rand.float(0, 0.1)
+        self.box.pos[1] = self.rand.float(0, 0.15)
 
         # Camera is 3.5cm forward
         self.entities.append(self.agent)
