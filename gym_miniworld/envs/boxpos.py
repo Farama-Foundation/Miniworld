@@ -12,9 +12,9 @@ sim_params.set('forward_step', 0.035)
 sim_params.set('forward_drift', 0)
 sim_params.set('turn_step', 17)
 sim_params.set('bot_radius', 0.11)
-sim_params.set('cam_pitch', 0)
+sim_params.set('cam_pitch', 0, -3, 3)
+sim_params.set('cam_height', 0.020, 0.019, 0.021)
 sim_params.set('cam_fov_y', 49)
-sim_params.set('cam_height', 0.02)
 sim_params.set('cam_fwd_disp', 0)
 
 class BoxPos(MiniWorldEnv):
@@ -69,6 +69,14 @@ class BoxPos(MiniWorldEnv):
             0,
             0
         ])
+
+    def render_obs(self, frame_buffer=None):
+        # Add gaussian noise to observations, and exposure noise
+        obs = super().render_obs(frame_buffer)
+        noise = np.random.normal(loc=0, scale=4, size=obs.shape)
+        fact = np.random.normal(loc=1, scale=0.02, size=(1,1,3)).clip(0.95, 1.05)
+        obs = (fact * obs + noise).clip(0, 255).astype(np.uint8)
+        return obs
 
     def step(self, action):
         obs, reward, done, info = super().step(action)
