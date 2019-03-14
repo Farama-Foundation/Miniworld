@@ -132,12 +132,14 @@ if __name__ == "__main__":
         global cur_idx, buf_num
 
         env.draw_static = True
+        env.img_noise = True
         obs = env.reset()
         obs = obs.transpose(2, 1, 0)
 
         # Check that the box is visible
         env.sky_color = [0, 0, 0]
         env.draw_static = False
+        env.img_noise = False
         seg = env.render_obs()
         if not np.any(seg):
             #print('box invisible')
