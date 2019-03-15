@@ -8,6 +8,9 @@ from ..math import *
 
 # Simulation parameters
 sim_params = DEFAULT_PARAMS.copy()
+sim_params.set('light_pos', [0, 2.5, 0], [-10, 0.5, -10], [10, 5, 10])
+sim_params.set('light_color', [0.7, 0.7, 0.7], [0.45, 0.45, 0.45], [0.9, 0.9, 0.9])
+sim_params.set('light_ambient', [0.45, 0.45, 0.45], [0.35, 0.35, 0.35], [0.65, 0.65, 0.65])
 sim_params.set('forward_step', 0.035)
 sim_params.set('forward_drift', 0)
 sim_params.set('turn_step', 17)
