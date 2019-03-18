@@ -52,16 +52,20 @@ class Model(nn.Module):
 
         self.apply(init_weights)
 
+        self.min = torch.cuda.FloatTensor((0.00, -0.00, -0.20, 0))
+        self.max = torch.cuda.FloatTensor((0.35, +0.15, +0.20, math.pi/2))
+        self.range = self.max - self.min
+
+    def norm_to_full(self, v):
+        return self.min + (v * self.range)
+
+    def full_to_norm(self, v):
+        return (v - self.min) / self.range
+
     def forward(self, obs):
         obs = obs / 255
         out = self.obs_to_out(obs)
-
-        min = torch.cuda.FloatTensor((0.00, -0.00, -0.20, 0))
-        max = torch.cuda.FloatTensor((0.35, +0.15, +0.20, math.pi/2))
-        range = max - min
-        out = min + out * range
-
-        return out
+        return self.norm_to_full(out)
 
 def recon_test(env, model, gen_imgs=10):
     img_idx = 0
@@ -177,9 +181,8 @@ if __name__ == "__main__":
         for i in range(16):
             gen_data()
 
-        # Compute an L2 loss
-        diff = pred_pos - batch_pos
-        #diff = diff * torch.FloatTensor([30, 30, 30, 1]).cuda()
+        # Compute an L2 loss in the normalized range
+        diff = model.full_to_norm(pred_pos) - model.full_to_norm(batch_pos)
         loss = (diff * diff).mean() # L2 loss
         optimizer.zero_grad()
         loss.backward()

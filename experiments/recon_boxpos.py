@@ -56,13 +56,14 @@ while True:
 
     pos = model(obs)
     pos = pos.squeeze().detach().cpu().numpy()
+    dir = pos[3]
     pos = pos[:3]
 
     print(pos)
     env.render('human')
 
     env2.box.pos = pos
-    env2.box.dir = 0
+    env2.box.dir = dir
     env2.render('human')
 
     # Avoid hitting the table or trying to go through it

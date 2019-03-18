@@ -67,7 +67,7 @@ def gripper_pos(angles):
 
     return pos
 
-def sample_angles():
+def sample_angles(y_min=0.015, y_max=0.15):
     """
     Sample random joint angles that are likely to be visible to
     the onboard camera and unlikely to result in a self-intersection.
@@ -85,7 +85,7 @@ def sample_angles():
 
         pos = gripper_pos_xy(angles)
 
-        if pos[0] > 0.01 and pos[1] > 0.015 and pos[1] < 0.15:
+        if pos[0] > 0.01 and pos[1] >= y_min and pos[1] <= y_max:
             break
 
     return angles
@@ -129,7 +129,6 @@ class ErgoJr(Entity):
         Positive angles open the gripper
         """
 
-        #glColor3f(0.9, 0.9, 0.9)
         glColor3f(1, 0, 0)
 
         drawBox(
@@ -141,7 +140,6 @@ class ErgoJr(Entity):
             z_max=-0.010
         )
 
-        glColor3f(1, 1, 0)
         angle = np.clip(self.angles[5], -25, 90)
         glRotatef(angle, 0, -1, 0)
         drawBox(

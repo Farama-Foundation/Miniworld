@@ -5,6 +5,7 @@ from ..miniworld import MiniWorldEnv, Room
 from ..params import DEFAULT_PARAMS
 from ..entity import Entity, Box
 from ..math import *
+from .ergojr import ErgoJr, sample_angles
 
 # Simulation parameters
 sim_params = DEFAULT_PARAMS.copy()
@@ -52,6 +53,9 @@ class BoxPos(MiniWorldEnv):
             wall_tex=wall_tex,
             floor_tex=floor_tex
         )
+
+        #self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
+        #self.ergojr.angles = sample_angles(y_max=0.10)
 
         # The box looks the same from all sides, so restrict angles to [0, 90]
         self.box = self.place_entity(
