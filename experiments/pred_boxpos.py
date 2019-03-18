@@ -57,7 +57,7 @@ class Model(nn.Module):
         out = self.obs_to_out(obs)
 
         min = torch.cuda.FloatTensor((0.00, -0.00, -0.20, 0))
-        max = torch.cuda.FloatTensor((0.35, +0.15, +0.20, 0))
+        max = torch.cuda.FloatTensor((0.35, +0.15, +0.20, math.pi/2))
         range = max - min
         out = min + out * range
 
@@ -154,8 +154,8 @@ if __name__ == "__main__":
         buf_num = max(buf_num, cur_idx+1)
 
         buf_obs[cur_idx] = obs
-        #buf_pos[cur_idx] = [*env.box.pos] + [env.box.dir]
-        buf_pos[cur_idx] = [*env.box.pos] + [0]
+        buf_pos[cur_idx] = [*env.box.pos] + [env.box.dir]
+        #buf_pos[cur_idx] = [*env.box.pos] + [0]
 
     while buf_num <= args.batch_size:
         gen_data()
