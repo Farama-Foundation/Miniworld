@@ -34,6 +34,7 @@ socket.send_json({"robot": {"set_compliant": {"trueorfalse": False}}})
 env = RemoteBot(obs_width=80, obs_height=60)
 
 env2 = BoxPos(domain_rand=False)
+env2.draw_robot = False
 env2.reset()
 env2.render('human')
 
@@ -56,11 +57,15 @@ while True:
 
     pos = model(obs)
     pos = pos.squeeze().detach().cpu().numpy()
+    box_present = pos[4] > 0.5
     dir = pos[3]
     pos = pos[:3]
 
     print(pos)
     env.render('human')
+
+    if not box_present:
+        pos = [-5, 0, 0]
 
     env2.box.pos = pos
     env2.box.dir = dir
@@ -72,7 +77,11 @@ while True:
     if args.noreach:
         continue
 
-    angles = ergojr.angles_near_pos(pos)
+    if box_present:
+        angles = ergojr.angles_near_pos(pos)
+    else:
+        angles = [0,-85,90,0,-90,0]
+
     req = {"robot": {"set_pos": {"positions":angles}}}
     socket.send_json(req)
     answer = socket.recv_json()

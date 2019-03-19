@@ -7,27 +7,28 @@ from ..entity import Entity, Box
 from ..math import *
 from .ergojr import ErgoJr, sample_angles
 
-# Simulation parameters
-sim_params = DEFAULT_PARAMS.copy()
-sim_params.set('light_pos', [0, 2.5, 0], [-10, 0.5, -10], [10, 5, 10])
-sim_params.set('light_color', [0.7, 0.7, 0.7], [0.45, 0.45, 0.45], [0.9, 0.9, 0.9])
-sim_params.set('light_ambient', [0.45, 0.45, 0.45], [0.35, 0.35, 0.35], [0.65, 0.65, 0.65])
-sim_params.set('forward_step', 0.035)
-sim_params.set('forward_drift', 0)
-sim_params.set('turn_step', 17)
-sim_params.set('bot_radius', 0.11)
-sim_params.set('cam_pitch', 0)
-sim_params.set('cam_height', 0.019)
-sim_params.set('cam_fov_y', 49)
-sim_params.set('cam_fwd_disp', 0)
-
 class BoxPos(MiniWorldEnv):
     """
     Environment to train for box prediction
     """
 
     def __init__(self, domain_rand=True, img_noise=True, **kwargs):
+        # Simulation parameters
+        sim_params = DEFAULT_PARAMS.copy()
+        sim_params.set('light_pos', [0, 2.5, 0], [-10, 0.5, -10], [10, 5, 10])
+        sim_params.set('light_color', [0.7, 0.7, 0.7], [0.45, 0.45, 0.45], [0.9, 0.9, 0.9])
+        sim_params.set('light_ambient', [0.45, 0.45, 0.45], [0.35, 0.35, 0.35], [0.65, 0.65, 0.65])
+        sim_params.set('forward_step', 0.035)
+        sim_params.set('forward_drift', 0)
+        sim_params.set('turn_step', 17)
+        sim_params.set('bot_radius', 0.11)
+        sim_params.set('cam_pitch', 0)
+        sim_params.set('cam_height', 0.019)
+        sim_params.set('cam_fov_y', 49)
+        sim_params.set('cam_fwd_disp', 0)
+
         self.img_noise = img_noise
+
         super().__init__(
             max_episode_steps=math.inf,
             params=sim_params,
@@ -54,8 +55,8 @@ class BoxPos(MiniWorldEnv):
             floor_tex=floor_tex
         )
 
-        #self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
-        #self.ergojr.angles = sample_angles(y_max=0.10)
+        self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
+        self.ergojr.angles = sample_angles(y_max=0.10)
 
         # The box looks the same from all sides, so restrict angles to [0, 90]
         self.box = self.place_entity(

@@ -6,17 +6,6 @@ from ..params import DEFAULT_PARAMS
 from ..entity import Entity, Box
 from ..math import *
 
-# Simulation parameters
-sim_params = DEFAULT_PARAMS.copy()
-sim_params.set('forward_step', 0.035)
-sim_params.set('forward_drift', 0)
-sim_params.set('turn_step', 17)
-sim_params.set('bot_radius', 0.11)
-sim_params.set('cam_pitch', -10)
-sim_params.set('cam_fov_y', 49)
-sim_params.set('cam_height', 0.18)
-sim_params.set('cam_fwd_disp', 0)
-
 def gripper_pos_xy(angles):
     """
     Compute the XY position of the end of the gripper relative to the base.
@@ -122,6 +111,8 @@ class ErgoJr(Entity):
         self.height = 0.4
 
         self.angles = [0] * 6
+
+        self.draw_robot = True
 
     def drawGripper(self):
         """
@@ -303,6 +294,9 @@ class ErgoJr(Entity):
         glPopMatrix()
 
     def render(self):
+        if not self.draw_robot:
+            return
+
         glDisable(GL_TEXTURE_2D)
 
         glPushMatrix()
@@ -320,6 +314,17 @@ class TableTopRobot(MiniWorldEnv):
     """
 
     def __init__(self, **kwargs):
+        # Simulation parameters
+        sim_params = DEFAULT_PARAMS.copy()
+        sim_params.set('forward_step', 0.035)
+        sim_params.set('forward_drift', 0)
+        sim_params.set('turn_step', 17)
+        sim_params.set('bot_radius', 0.11)
+        sim_params.set('cam_pitch', -10)
+        sim_params.set('cam_fov_y', 49)
+        sim_params.set('cam_height', 0.18)
+        sim_params.set('cam_fwd_disp', 0)
+
         super().__init__(
             max_episode_steps=math.inf,
             params=sim_params,
