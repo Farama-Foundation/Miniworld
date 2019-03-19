@@ -34,7 +34,7 @@ socket.send_json({"robot": {"set_compliant": {"trueorfalse": False}}})
 env = RemoteBot(obs_width=80, obs_height=60)
 
 env2 = BoxPos(domain_rand=False)
-env2.draw_robot = False
+env2.ergojr.draw_robot = False
 env2.reset()
 env2.render('human')
 
@@ -61,11 +61,11 @@ while True:
     dir = pos[3]
     pos = pos[:3]
 
-    print(pos)
-    env.render('human')
-
     if not box_present:
         pos = [-5, 0, 0]
+
+    print(pos)
+    env.render('human')
 
     env2.box.pos = pos
     env2.box.dir = dir
