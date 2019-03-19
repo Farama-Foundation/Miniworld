@@ -34,8 +34,8 @@ socket.send_json({"robot": {"set_compliant": {"trueorfalse": False}}})
 env = RemoteBot(obs_width=80, obs_height=60)
 
 env2 = BoxPos(domain_rand=False)
-env2.ergojr.draw_robot = False
 env2.reset()
+env2.ergojr.draw_robot = False
 env2.render('human')
 
 model = Model()
