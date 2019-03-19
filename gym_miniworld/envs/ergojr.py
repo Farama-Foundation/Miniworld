@@ -107,7 +107,8 @@ class ErgoJr(Entity):
     def __init__(self):
         super().__init__()
 
-        self.radius = 0.1
+        #self.radius = 0.1
+        self.radius = 0
         self.height = 0.4
 
         self.angles = [0] * 6
@@ -356,9 +357,6 @@ class TableTopRobot(MiniWorldEnv):
 
         self.ergojr = self.place_entity(ErgoJr(), pos=[0, 0, 0], dir=0)
         self.ergojr.angles = sample_angles()
-
-        pos = gripper_pos(self.ergojr.angles)
-        print(pos)
 
         self.entities.append(self.agent)
         self.agent.radius = 0.15
