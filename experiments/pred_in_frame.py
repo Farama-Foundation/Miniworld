@@ -46,49 +46,16 @@ class Model(nn.Module):
             nn.Linear(128, 64),
             nn.LeakyReLU(),
 
-            nn.Linear(64, 5),
+            nn.Linear(64, 1),
             nn.Sigmoid(),
         )
 
         self.apply(init_weights)
 
-        self.min = torch.cuda.FloatTensor((0.00, -0.00, -0.20, 0, 0))
-        self.max = torch.cuda.FloatTensor((0.35, +0.15, +0.20, math.pi/2, 1))
-        self.range = self.max - self.min
-
-    def norm_to_full(self, v):
-        return self.min + (v * self.range)
-
-    def full_to_norm(self, v):
-        return (v - self.min) / self.range
-
     def forward(self, obs):
         obs = obs / 255
         out = self.obs_to_out(obs)
-        return self.norm_to_full(out)
-
-def recon_test(env, model, gen_imgs=20):
-    img_idx = 0
-    while img_idx < gen_imgs:
-        env.draw_static = True
-        env.ergojr.draw_robot = True
-        obs = env.reset()
-        obs = obs.transpose(2, 1, 0)
-        obs = make_var(obs).unsqueeze(0)
-
-        pred_pos = model(obs)
-        pred_pos = pred_pos.reshape(-1)
-        pred_pos = pred_pos.detach().cpu().numpy()
-
-        img_orig = env.render_obs()
-
-        env.box.pos = pred_pos[0:3]
-        env.box.dir = pred_pos[3]
-        img_pred = env.render_obs()
-
-        save_img('boxpos_{:03d}_orig.png'.format(img_idx), img_orig)
-        save_img('boxpos_{:03d}_pred.png'.format(img_idx), img_pred)
-        img_idx += 1
+        return out
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -96,7 +63,7 @@ if __name__ == "__main__":
     parser.add_argument("--buffer-size", default=200000, type=int)
     parser.add_argument("--weight-decay", default=0, type=float)
     parser.add_argument("--env", default="MiniWorld-BoxPos-v0")
-    parser.add_argument("--model-path", default="pred_boxpos.torch")
+    parser.add_argument("--model-path", default="pred_in_frame.torch")
     args = parser.parse_args()
 
     env = gym.make(args.env)
@@ -109,7 +76,7 @@ if __name__ == "__main__":
 
     # Done indicates that we become done after the current step
     buf_obs = np.zeros(shape=(args.buffer_size, 3, 80, 60), dtype=np.uint8)
-    buf_pos = np.zeros(shape=(args.buffer_size, 5), dtype=np.float32)
+    buf_pos = np.zeros(shape=(args.buffer_size, 1), dtype=np.float32)
 
     buf_num = 0
     cur_idx = 0
@@ -150,7 +117,7 @@ if __name__ == "__main__":
         buf_num = max(buf_num, cur_idx+1)
 
         buf_obs[cur_idx] = obs
-        buf_pos[cur_idx] = [*env.box.pos] + [env.box.dir] + [box_present]
+        buf_pos[cur_idx] = box_present
 
     while buf_num <= args.batch_size:
         gen_data()
@@ -172,19 +139,17 @@ if __name__ == "__main__":
         for i in range(16):
             gen_data()
 
-        # Box-present flag
-        pred_bp = pred_pos[:, -1:]
-        batch_bp = batch_pos[:, -1:]
-
-        # Compute an L2 loss in the normalized range
-        diff = model.full_to_norm(pred_pos) - model.full_to_norm(batch_pos)
-        loss = (diff * diff)
-        loss = torch.cat((loss[:,:4] * batch_bp, loss[:,-1:]), dim=1)
-        loss = loss.mean()
+        diff = pred_pos - batch_pos
+        loss = (diff * diff).mean()
 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+
+        acc_elems = (pred_pos > 0.5) == (batch_pos > 0.5)
+        num_acc = acc_elems.sum().detach().item()
+        acc = 100 * num_acc / pred_pos.size(0)
+        print('accuracy: {:.1f}%'.format(acc))
 
         if batch_no == 1:
             running_loss = loss.data.detach().item()
@@ -199,13 +164,8 @@ if __name__ == "__main__":
         print('frames: {}'.format(frame_count))
         print('running loss: {:.5f}'.format(running_loss))
 
-        acc_elems = (pred_bp > 0.5) == (batch_bp > 0.5)
-        num_acc = acc_elems.sum().detach().item()
-        acc = 100 * num_acc / pred_pos.size(0)
-        print('box-present accuracy: {:.1f}%'.format(acc))
-
         if batch_no % 100 == 0:
             print('saving model')
             torch.save(model.state_dict(), args.model_path)
 
-            recon_test(env, model)
+            #recon_test(env, model)
