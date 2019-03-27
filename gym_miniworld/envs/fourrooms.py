@@ -6,7 +6,7 @@ from ..entity import Box
 
 class FourRooms(MiniWorldEnv):
     """
-    Two small rooms conected
+    Classic four rooms environment
     """
 
     def __init__(self, **kwargs):
