@@ -18,7 +18,7 @@ sudo dnf install freeglut-devel
 
 ## NoSuchDisplayException: Cannot connect to "None"
 
-If you are connected through SSH, or running the simulator in a Docker image, you will need to use `xvfb-run` to create a virtual frame buffer (virtual display) in order to run the simulator. The following command can be used to test that this is working:
+If you are connected through SSH, or running the simulator in a Docker image, you will need to use `xvfb-run` to create a virtual frame buffer (virtual display) in order to run the simulator. The following command can be used to test that the simularor is working correctly:
 
 ```
 xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" ./run_tests.py
