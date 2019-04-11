@@ -18,9 +18,15 @@ sudo dnf install freeglut-devel
 
 ## NoSuchDisplayException: Cannot connect to "None"
 
-If you are connected through SSH, or running the simulator in a Docker image, you will need to use `xvfb-run` to create a virtual frame buffer (virtual display) in order to run the simulator. See the "running headless" section.
+If you are connected through SSH, or running the simulator in a Docker image, you will need to use `xvfb-run` to create a virtual frame buffer (virtual display) in order to run the simulator. The following command can be used to test that this is working:
 
-## Running headless and training in a cloud based environment (AWS)
+```
+xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" ./run_tests.py
+```
+
+Depending on which system you are running this command, you may need to install xvfb and mesa packages.
+
+## Running headless and training on AWS
 
 We recommend using the Ubuntu-based [Deep Learning AMI](https://aws.amazon.com/marketplace/pp/B077GCH38C) to provision your server which comes with all the deep learning libraries. To begin with, you will want to install xvfb and mesa. You may also need to uninstall the Nvidia display drivers in order for OpenGL/GLX to work properly:
 
