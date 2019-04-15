@@ -19,7 +19,6 @@ def gripper_pos_xy(angles):
 def gripper_pos(angles):
     """
     Compute the XYZ position of the end of the gripper relative to the base.
-    This doesn't take left/right rotations into account.
     """
 
     L0 = 0.033 # Height of the base to first segment
