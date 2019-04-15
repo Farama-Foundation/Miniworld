@@ -1,5 +1,7 @@
 .DS_Store
 
+*.torch
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

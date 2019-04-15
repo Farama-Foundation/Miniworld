@@ -46,6 +46,6 @@ def register_envs():
 
         env_ids.append(gym_id)
 
-        print('Registered env:', gym_id)
+        #print('Registered env:', gym_id)
 
 register_envs()
