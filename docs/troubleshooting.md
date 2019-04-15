@@ -57,6 +57,10 @@ It's possible to improve the performance of the simulator by disabling Pyglet er
 export PYGLET_DEBUG_GL=True
 ```
 
+## Training not converging or taking too long to converge
+
+If training is taking too long to converge, you can make environments easier by making them smaller, or by increasing the step size, that is, the amount of distance the agent can go forward or turns at each step. An example of an environment that does this is `MazeS3Fast`, which [can be found here](https://github.com/maximecb/gym-miniworld/blob/master/gym_miniworld/envs/maze.py#L123).
+
 ## Unknown encoder 'libx264' when using gym.wrappers.Monitor
 
 It is possible to use `gym.wrappers.Monitor` to record videos of the agent performing a task. See [examples here](https://www.programcreek.com/python/example/100947/gym.wrappers.Monitor).
