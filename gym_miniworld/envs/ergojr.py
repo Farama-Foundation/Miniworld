@@ -46,7 +46,7 @@ def gripper_pos(angles):
     pos = m.dot(pos)
 
     # Segment 1, upwards, rotation around Y
-    pos += np.array((0, L0, 0))
+    pos += np.array((0, L1, 0))
     m = gen_rot_matrix(np.array((0, 1, 0)), -angles[0] * math.pi/180)
     pos = m.dot(pos)
 
