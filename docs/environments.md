@@ -51,6 +51,10 @@ Registered configurations:
 Registered configurations:
 - `MiniWorld-PickupObjs-v0`
 
+<p align="center">
+<img src="/images/pickupobjs_0.jpg" width=300></img>
+</p>
+
 One single large room in which the agent has to collect several objects. The
 agent gets +1 reward for collecting each object. The episode terminates when
 all objects are collected or when the time step limit is exceeded.
