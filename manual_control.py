@@ -38,8 +38,11 @@ def step(action):
 
     obs, reward, done, info = env.step(action)
 
+    if reward > 0:
+        print('reward={:.2f}'.format(reward))
+
     if done:
-        print('done! reward={:.2f}'.format(reward))
+        print('done!')
         env.reset()
 
     env.render('pyglet')

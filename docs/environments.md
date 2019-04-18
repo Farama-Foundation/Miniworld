@@ -46,9 +46,14 @@ Registered configurations:
 <img src="/images/maze_0.jpg" width=300></img>
 </p>
 
-Randomly generated maze, in which the agent starts in a random location, and
-has to navigate to a red box placed at another random location. This is a
-very challenging environment to solve with reinforcement learning.
+# PickupObjs
+
+Registered configurations:
+- `MiniWorld-PickupObjs-v0`
+
+One single large room in which the agent has to collect several objects. The
+agent gets +1 reward for collecting each object. The episode terminates when
+all objects are collected or when the time step limit is exceeded.
 
 # CollectHealth
 

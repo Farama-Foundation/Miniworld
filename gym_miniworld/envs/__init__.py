@@ -5,6 +5,7 @@ from .remotebot import *
 from .hallway import *
 from .oneroom import *
 from .roomobjs import *
+from .pickupobjs import *
 from .tmaze import *
 from .fourrooms import *
 from .threerooms import *
