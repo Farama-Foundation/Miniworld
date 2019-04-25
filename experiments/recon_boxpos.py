@@ -79,6 +79,7 @@ while True:
 
     if box_present:
         angles = ergojr.angles_near_pos(pos)
+        angles[-1] = random.choice([20, -20])
     else:
         angles = [0,-85,90,0,-90,0]
 
