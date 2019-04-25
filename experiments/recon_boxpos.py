@@ -1,6 +1,6 @@
 # ssh poppy@flogo.local
 # fuser -k /dev/ttyA*
-# poppy-services -vv --zmq poppy-ergo-jr
+# poppy-services --disable-camera --no-browser -vv --zmq poppy-ergo-jr
 #
 # python3 -m experiments.test_robot_control
 
