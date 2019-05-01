@@ -24,7 +24,7 @@ MiniWorld can be seen as an alternative to VizDoom or DMLab. It is written
 
 <p align="center">
 <img src="images/maze_top_view.jpg" width=260></img>
-<img src="images/wallgap_0.jpg" width=260></img>
+<img src="images/sidewalk_0.jpg" width=260></img>
 <img src="images/collecthealth_0.jpg" width=260></img>
 </p>
 
