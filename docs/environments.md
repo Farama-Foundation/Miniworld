@@ -46,6 +46,19 @@ Registered configurations:
 <img src="/images/maze_0.jpg" width=300></img>
 </p>
 
+# Sidewalk
+
+Registered configurations:
+- `MiniWorld-Sidewalk-v0`
+
+<p align="center">
+<img src="/images/sidewalk_0.jpg" width=300></img>
+</p>
+
+The agent must walk to an object at the end of the sidewalk, while avoiding
+walking into the street. Reaching the object provides a positive reward,
+but walking into the street terminates the episode with zero reward.
+
 # PickupObjs
 
 Registered configurations:

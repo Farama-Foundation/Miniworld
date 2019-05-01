@@ -10,6 +10,7 @@ from .tmaze import *
 from .fourrooms import *
 from .threerooms import *
 from .wallgap import *
+from .sidewalk import *
 from .putnext import *
 from .maze import *
 from .collecthealth import *
