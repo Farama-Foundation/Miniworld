@@ -2,7 +2,8 @@
 # fuser -k /dev/ttyA*
 # poppy-services --disable-camera --no-browser -vv --zmq poppy-ergo-jr
 #
-# python3 -m experiments.test_robot_control
+# python3 -m experiments.recon_boxpos
+# python3 -m experiments.recon_boxpos --noreach
 
 import time
 import random
