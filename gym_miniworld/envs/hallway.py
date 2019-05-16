@@ -19,7 +19,7 @@ class Hallway(MiniWorldEnv):
             **kwargs
         )
 
-        # Allow only the movement actions
+        # Allow only movement actions (left/right/forward)
         self.action_space = spaces.Discrete(self.actions.move_forward+1)
 
     def _gen_world(self):

@@ -2,6 +2,7 @@ import numpy as np
 import math
 from ..miniworld import MiniWorldEnv, Room
 from ..entity import Box
+from gym import spaces
 
 class OneRoom(MiniWorldEnv):
     """
@@ -17,6 +18,9 @@ class OneRoom(MiniWorldEnv):
             max_episode_steps=180,
             **kwargs
         )
+
+        # Allow only movement actions (left/right/forward)
+        self.action_space = spaces.Discrete(self.actions.move_forward+1)
 
     def _gen_world(self):
         room = self.add_rect_room(
