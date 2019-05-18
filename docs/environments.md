@@ -46,7 +46,7 @@ Registered configurations:
 - `MiniWorld-FourRooms-v0`
 
 <p align="center">
-<img src="/images/fourrooms_.jpg" width=300></img>
+<img src="/images/fourrooms_0.jpg" width=300></img>
 </p>
 
 Inspired by the classic four-rooms gridworld environment. The agent appears
