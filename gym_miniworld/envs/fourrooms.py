@@ -6,7 +6,8 @@ from ..entity import Box
 
 class FourRooms(MiniWorldEnv):
     """
-    Classic four rooms environment
+    Classic four rooms environment.
+    The agent must reach the red box to get a reward.
     """
 
     def __init__(self, **kwargs):
@@ -47,7 +48,6 @@ class FourRooms(MiniWorldEnv):
         self.connect_rooms(room3, room0, min_x=-5, max_x=-3, max_y=2.2)
 
         self.box = self.place_entity(Box(color='red'))
-        self.place_entity(Box(color='yellow', size=[0.8, 1.2, 0.5]))
 
         self.place_agent()
 

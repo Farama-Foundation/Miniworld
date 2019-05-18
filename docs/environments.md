@@ -23,6 +23,10 @@ to verify that your training code is working correctly.
 Registered configurations:
 - `MiniWorld-OneRoom-v0`
 
+<p align="center">
+<img src="/images/oneroom_0.jpg" width=300></img>
+</p>
+
 One single large room in which the agent has to navitage to a red box.
 Requires the agent to turn around and scan the room to find the red
 box.
@@ -35,6 +39,19 @@ Registered configurations:
 In this environment, there is a T-junction. The agent has to get to the
 junction point, and turn either left or right to reach a red box, which
 is randomly placed at one end or the other.
+
+# FourRooms
+
+Registered configurations:
+- `MiniWorld-FourRooms-v0`
+
+<p align="center">
+<img src="/images/fourrooms_.jpg" width=300></img>
+</p>
+
+Inspired by the classic four-rooms gridworld environment. The agent appears
+at a random position inside 4 rooms connected by 4 openings. In order to
+get a reward, the agent must reach a red box.
 
 # Maze
 
