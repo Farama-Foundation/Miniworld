@@ -40,6 +40,10 @@ In this environment, there is a T-junction. The agent has to get to the
 junction point, and turn either left or right to reach a red box, which
 is randomly placed at one end or the other.
 
+<p align="center">
+<img src="/images/tmaze.jpg" width=300></img>
+</p>
+
 # FourRooms
 
 Registered configurations:
