@@ -57,6 +57,9 @@ Please use this bibtex if you want to cite this repository in your publications:
 }
 ```
 
+List of publications & submissions using MiniWorld (please open a pull request to add missing entries):
+- [Visual Hindsight Experience Replay](https://arxiv.org/pdf/1901.11529.pdf) (Georgia Tech, UC Berkeley, Jan 2019)
+
 This simulator was created as part of work done at [Mila](https://mila.quebec/).
 
 ## Installation
