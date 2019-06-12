@@ -62,10 +62,14 @@ get a reward, the agent must reach a red box.
 Registered configurations:
 - `MiniWorld-Maze-v0`
 - `MiniWorld-MazeS3-v0`
+- `MiniWorld-MazeS3Fast-v0`
+- `MiniWorld-MazeS2-v0`
 
 <p align="center">
 <img src="/images/maze_0.jpg" width=300></img>
 </p>
+
+Navigate to a goal through a procedurally generated maze. The largest version of this environment (`MiniWorld-Maze-v0`) is extremely hard to solve as it has a sparse reward and a long time horizon. The `MazeS3Fast` environment has faster movement actions (bigger time steps) making it easier to solve than the regular `MazeS3`.
 
 # Sidewalk
 
