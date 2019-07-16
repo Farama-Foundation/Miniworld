@@ -2,7 +2,7 @@
 
 ## The World
 
-In MiniWorld, the world is made of static elements (rooms and hallways), as well as objects which may be dynamic, which we call entities. Environments are essentially 2D floorplans made of connected rooms. Rooms can have any convex outline defined by at least 3 points. Portals (openings) can be created in walls to create doors or windows into other rooms. Hallways are themselves small rooms with some walls completely open. To get an idea how to create and connect rooms, you should take a look at the implementation of the [ThreeRooms environment](/gym_miniworld/envs/threerooms.py).
+In MiniWorld, the world is made of static elements (rooms and hallways), as well as objects which may be dynamic, which we call entities. Environments are essentially 2D floorplans made of connected rooms. Rooms can have any convex outline defined by at least 3 points. Portals (openings) can be created in walls to create doors or windows into other rooms. Hallways are themselves small rooms with some walls removed. To get an idea how to create and connect rooms, you should take a look at the implementation of the [ThreeRooms environment](/gym_miniworld/envs/threerooms.py).
 
 The entities are defined in [gym_miniworld/entity.py](/gym_miniworld/entity.py) and include:
 
@@ -17,6 +17,11 @@ MiniWorld uses OpenGL's right-handed coordinate system. The ground plane lies al
 ## Observations
 
 The observations are single camera images, as numpy arrays of size (80, 60, 3). These arrays contain unsigned 8-bit integer values (`uint8`) in the [0, 255] range. It is possible to change the observation image size by directly instantiating the environment class (`MiniWorldEnv`) and setting the appropriate parameters in the constructor.
+
+<p align="center">
+<img src="/images/maze_top_view.jpg" width=260></img><br>
+Top view of the Maze environment
+</p>
 
 A top-down fully observable view of the environment can be produced as well. To produce this view, you can call the `env.render_top_view()` method, which returns a NumPy RGB array as output.
 
@@ -40,5 +45,11 @@ Each environment has an associated `max_episode_steps` variable which specifies 
 ### Loading 3D Models
 
 MiniWorld has built-in support for [OBJ mesh files](https://en.wikipedia.org/wiki/Wavefront_.obj_file). Some 3D models are included under the [gym_miniworld/meshes](https://github.com/maximecb/gym-miniworld/tree/master/gym_miniworld/meshes) directory. These models are all tested and working with MiniWorld. In order to load a 3D model in an environment, you should create a `MeshEnt` object and specify the name of the model to load. See the [sidewalk environment](https://github.com/maximecb/gym-miniworld/blob/master/gym_miniworld/envs/sidewalk.py) for an example of how to do this. The `height` parameter specifies how to scale the model, based on the height you want it to have, in meters.
+
+
+<p align="center">
+<img src="/images/sidewalk_0.jpg" width=260></img><br>
+Street cone 3D models
+</p>
 
 You can find many more 3D models to load on the [OpenGameArt](https://opengameart.org/) website. Make sure to check the OBJ checkbox when searching, and that these models are compatible with the open source license of your project. Something to be aware of is that MiniWorld only supports triangle polygons. If you want to load a mesh that contains non-triangular polygons, you can convert it to triangles only by loading it in [Blender](https://www.blender.org/) (a free model-editing program), and re-exporting them with the triangulate mesh option. If you want to create your own custom 3D models, I recommend the [Wings 3D](http://www.wings3d.com/) editor, which is relatively simple and easy to use.
