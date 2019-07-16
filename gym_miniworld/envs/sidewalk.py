@@ -58,10 +58,6 @@ class Sidewalk(MiniWorldEnv):
                 pos = np.array([1, 0, 2*i])
             )
 
-
-
-
-
         self.box = self.place_entity(
             Box(color='red'),
             room=sidewalk,
