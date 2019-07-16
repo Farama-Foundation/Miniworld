@@ -7,7 +7,7 @@ Contents:
 - [Installation](#installation)
 - [Usage](#usage)
 - [Environments](docs/environments.md)
-- [Design](docs/design.md)
+- [Design and Customization](docs/design.md)
 - [Troubleshooting](docs/troubleshooting.md)
 
 ## Introduction
