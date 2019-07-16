@@ -1,5 +1,7 @@
 # Design and Customization
 
+MiniWorld is essentially a very simple 3D game engine. At a few thousand lines of code, it is [minimalistic by design](https://pointersgonewild.com/2018/02/18/minimalism-in-programming/). It has a limited feature set, but its simplicity means that it's easier to troubleshoot and relatively easy to customize based on your needs. If you need any help, please never hesitate to open an issue on this repository, even if it's just to ask a question.
+
 ## The World
 
 In MiniWorld, the world is made of static elements (rooms and hallways), as well as objects which may be dynamic, which we call entities. Environments are essentially 2D floorplans made of connected rooms. Rooms can have any convex outline defined by at least 3 points. Portals (openings) can be created in walls to create doors or windows into other rooms. Hallways are themselves small rooms with some walls removed. To get an idea how to create and connect rooms, you should take a look at the implementation of the [ThreeRooms environment](/gym_miniworld/envs/threerooms.py).
