@@ -164,6 +164,7 @@ class ImageFrame(Entity):
         self.depth = depth
         self.height = (float(self.tex.height) / self.tex.width) * self.width
 
+    @property
     def is_static(self):
         return True
 
@@ -258,6 +259,7 @@ class TextFrame(Entity):
         self.height = height
         self.width = len(str) * height
 
+    @property
     def is_static(self):
         return True
 
