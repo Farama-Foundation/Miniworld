@@ -392,7 +392,6 @@ class Room:
         Render the static elements of the room
         """
 
-        glEnable(GL_TEXTURE_2D)
         glColor3f(1, 1, 1)
 
         # Draw the floor
@@ -1042,6 +1041,7 @@ class MiniWorldEnv(gym.Env):
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
         # Render the rooms
+        glEnable(GL_TEXTURE_2D)
         for room in self.rooms:
             room._render()
 
@@ -1214,6 +1214,101 @@ class MiniWorldEnv(gym.Env):
         self.render_obs(frame_buffer)
 
         return frame_buffer.get_depth_map(0.04, 100.0)
+
+    def get_visible_ents(self):
+        """
+        Get a list of visible entities.
+        Uses OpenGL occlusion queries to approximate visibility.
+        :return: set of objects visible to the agent
+        """
+
+        # Allocate the occlusion query ids
+        num_ents = len(self.entities)
+        query_ids = (GLuint * num_ents)()
+        glGenQueries(num_ents, query_ids)
+
+        # Switch to the default OpenGL context
+        # This is necessary on Linux Nvidia drivers
+        self.shadow_window.switch_to()
+
+        # Use the small observation frame buffer
+        frame_buffer = self.obs_fb
+
+        # Bind the frame buffer before rendering into it
+        frame_buffer.bind()
+
+        # Clear the color and depth buffers
+        glClearColor(*self.sky_color, 1.0)
+        glClearDepth(1.0)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+        # Set the projection matrix
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(
+            self.agent.cam_fov_y,
+            frame_buffer.width / float(frame_buffer.height),
+            0.04,
+            100.0
+        )
+
+        # Setup the cameravisible objects
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        gluLookAt(
+            # Eye position
+            *self.agent.cam_pos,
+            # Target
+            *(self.agent.cam_pos + self.agent.cam_dir),
+            # Up vector
+            0, 1.0, 0.0
+        )
+
+        # Render the rooms, without texturing
+        glDisable(GL_TEXTURE_2D)
+        for room in self.rooms:
+            room._render()
+
+        # For each entity
+        for ent_idx, ent in enumerate(self.entities):
+            if ent is self.agent:
+                continue
+
+            glBeginQuery(GL_ANY_SAMPLES_PASSED, query_ids[ent_idx])
+            pos = ent.pos
+
+            #glColor3f(1, 0, 0)
+            drawBox(
+                x_min=pos[0] - 0.1,
+                x_max=pos[0] + 0.1,
+                y_min=pos[1],
+                y_max=pos[1] + 0.2,
+                z_min=pos[2] - 0.1,
+                z_max=pos[2] + 0.1
+            )
+
+            glEndQuery(GL_ANY_SAMPLES_PASSED)
+
+        vis_objs = set()
+
+        # Get query results
+        for ent_idx, ent in enumerate(self.entities):
+            if ent is self.agent:
+                continue
+
+            visible = (GLuint*1)(1)
+            glGetQueryObjectuiv(query_ids[ent_idx], GL_QUERY_RESULT, visible);
+
+            if visible[0] != 0:
+                vis_objs.add(ent)
+
+        # Free the occlusion query ids
+        glDeleteQueries(1, query_ids)
+
+        #img = frame_buffer.resolve()
+        #return img
+
+        return vis_objs
 
     def render(self, mode='human', close=False):
         """

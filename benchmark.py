@@ -28,7 +28,7 @@ while True:
     if dt > 5:
         break
 
-    # Slow speed to minimize resets
+    # Slow movement speed to minimize resets
     action = 0
     obs, reward, done, info = env.step(action)
 
