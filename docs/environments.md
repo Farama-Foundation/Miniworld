@@ -22,6 +22,8 @@ to verify that your training code is working correctly.
 
 Registered configurations:
 - `MiniWorld-OneRoom-v0`
+- `MiniWorld-OneRoomS6-v0`
+- `MiniWorld-OneRoomS6Fast-v0`
 
 <p align="center">
 <img src="/images/oneroom_0.jpg" width=300></img>
