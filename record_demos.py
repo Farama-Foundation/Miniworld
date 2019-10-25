@@ -47,6 +47,9 @@ def step(action):
 
     if done:
         print('done!')
+
+        save_demo()
+
         env.reset()
 
     env.render('pyglet')
@@ -79,11 +82,11 @@ def on_key_press(symbol, modifiers):
         step(env.actions.turn_right)
 
     elif symbol == key.PAGEUP or symbol == key.P:
-        #step(env.actions.pickup)
-        save_demo()
+        step(env.actions.pickup)
+        #save_demo()
     elif symbol == key.PAGEDOWN or symbol == key.D:
-        #step(env.actions.drop)
-        drop_demo()
+        step(env.actions.drop)
+        #drop_demo()
 
     elif symbol == key.ENTER:
         step(env.actions.done)

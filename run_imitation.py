@@ -35,6 +35,7 @@ def make_var(arr):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model-path", default="imitation_model.torch")
+parser.add_argument('--env-name', default='MiniWorld-OneRoomS6-v0')
 args = parser.parse_args()
 
 model = Model()
@@ -43,7 +44,7 @@ model.eval()
 
 model.load_state_dict(torch.load(args.model_path))
 
-env = gym.make('MiniWorld-OneRoomS6-v0')
+env = gym.make(args.env_name)
 obs = env.reset()
 
 print('starting')
