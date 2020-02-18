@@ -9,7 +9,11 @@ class TMaze(MiniWorldEnv):
     Two hallways connected in a T-junction
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, goal_pos=None, **kwargs):
+        # Position of the goal, left, right, or random
+        assert goal_pos in [0, 1, None]
+        self.goal_pos = goal_pos
+
         super().__init__(
             max_episode_steps=280,
             **kwargs
@@ -31,10 +35,17 @@ class TMaze(MiniWorldEnv):
 
         # Add a box at a random end of the hallway
         self.box = Box(color='red')
-        if self.rand.bool():
-            self.place_entity(self.box, room=room2, min_z=room2.max_z - 2)
-        else:
+
+        # If no goal position is specified, pick a random one
+        goal_pos = self.goal_pos
+        if goal_pos is None:
+            goal_pos = self.rand.bool()
+
+        # Place the goal in the left or the right arm
+        if goal_pos == 0:
             self.place_entity(self.box, room=room2, max_z=room2.min_z + 2)
+        else:
+            self.place_entity(self.box, room=room2, min_z=room2.max_z - 2)
 
         # Choose a random room and position to spawn at
         self.place_agent(
@@ -50,3 +61,11 @@ class TMaze(MiniWorldEnv):
             done = True
 
         return obs, reward, done, info
+
+class TMazeLeft(TMaze):
+    def __init__(self):
+        super().__init__(goal_pos=0)
+
+class TMazeRight(TMaze):
+    def __init__(self):
+        super().__init__(goal_pos=1)

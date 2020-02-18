@@ -37,6 +37,8 @@ box.
 
 Registered configurations:
 - `MiniWorld-TMaze-v0`
+- `MiniWorld-TMazeLeft-v0`
+- `MiniWorld-TMazeRight-v0`
 
 <p align="center">
 <img src="/images/tmaze_0.jpg" width=300></img>
@@ -44,7 +46,12 @@ Registered configurations:
 
 In this environment, there is a T-junction. The agent has to get to the
 junction point, and turn either left or right to reach a red box, which
-is randomly placed at one end or the other.
+is randomly placed at one end or the other. The environment comes in three
+variants. In the default variant, the red box is randomly placed in the left
+or right arm of the maze in each episode. In the `MiniWorld-TMazeLeft-v0`
+variant, the box is always in the left arm, and in the `MiniWorld-TMazeRight-v0`
+variant, the box is always in the right arm. This can be used to experiment
+with transfer learning.
 
 # FourRooms
 
