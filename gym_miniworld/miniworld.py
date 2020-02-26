@@ -1368,12 +1368,12 @@ class MiniWorldEnv(gym.Env):
         glOrtho(0, window_width, 0, window_height, 0, 10)
 
         # Draw the human render to the rendering window
-        img = np.ascontiguousarray(np.flip(img, axis=0))
+        img_flip = np.ascontiguousarray(np.flip(img, axis=0))
         img_data = pyglet.image.ImageData(
             img_width,
             img_height,
             'RGB',
-            img.ctypes.data_as(POINTER(GLubyte)),
+            img_flip.ctypes.data_as(POINTER(GLubyte)),
             pitch=img_width * 3,
         )
         img_data.blit(
@@ -1418,4 +1418,4 @@ class MiniWorldEnv(gym.Env):
             self.window.flip()
             self.window.dispatch_events()
 
-        return None
+        return img
