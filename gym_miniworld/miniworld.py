@@ -1310,7 +1310,7 @@ class MiniWorldEnv(gym.Env):
 
         return vis_objs
 
-    def render(self, mode='human', close=False):
+    def render(self, mode='human', close=False, view='agent'):
         """
         Render the environment for human viewing
         """
@@ -1321,8 +1321,11 @@ class MiniWorldEnv(gym.Env):
             return
 
         # Render the human-view image
-        img = self.render_obs(self.vis_fb)
-        #img = self.render_top_view(self.vis_fb)
+        assert view in ['agent', 'top']
+        if view == 'agent':
+            img = self.render_obs(self.vis_fb)
+        else:
+            img = self.render_top_view(self.vis_fb)
         img_width = img.shape[1]
         img_height = img.shape[0]
 
