@@ -727,8 +727,6 @@ class MiniWorldEnv(gym.Env):
         Create a rectangular room
         """
 
-        assert len(self.wall_segs) == 0, "cannot add rooms after static data is generated"
-
         # 2D outline coordinates of the room,
         # listed in counter-clockwise order when viewed from the top
         outline = np.array([
@@ -742,10 +740,16 @@ class MiniWorldEnv(gym.Env):
             [min_x, max_z],
         ])
 
-        room = Room(
-            outline,
-            **kwargs,
-        )
+        return self.add_room(outline=outline, **kwargs)
+
+    def add_room(self, **kwargs):
+        """
+        Create a new room
+        """
+
+        assert len(self.wall_segs) == 0, "cannot add rooms after static data is generated"
+
+        room = Room(**kwargs)
         self.rooms.append(room)
 
         return room
