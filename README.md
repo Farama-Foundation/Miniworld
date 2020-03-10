@@ -89,6 +89,9 @@ There is a simple UI application which allows you to control the simulation or r
 
 ```
 ./manual_control.py --env-name MiniWorld-Hallway-v0
+
+# Display an overhead view of the environment
+./manual_control.py --env-name MiniWorld-Hallway-v0 --top_view
 ```
 
 There is also a script to run automated tests (`run_tests.py`) and a script to gather performance metrics (`benchmark.py`).

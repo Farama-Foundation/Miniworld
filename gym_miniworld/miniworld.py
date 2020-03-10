@@ -775,14 +775,14 @@ class MiniWorldEnv(gym.Env):
                 for idx_b in range(room_b.num_walls):
                     norm_b = room_b.edge_norms[idx_b]
 
-                    # Reject edges that are not facing the correct way
+                    # Reject edges that are not facing each other
                     if np.dot(norm_a, norm_b) > -0.9:
                         continue
 
                     dir = room_b.outline[idx_b] - room_a.outline[idx_a]
 
-                    # Reject edges that are not facing each other
-                    if np.dot(norm_a, dir) > 0:
+                    # Reject edges that are not touching
+                    if np.dot(norm_a, dir) > 0.05:
                         continue
 
                     return idx_a, idx_b
