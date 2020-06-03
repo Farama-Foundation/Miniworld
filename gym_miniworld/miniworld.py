@@ -778,13 +778,11 @@ class MiniWorldEnv(gym.Env):
                     # Reject edges that are not facing each other
                     if np.dot(norm_a, norm_b) > -0.9:
                         continue
-
                     dir = room_b.outline[idx_b] - room_a.outline[idx_a]
 
                     # Reject edges that are not touching
                     if np.dot(norm_a, dir) > 0.05:
-                        continue
-
+                        continue 
                     return idx_a, idx_b
 
             return None, None
@@ -868,7 +866,10 @@ class MiniWorldEnv(gym.Env):
         # If an exact position if specified
         if pos is not None:
             ent.dir = dir if dir != None else self.rand.float(-math.pi, math.pi)
-            ent.pos = pos
+            if np.shape(pos)[0]==1:
+                ent.pos=pos[0]
+            else:
+                ent.pos = pos
             self.entities.append(ent)
             return ent
 
@@ -901,7 +902,6 @@ class MiniWorldEnv(gym.Env):
             ent.pos = pos
             ent.dir = d
             break
-
         self.entities.append(ent)
 
         return ent
