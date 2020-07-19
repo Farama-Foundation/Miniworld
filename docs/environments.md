@@ -29,7 +29,7 @@ Registered configurations:
 <img src="/images/oneroom_0.jpg" width=300></img>
 </p>
 
-One single large room in which the agent has to navitage to a red box.
+One single large room in which the agent has to navigate to a red box.
 Requires the agent to turn around and scan the room to find the red
 box.
 
