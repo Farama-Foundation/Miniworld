@@ -7,12 +7,13 @@ from .oneroom import *
 from .roomobjs import *
 from .pickupobjs import *
 from .tmaze import *
+from .ymaze import *
+from .maze import *
 from .fourrooms import *
 from .threerooms import *
 from .wallgap import *
 from .sidewalk import *
 from .putnext import *
-from .maze import *
 from .collecthealth import *
 from .simtorealgoto import *
 from .simtorealpush import *

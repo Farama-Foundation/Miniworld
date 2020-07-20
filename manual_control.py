@@ -19,6 +19,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--env-name', default='MiniWorld-Hallway-v0')
 parser.add_argument('--domain-rand', action='store_true', help='enable domain randomization')
 parser.add_argument('--no-time-limit', action='store_true', help='ignore time step limits')
+parser.add_argument('--top_view', action='store_true', help='show the top view instead of the agent view')
 args = parser.parse_args()
 
 env = gym.make(args.env_name)
@@ -28,10 +29,12 @@ if args.no_time_limit:
 if args.domain_rand:
     env.domain_rand = True
 
+view_mode = 'top' if args.top_view else 'agent'
+
 env.reset()
 
 # Create the display window
-env.render('pyglet')
+env.render('pyglet', view=view_mode)
 
 def step(action):
     print('step {}/{}: {}'.format(env.step_count+1, env.max_episode_steps, env.actions(action).name))
@@ -45,7 +48,7 @@ def step(action):
         print('done!')
         env.reset()
 
-    env.render('pyglet')
+    env.render('pyglet', view=view_mode)
 
 @env.unwrapped.window.event
 def on_key_press(symbol, modifiers):
@@ -57,7 +60,7 @@ def on_key_press(symbol, modifiers):
     if symbol == key.BACKSPACE or symbol == key.SLASH:
         print('RESET')
         env.reset()
-        env.render('pyglet')
+        env.render('pyglet', view=view_mode)
         return
 
     if symbol == key.ESCAPE:
@@ -88,7 +91,7 @@ def on_key_release(symbol, modifiers):
 
 @env.unwrapped.window.event
 def on_draw():
-    env.render('pyglet')
+    env.render('pyglet', view=view_mode)
 
 @env.unwrapped.window.event
 def on_close():

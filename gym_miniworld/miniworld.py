@@ -727,8 +727,6 @@ class MiniWorldEnv(gym.Env):
         Create a rectangular room
         """
 
-        assert len(self.wall_segs) == 0, "cannot add rooms after static data is generated"
-
         # 2D outline coordinates of the room,
         # listed in counter-clockwise order when viewed from the top
         outline = np.array([
@@ -742,10 +740,16 @@ class MiniWorldEnv(gym.Env):
             [min_x, max_z],
         ])
 
-        room = Room(
-            outline,
-            **kwargs,
-        )
+        return self.add_room(outline=outline, **kwargs)
+
+    def add_room(self, **kwargs):
+        """
+        Create a new room
+        """
+
+        assert len(self.wall_segs) == 0, "cannot add rooms after static data is generated"
+
+        room = Room(**kwargs)
         self.rooms.append(room)
 
         return room
@@ -771,14 +775,14 @@ class MiniWorldEnv(gym.Env):
                 for idx_b in range(room_b.num_walls):
                     norm_b = room_b.edge_norms[idx_b]
 
-                    # Reject edges that are not facing the correct way
+                    # Reject edges that are not facing each other
                     if np.dot(norm_a, norm_b) > -0.9:
                         continue
 
                     dir = room_b.outline[idx_b] - room_a.outline[idx_a]
 
-                    # Reject edges that are not facing each other
-                    if np.dot(norm_a, dir) > 0:
+                    # Reject edges that are not touching
+                    if np.dot(norm_a, dir) > 0.05:
                         continue
 
                     return idx_a, idx_b
@@ -1310,7 +1314,7 @@ class MiniWorldEnv(gym.Env):
 
         return vis_objs
 
-    def render(self, mode='human', close=False):
+    def render(self, mode='human', close=False, view='agent'):
         """
         Render the environment for human viewing
         """
@@ -1321,8 +1325,11 @@ class MiniWorldEnv(gym.Env):
             return
 
         # Render the human-view image
-        img = self.render_obs(self.vis_fb)
-        #img = self.render_top_view(self.vis_fb)
+        assert view in ['agent', 'top']
+        if view == 'agent':
+            img = self.render_obs(self.vis_fb)
+        else:
+            img = self.render_top_view(self.vis_fb)
         img_width = img.shape[1]
         img_height = img.shape[0]
 
@@ -1365,12 +1372,12 @@ class MiniWorldEnv(gym.Env):
         glOrtho(0, window_width, 0, window_height, 0, 10)
 
         # Draw the human render to the rendering window
-        img = np.ascontiguousarray(np.flip(img, axis=0))
+        img_flip = np.ascontiguousarray(np.flip(img, axis=0))
         img_data = pyglet.image.ImageData(
             img_width,
             img_height,
             'RGB',
-            img.ctypes.data_as(POINTER(GLubyte)),
+            img_flip.ctypes.data_as(POINTER(GLubyte)),
             pitch=img_width * 3,
         )
         img_data.blit(
@@ -1415,4 +1422,4 @@ class MiniWorldEnv(gym.Env):
             self.window.flip()
             self.window.dispatch_events()
 
-        return None
+        return img
