@@ -118,4 +118,5 @@ python3 enjoy.py --env-name MiniWorld-Hallway-v0 --load-dir trained_models/ppo
 You can run `gym-miniword` offscreen by setting the environment variable `PYOPENGL_PLATFORM` to `egl`.
 
 ```
-PYOPENGL_PLATFORM=egl python3 --env-name MiniWorld-Hallway-v0 ...```
+PYOPENGL_PLATFORM=egl python3 --env-name MiniWorld-Hallway-v0 ...
+```
