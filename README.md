@@ -81,7 +81,7 @@ cd gym-miniworld
 pip3 install -e .
 ```
 
-If you run into any problems, please take a look at the [troubleshooting guide](docs/troubleshooting.md), and if you' re still stuck, please
+If you run into any problems, please take a look at the [troubleshooting guide](docs/troubleshooting.md), and if you're still stuck, please
 [open an issue](https://github.com/maximecb/gym-miniworld/issues) on this
 repository to let us know something is wrong.
 
