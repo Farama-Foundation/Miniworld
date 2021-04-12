@@ -2,6 +2,12 @@ import math
 import os
 import numpy as np
 import pyglet
+
+# Solution to https://github.com/maximecb/gym-miniworld/issues/24
+# until pyglet support egl officially
+if os.environ.get('PYOPENGL_PLATFORM', None) == 'egl':
+    pyglet.options['headless'] = True
+
 from pyglet.gl import *
 from ctypes import byref, POINTER
 from .utils import *

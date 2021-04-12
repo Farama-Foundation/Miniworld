@@ -49,6 +49,11 @@ cd pytorch-a2c-ppo-acktr
 xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python3 main.py --algo ppo --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
 ```
 
+alternatively you can set the environment variable `PYOPENGL_PLATFORM` to `egl` (requires `pyglet==1.5.11`) to force `gym-miniworld` to render offscreen:
+```
+PYOPENGL_PLATFORM=egl python3 main.py --algo ppo --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
+```
+
 ## Poor performance, low frame rate
 
 It's possible to improve the performance of the simulator by disabling Pyglet error-checking code. Export this environment variable before running the simulator:

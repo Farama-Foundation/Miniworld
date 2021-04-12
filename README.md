@@ -113,3 +113,9 @@ Then, to visualize the results of training, you can run the following command. N
 ```
 python3 enjoy.py --env-name MiniWorld-Hallway-v0 --load-dir trained_models/ppo
 ```
+
+### Offscreen Rendering
+You can run `gym-miniword` offscreen by setting the environment variable `PYOPENGL_PLATFORM` to `egl`.
+
+```
+PYOPENGL_PLATFORM=egl python3 --env-name MiniWorld-Hallway-v0 ...```
