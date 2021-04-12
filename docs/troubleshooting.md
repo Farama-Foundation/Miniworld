@@ -26,6 +26,7 @@ xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" ./run
 
 Depending on which system you are running this command, you may need to install xvfb and mesa packages.
 
+
 ## Running headless and training on AWS
 
 We recommend using the Ubuntu-based [Deep Learning AMI](https://aws.amazon.com/marketplace/pp/B077GCH38C) to provision your server which comes with all the deep learning libraries. To begin with, you will want to install xvfb and mesa. You may also need to uninstall the Nvidia display drivers in order for OpenGL/GLX to work properly:
@@ -47,6 +48,11 @@ Once this is done, you should be able to run training code through `xvfb-run`, f
 ```
 cd pytorch-a2c-ppo-acktr
 xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python3 main.py --algo ppo --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
+```
+
+alternatively you can set the environment variable `PYOPENGL_PLATFORM` to `egl` (requires `pyglet==1.5.11`) to force `gym-miniworld` to render offscreen:
+```
+PYOPENGL_PLATFORM=egl python3 main.py --algo ppo --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
 ```
 
 ## Poor performance, low frame rate
