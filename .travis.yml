@@ -15,7 +15,7 @@ script:
     - python3 -m flake8 . --count --show-source --statistics --select=E901,E999,F821,F822,F823
 
     # Test the simulator
-    - PYOPENGL_PLATFORM=egl python run_tests.py
+    - xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" ./run_tests.py
 
     # Test RL code quickly
-    - PYOPENGL_PLATFORM=egl cd pytorch-a2c-ppo-acktr && time python3 main.py --no-cuda --algo a2c --log-interval 1 --num-frames 200 --num-processes 1 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
+    - cd pytorch-a2c-ppo-acktr && xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" time python3 main.py --no-cuda --algo a2c --log-interval 1 --num-frames 200 --num-processes 1 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
