@@ -26,7 +26,6 @@ xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" ./run
 
 Depending on which system you are running this command, you may need to install xvfb and mesa packages.
 
-
 ## Running headless and training on AWS
 
 We recommend using the Ubuntu-based [Deep Learning AMI](https://aws.amazon.com/marketplace/pp/B077GCH38C) to provision your server which comes with all the deep learning libraries. To begin with, you will want to install xvfb and mesa. You may also need to uninstall the Nvidia display drivers in order for OpenGL/GLX to work properly:
