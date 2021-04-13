@@ -270,7 +270,7 @@ class TextFrame(Entity):
                 if ch == ' ':
                     self.texs.append(None)
                 else:
-                    tex_name = 'chars/ch_' + f'0x{ord(ch)}'
+                    tex_name = f'chars/ch_0x{ord(ch)}'
                     self.texs.append(Texture.get(tex_name, rng))
             except:
                 raise 'only alphanumerical characters supported in TextFrame'
