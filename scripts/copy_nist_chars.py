@@ -43,6 +43,6 @@ for class_name in class_to_char:
     png_paths = get_png_paths(dir_path, args.chars_per_class)
 
     for idx, png_path in enumerate(png_paths):
-        dst_path = os.path.join(args.out_path, 'ch_{}_{}.png'.format(ch, idx+1))
+        dst_path = os.path.join(args.out_path, 'ch_0x{}_{}.png'.format(ord(ch), idx+1))
         print(dst_path)
         copyfile(png_path, dst_path)
