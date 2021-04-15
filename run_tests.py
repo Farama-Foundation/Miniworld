@@ -2,9 +2,11 @@
 
 import os
 import numpy as np
+import math
 import gym
 import gym_miniworld
 from gym_miniworld.wrappers import PyTorchObsWrapper, GreyscaleWrapper
+from gym_miniworld.entity import TextFrame
 
 env = gym.make('MiniWorld-Hallway-v0')
 
@@ -31,6 +33,18 @@ first_obs = env.reset()
 second_obs, _, _, _ = env.step(0)
 assert first_obs.shape == env.observation_space.shape
 assert first_obs.shape == second_obs.shape
+
+# Test TextFrame
+# make sure it loads the TextFrame with no issues
+class TestText(gym_miniworld.envs.threerooms.ThreeRooms):
+     def _gen_world(self):
+         super()._gen_world()
+         self.entities.append(TextFrame(
+            pos=[0, 1.35, 7],
+            dir=math.pi/2,
+            str='this is a test'
+        ))
+env = TestText()
 
 # Basic collision detection test
 # Make sure the agent can never get outside of the room
