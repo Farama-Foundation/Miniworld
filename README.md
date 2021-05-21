@@ -15,8 +15,8 @@ Contents:
 MiniWorld is a minimalistic 3D interior environment simulator for reinforcement
 learning &amp; robotics research. It can be used to simulate environments with
 rooms, doors, hallways and various objects (eg: office and home environments, mazes).
-MiniWorld can be seen as an alternative to VizDoom or DMLab. It is written
-100% in Python and designed to be easily modified or extended.
+MiniWorld can be seen as a simpler alternative to VizDoom or DMLab. It is written
+100% in Python and designed to be easily modified or extended by students.
 
 <p align="center">
 <img src="images/maze_top_view.jpg" width=260></img>
@@ -54,9 +54,9 @@ Please use this bibtex if you want to cite this repository in your publications:
 ```
 
 List of publications & submissions using MiniWorld (please open a pull request to add missing entries):
+- [Decoupling Exploration and Exploitation for Meta-Reinforcement Learning without Sacrifices](https://arxiv.org/abs/2008.02790) (Stanford University, ICML 2021)
 - [Rank the Episodes: A Simple Approach for Exploration in Procedurally-Generated Environments](https://openreview.net/forum?id=MtEE0CktZht) (Texas A&M University, Kuai Inc., ICLR 2021)
 - [DeepAveragers: Offline Reinforcement Learning by Solving Derived Non-Parametric MDPs](https://arxiv.org/abs/2010.08891) (NeurIPS Offline RL Workshop, Oct 2020)
-- [Decoupling Exploration and Exploitation for Meta-Reinforcement Learning without Sacrifices](https://arxiv.org/abs/2008.02790) (Stanford University, ICML 2021)
 - [Pre-trained Word Embeddings for Goal-conditional Transfer Learning in Reinforcement Learning](https://arxiv.org/abs/2007.05196) (University of Antwerp, Jul 2020, ICML 2020 LaReL Workshop)
 - [Temporal Abstraction with Interest Functions](https://arxiv.org/abs/2001.00271) (Mila, Feb 2020, AAAI 2020)
 - [Avoidance Learning Using Observational Reinforcement Learning](https://arxiv.org/abs/1909.11228) (Mila, McGill, Sept 2019)
@@ -115,8 +115,9 @@ python3 enjoy.py --env-name MiniWorld-Hallway-v0 --load-dir trained_models/ppo
 ```
 
 ### Offscreen Rendering
-You can run `gym-miniword` offscreen by setting the environment variable `PYOPENGL_PLATFORM` to `egl`.
+
+You can run `gym-miniword` offscreen by setting the environment variable `PYOPENGL_PLATFORM` to `egl` before running MiniWorld, e.g.
 
 ```
-PYOPENGL_PLATFORM=egl python3 --env-name MiniWorld-Hallway-v0 ...
+PYOPENGL_PLATFORM=egl python3 main.py --algo ppo --num-frames 5000000 --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
 ```
