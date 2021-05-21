@@ -59,6 +59,7 @@ List of publications & submissions using MiniWorld (please open a pull request t
 - [DeepAveragers: Offline Reinforcement Learning by Solving Derived Non-Parametric MDPs](https://arxiv.org/abs/2010.08891) (NeurIPS Offline RL Workshop, Oct 2020)
 - [Pre-trained Word Embeddings for Goal-conditional Transfer Learning in Reinforcement Learning](https://arxiv.org/abs/2007.05196) (University of Antwerp, Jul 2020, ICML 2020 LaReL Workshop)
 - [Temporal Abstraction with Interest Functions](https://arxiv.org/abs/2001.00271) (Mila, Feb 2020, AAAI 2020)
+- [Addressing Sample Complexity in Visual Tasks Using Hindsight Experience Replay and Hallucinatory GANs](https://openreview.net/forum?id=H1xSXdV0i4) (Offworld Inc, Georgia Tech, UC Berkeley, ICML 2019 Workshop RL4RealLife)
 - [Avoidance Learning Using Observational Reinforcement Learning](https://arxiv.org/abs/1909.11228) (Mila, McGill, Sept 2019)
 - [Visual Hindsight Experience Replay](https://arxiv.org/pdf/1901.11529.pdf) (Georgia Tech, UC Berkeley, Jan 2019)
 
