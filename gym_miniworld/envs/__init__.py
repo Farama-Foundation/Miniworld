@@ -17,6 +17,7 @@ from .putnext import *
 from .collecthealth import *
 from .simtorealgoto import *
 from .simtorealpush import *
+from .sign import *
 
 # Registered environment ids
 env_ids = []
