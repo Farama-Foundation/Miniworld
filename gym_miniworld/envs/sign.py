@@ -35,6 +35,9 @@ class Sign(MiniWorldEnv):
   goal yields +1 reward.
   Touching any other object yields -1 reward.
 
+  The sign and goal can be configured via the color_index and goal arguments to
+  the constructor respectively.
+
   Includes an action to end the episode.
   """
 
