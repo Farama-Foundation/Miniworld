@@ -144,6 +144,42 @@ Registered configurations:
 There are multiple colored boxes of random sizes in one large room. In order
 to get a reward, the agent must put the red box next to the yellow box.
 
+# Sign
+
+Registered configurations:
+- `MiniWorld-Sign-v0`
+
+<p align="center">
+<img src="/images/sign.jpg" width=300></img>
+</p>
+
+There are 6 objects of color (red, green blue) and shape (key, box) in a
+U-shaped maze. The agent starts on one side of the barrier in the U-shaped
+maze, and on the other side of the barrier is a sign that says "blue,"
+"green," or "red." Additionally, the state includes a goal that specifies
+either key or box. In order to get reward, the agent must read the sign and go
+to the object with shape specified by the goal and color specified by the
+sign. Going to any other object yields -1 reward.
+
+Note that the state structure differs from the standard MiniWorld state. In
+particular, the state is a dict where `state["obs"]` is the standard
+observation, and `state["goal"]` is an additional int specifying key or box.
+
+This environment is from the paper [Decoupling Exploration and Exploitation
+for Meta-Reinforcement Learning without Sacrifices](https://arxiv.org/abs/2008.02790).
+If you use this environment, please cite this paper:
+
+```
+@inproceedings{liu2021decoupling,
+  title={Decoupling Exploration and Exploitation for Meta-Reinforcement Learning without Sacrifices},
+  author={Liu, Evan Z and Raghunathan, Aditi and Liang, Percy and Finn, Chelsea},
+  booktitle={International Conference on Machine Learning},
+  pages={6925--6935},
+  year={2021},
+  organization={PMLR}
+}
+```
+
 # RemoteBot
 
 Registered configurations:
