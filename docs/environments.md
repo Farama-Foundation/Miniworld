@@ -156,10 +156,11 @@ Registered configurations:
 There are 6 objects of color (red, green blue) and shape (key, box) in a
 U-shaped maze. The agent starts on one side of the barrier in the U-shaped
 maze, and on the other side of the barrier is a sign that says "blue,"
-"green," or "red." Additionally, the state includes a goal that specifies
-either key or box. In order to get reward, the agent must read the sign and go
-to the object with shape specified by the goal and color specified by the
-sign. Going to any other object yields -1 reward.
+"green," or "red." The sign is highlighted above in yellow. Additionally, the
+state includes a goal that specifies either key or box. In order to get
+reward, the agent must read the sign and go to the object with shape specified
+by the goal and color specified by the sign. Going to any other object yields
+-1 reward.
 
 Note that the state structure differs from the standard MiniWorld state. In
 particular, the state is a dict where `state["obs"]` is the standard
