@@ -1,3 +1,4 @@
+import multiprocessing
 import os
 import math
 import numpy as np
@@ -26,7 +27,8 @@ class ObjMesh:
             return self.cache[file_path]
 
         mesh = ObjMesh(file_path)
-        self.cache[file_path] = mesh
+        with multiprocessing.Lock():
+            self.cache[file_path] = mesh
 
         return mesh
 
