@@ -45,7 +45,7 @@ Please use this bibtex if you want to cite this repository in your publications:
 ```
 @misc{gym_miniworld,
   author = {Chevalier-Boisvert, Maxime},
-  title = {MiniWorld: Simple 3D Environment for RL & Robotics Research},
+  title = {MiniWorld: Minimalistic 3D Environment for RL & Robotics Research},
   year = {2018},
   publisher = {GitHub},
   journal = {GitHub repository},
