@@ -115,10 +115,17 @@ Then, to visualize the results of training, you can run the following command. N
 python3 enjoy.py --env-name MiniWorld-Hallway-v0 --load-dir trained_models/ppo
 ```
 
-### Offscreen Rendering
+### Offscreen Rendering (Clusters and Colab)
 
-You can run `gym-miniword` offscreen by setting the environment variable `PYOPENGL_PLATFORM` to `egl` before running MiniWorld, e.g.
+When running MiniWorld on a cluster or in a Colab environment, you need to render to an offscreen display. You can
+run `gym-miniword` offscreen by setting the environment variable `PYOPENGL_PLATFORM` to `egl` before running MiniWorld, e.g.
 
 ```
 PYOPENGL_PLATFORM=egl python3 main.py --algo ppo --num-frames 5000000 --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
+```
+
+Alternatively, if this doesn't work, you can also try running MiniWorld with `xvfb`, e.g.
+
+```
+xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python3 your_script.py
 ```
