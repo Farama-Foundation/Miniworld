@@ -46,12 +46,12 @@ Once this is done, you should be able to run training code through `xvfb-run`, f
 
 ```
 cd pytorch-a2c-ppo-acktr
-xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python3 main.py --algo ppo --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
+xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" your_script.py
 ```
 
 alternatively you can set the environment variable `PYOPENGL_PLATFORM` to `egl` (requires `pyglet==1.5.11`) to force `gym-miniworld` to render offscreen:
 ```
-PYOPENGL_PLATFORM=egl python3 main.py --algo ppo --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
+PYOPENGL_PLATFORM=egl your_script.py
 ```
 
 ## Poor performance, low frame rate
