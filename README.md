@@ -82,13 +82,9 @@ cd gym-miniworld
 pip3 install -e .
 ```
 
-If you run into any problems, please take a look at the [troubleshooting guide](docs/troubleshooting.md), and if you're still stuck, please
-[open an issue](https://github.com/maximecb/gym-miniworld/issues) on this
-repository to let us know something is wrong.
+If you run into any problems, please take a look at the [troubleshooting guide](docs/troubleshooting.md).
 
 ## Usage
-
-### Testing
 
 There is a simple UI application which allows you to control the simulation or real robot manually. The `manual_control.py` application will launch the Gym environment, display camera images and send actions (keyboard commands) back to the simulator or robot. The `--env-name` argument specifies which environment to load. See the list of [available environments](docs/environments.md) for more information.
 
@@ -101,27 +97,13 @@ There is a simple UI application which allows you to control the simulation or r
 
 There is also a script to run automated tests (`run_tests.py`) and a script to gather performance metrics (`benchmark.py`).
 
-### Reinforcement Learning
-
-To train a reinforcement learning agent, you can use the code provided in the [/pytorch-a2c-ppo-acktr](/pytorch-a2c-ppo-acktr) directory. This code is a modified version of the RL code found in [this repository](https://github.com/ikostrikov/pytorch-a2c-ppo-acktr). I recommend using the PPO algorithm and 16 processes or more. A sample command to launch training is:
-
-```
-python3 main.py --algo ppo --num-frames 5000000 --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
-```
-
-Then, to visualize the results of training, you can run the following command. Note that you can do this while the training process is still running. Also note that if you are running this through SSH, you will need to enable X forwarding to get a display:
-
-```
-python3 enjoy.py --env-name MiniWorld-Hallway-v0 --load-dir trained_models/ppo
-```
-
 ### Offscreen Rendering (Clusters and Colab)
 
 When running MiniWorld on a cluster or in a Colab environment, you need to render to an offscreen display. You can
 run `gym-miniword` offscreen by setting the environment variable `PYOPENGL_PLATFORM` to `egl` before running MiniWorld, e.g.
 
 ```
-PYOPENGL_PLATFORM=egl python3 main.py --algo ppo --num-frames 5000000 --num-processes 16 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0
+PYOPENGL_PLATFORM=egl python3 your_script.py
 ```
 
 Alternatively, if this doesn't work, you can also try running MiniWorld with `xvfb`, e.g.
