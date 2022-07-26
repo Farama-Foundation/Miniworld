@@ -27,7 +27,7 @@ setup(
         'pyglet>=1.5.11',
     ],
     # Include textures and meshes in the package
-    include_package_data=True
+    include_package_data=True,
     classifiers=[
     "Development Status :: 5 - Production/Stable",
     "Programming Language :: Python :: 3",
