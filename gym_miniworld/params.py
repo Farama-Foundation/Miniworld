@@ -1,11 +1,12 @@
-import math
-import numpy as np
 from collections import namedtuple
 from copy import deepcopy
 
+import numpy as np
+
 # Simulation parameter, with domain randomization range
 # The default value is used when domain randomization is disabled
-DomainParam = namedtuple('Domainparam', ['default', 'min', 'max', 'type'])
+DomainParam = namedtuple("Domainparam", ["default", "min", "max", "type"])
+
 
 class DomainParams:
     """
@@ -33,7 +34,7 @@ class DomainParams:
 
         return copy
 
-    def set(self, name, default, min=None, max=None, type='float'):
+    def set(self, name, default, min=None, max=None, type="float"):
         """
         Register/modify a named parameter
         """
@@ -56,10 +57,10 @@ class DomainParams:
             assert np.all(np.greater_equal(max, default))
             assert np.all(np.greater_equal(default, min))
 
-            if type == 'float':
-                default = default.astype('float')
-                min = min.astype('float')
-                max = max.astype('float')
+            if type == "float":
+                default = default.astype("float")
+                min = min.astype("float")
+                max = max.astype("float")
         else:
             assert max >= default
             assert default >= min
@@ -91,10 +92,10 @@ class DomainParams:
         if rng is None:
             return p.default
 
-        if p.type == 'float':
+        if p.type == "float":
             return rng.float(p.min, p.max)
-        elif p.type == 'int':
-            return rng.int(p.min, p.max+1)
+        elif p.type == "int":
+            return rng.int(p.min, p.max + 1)
 
         assert False
 
@@ -106,18 +107,21 @@ class DomainParams:
         for name in param_names:
             setattr(target_obj, name, self.sample(rng, name))
 
+
 # Default simulation parameters
 DEFAULT_PARAMS = DomainParams()
-DEFAULT_PARAMS.set('sky_color', [0.25, 0.82, 1], [0.1, 0.1, 0.1], [1.0, 1.0, 1.0])
-DEFAULT_PARAMS.set('light_pos', [0, 2.5, 0], [-40, 2.5, -40], [40, 5, 40])
-DEFAULT_PARAMS.set('light_color', [0.7, 0.7, 0.7], [0.45, 0.45, 0.45], [0.8, 0.8, 0.8])
-DEFAULT_PARAMS.set('light_ambient', [0.45, 0.45, 0.45], [0.35, 0.35, 0.35], [0.55, 0.55, 0.55])
-DEFAULT_PARAMS.set('obj_color_bias', [0,0,0], [-0.2,-0.2,-0.2], [0.2,0.2,0.2])
-DEFAULT_PARAMS.set('forward_step', 0.15, 0.12, 0.17)
-DEFAULT_PARAMS.set('forward_drift', 0, -0.05, 0.05)
-DEFAULT_PARAMS.set('turn_step', 15, 10, 20)
-DEFAULT_PARAMS.set('bot_radius', 0.4, 0.38, 0.42)
-DEFAULT_PARAMS.set('cam_pitch', 0, -5, 5)
-DEFAULT_PARAMS.set('cam_fov_y', 60, 55, 65)
-DEFAULT_PARAMS.set('cam_height', 1.5, 1.45, 1.55)
-DEFAULT_PARAMS.set('cam_fwd_disp', 0, -0.05, 0.10)
+DEFAULT_PARAMS.set("sky_color", [0.25, 0.82, 1], [0.1, 0.1, 0.1], [1.0, 1.0, 1.0])
+DEFAULT_PARAMS.set("light_pos", [0, 2.5, 0], [-40, 2.5, -40], [40, 5, 40])
+DEFAULT_PARAMS.set("light_color", [0.7, 0.7, 0.7], [0.45, 0.45, 0.45], [0.8, 0.8, 0.8])
+DEFAULT_PARAMS.set(
+    "light_ambient", [0.45, 0.45, 0.45], [0.35, 0.35, 0.35], [0.55, 0.55, 0.55]
+)
+DEFAULT_PARAMS.set("obj_color_bias", [0, 0, 0], [-0.2, -0.2, -0.2], [0.2, 0.2, 0.2])
+DEFAULT_PARAMS.set("forward_step", 0.15, 0.12, 0.17)
+DEFAULT_PARAMS.set("forward_drift", 0, -0.05, 0.05)
+DEFAULT_PARAMS.set("turn_step", 15, 10, 20)
+DEFAULT_PARAMS.set("bot_radius", 0.4, 0.38, 0.42)
+DEFAULT_PARAMS.set("cam_pitch", 0, -5, 5)
+DEFAULT_PARAMS.set("cam_fov_y", 60, 55, 65)
+DEFAULT_PARAMS.set("cam_height", 1.5, 1.45, 1.55)
+DEFAULT_PARAMS.set("cam_fwd_disp", 0, -0.05, 0.10)

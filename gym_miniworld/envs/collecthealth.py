@@ -1,11 +1,10 @@
-import numpy as np
-import math
-from ..miniworld import MiniWorldEnv, Room
-from ..entity import MeshEnt
+from gym_miniworld.entity import MeshEnt
+from gym_miniworld.miniworld import MiniWorldEnv
+
 
 class CollectHealth(MiniWorldEnv):
     """
-    Environment where the agent has to collect healthkits and stay
+    Environment where the agent has to collect health kits and stay
     alive as long as possible. This is inspired from the VizDoom
     HealthGathering environment. Please note, however, that the rewards
     produced by this environment are not directly comparable to those
@@ -20,28 +19,23 @@ class CollectHealth(MiniWorldEnv):
         assert size >= 2
         self.size = size
 
-        super().__init__(
-            max_episode_steps=1000,
-            **kwargs
-        )
+        super().__init__(max_episode_steps=1000, **kwargs)
 
     def _gen_world(self):
         # Create a long rectangular room
-        room = self.add_rect_room(
+        self.add_rect_room(
             min_x=0,
             max_x=self.size,
             min_z=0,
             max_z=self.size,
-            wall_tex='cinder_blocks',
-            floor_tex='slime'
+            wall_tex="cinder_blocks",
+            floor_tex="slime",
         )
 
         for _ in range(18):
-            self.box = self.place_entity(MeshEnt(
-                mesh_name='medkit',
-                height=0.40,
-                static=False
-            ))
+            self.box = self.place_entity(
+                MeshEnt(mesh_name="medkit", height=0.40, static=False)
+            )
 
         # Place the agent a random distance away from the goal
         self.place_agent()
@@ -71,6 +65,6 @@ class CollectHealth(MiniWorldEnv):
             done = True
 
         # Pass current health value in info dict
-        info['health'] = self.health
+        info["health"] = self.health
 
         return obs, reward, done, info

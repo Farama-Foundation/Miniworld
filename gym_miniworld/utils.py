@@ -1,5 +1,6 @@
 import os
 
+
 def get_subdir_path(sub_dir):
     # Get the directory this module is located in
     abs_path_module = os.path.realpath(__file__)
@@ -8,6 +9,7 @@ def get_subdir_path(sub_dir):
     dir_path = os.path.join(module_dir, sub_dir)
 
     return dir_path
+
 
 def get_file_path(sub_dir, file_name, default_ext):
     """
@@ -19,8 +21,8 @@ def get_file_path(sub_dir, file_name, default_ext):
     what the current working directory is.
     """
 
-    assert '.' not in default_ext
-    assert '/' not in default_ext
+    assert "." not in default_ext
+    assert "/" not in default_ext
 
     # If this is already a real path
     if os.path.exists(file_name):
@@ -29,7 +31,7 @@ def get_file_path(sub_dir, file_name, default_ext):
     subdir_path = get_subdir_path(sub_dir)
     file_path = os.path.join(subdir_path, file_name)
 
-    if '.' not in file_name:
-        file_path += '.' + default_ext
+    if "." not in file_name:
+        file_path += "." + default_ext
 
     return file_path

@@ -1,5 +1,5 @@
-import numpy as np
 from gym.utils import seeding
+
 
 class RandGen:
     """
@@ -11,10 +11,10 @@ class RandGen:
 
     def int(self, low, high):
         """
-        Generate random integer in [low,high[
+        Generate random integer in [low,high]
         """
 
-        return self.np_random.randint(low, high)
+        return self.np_random.integers(low, high)
 
     def float(self, low, high, shape=None):
         """
@@ -28,7 +28,7 @@ class RandGen:
         Generate random boolean value
         """
 
-        return (self.np_random.randint(0, 2) == 0)
+        return self.np_random.integers(0, 2) == 0
 
     def choice(self, iterable, probs=None):
         """
@@ -44,7 +44,8 @@ class RandGen:
         Pick a random color name
         """
 
-        from .miniworld import COLOR_NAMES
+        from gym_miniworld.entity import COLOR_NAMES
+
         return self.choice(COLOR_NAMES)
 
     def subset(self, iterable, num_elems):

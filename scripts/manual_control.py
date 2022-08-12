@@ -5,21 +5,27 @@ This script allows you to manually control the simulator
 using the keyboard arrows.
 """
 
-import sys
 import argparse
-import pyglet
 import math
-from pyglet.window import key
-from pyglet import clock
-import numpy as np
+import sys
+
 import gym
-import gym_miniworld
+import pyglet
+from pyglet.window import key
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--env-name', default='MiniWorld-Hallway-v0')
-parser.add_argument('--domain-rand', action='store_true', help='enable domain randomization')
-parser.add_argument('--no-time-limit', action='store_true', help='ignore time step limits')
-parser.add_argument('--top_view', action='store_true', help='show the top view instead of the agent view')
+parser.add_argument("--env-name", default="MiniWorld-Hallway-v0")
+parser.add_argument(
+    "--domain-rand", action="store_true", help="enable domain randomization"
+)
+parser.add_argument(
+    "--no-time-limit", action="store_true", help="ignore time step limits"
+)
+parser.add_argument(
+    "--top_view",
+    action="store_true",
+    help="show the top view instead of the agent view",
+)
 args = parser.parse_args()
 
 env = gym.make(args.env_name)
@@ -29,26 +35,32 @@ if args.no_time_limit:
 if args.domain_rand:
     env.domain_rand = True
 
-view_mode = 'top' if args.top_view else 'agent'
+view_mode = "top" if args.top_view else "agent"
 
 env.reset()
 
 # Create the display window
-env.render('pyglet', view=view_mode)
+env.render("pyglet", view=view_mode)
+
 
 def step(action):
-    print('step {}/{}: {}'.format(env.step_count+1, env.max_episode_steps, env.actions(action).name))
+    print(
+        "step {}/{}: {}".format(
+            env.step_count + 1, env.max_episode_steps, env.actions(action).name
+        )
+    )
 
     obs, reward, done, info = env.step(action)
 
     if reward > 0:
-        print('reward={:.2f}'.format(reward))
+        print(f"reward={reward:.2f}")
 
     if done:
-        print('done!')
+        print("done!")
         env.reset()
 
-    env.render('pyglet', view=view_mode)
+    env.render("pyglet", view=view_mode)
+
 
 @env.unwrapped.window.event
 def on_key_press(symbol, modifiers):
@@ -58,9 +70,9 @@ def on_key_press(symbol, modifiers):
     """
 
     if symbol == key.BACKSPACE or symbol == key.SLASH:
-        print('RESET')
+        print("RESET")
         env.reset()
-        env.render('pyglet', view=view_mode)
+        env.render("pyglet", view=view_mode)
         return
 
     if symbol == key.ESCAPE:
@@ -85,17 +97,21 @@ def on_key_press(symbol, modifiers):
     elif symbol == key.ENTER:
         step(env.actions.done)
 
+
 @env.unwrapped.window.event
 def on_key_release(symbol, modifiers):
     pass
 
+
 @env.unwrapped.window.event
 def on_draw():
-    env.render('pyglet', view=view_mode)
+    env.render("pyglet", view=view_mode)
+
 
 @env.unwrapped.window.event
 def on_close():
     pyglet.app.exit()
+
 
 # Enter main event loop
 pyglet.app.run()
