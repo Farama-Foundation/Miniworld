@@ -33,9 +33,7 @@ class RoomObjs(MiniWorldEnv):
         self.agent.radius = 1.5
 
         self.place_entity(Box(color=self.rand.color(), size=0.9))
-
         self.place_entity(Ball(color=self.rand.color(), size=0.9))
-
         self.place_entity(Key(color=self.rand.color()))
 
         self.place_agent()

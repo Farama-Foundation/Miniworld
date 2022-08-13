@@ -111,6 +111,8 @@ class ObjMesh:
 
                 faces.append([face, cur_mtl])
 
+        mesh_file.close()
+
         # Sort the faces by material name
         faces.sort(key=lambda f: f[1])
 
