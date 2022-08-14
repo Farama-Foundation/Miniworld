@@ -20,6 +20,7 @@ setup(
     packages=["gym_miniworld", "gym_miniworld.envs"],
     long_description=long_description,
     python_requires=">=3.7, <3.11",
+    extras_require={"testing": ["pytest==7.0.1", "torch"]},
     long_description_content_type="text/markdown",
     install_requires=[
         "gym>=0.24.0",
