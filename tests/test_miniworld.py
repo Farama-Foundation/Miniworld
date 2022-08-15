@@ -3,6 +3,7 @@ import importlib
 
 import gym
 import pytest
+import warnings
 from gym.utils.env_checker import check_env
 
 import gym_miniworld
@@ -85,11 +86,13 @@ def test_all_envs(env_id):
         return
 
     env = gym.make(env_id)
+
     spec_entry_point = env.spec.entry_point
     mod_name, attr_name = spec_entry_point.split(":")
     mode = importlib.import_module(mod_name)
     attr = getattr(mode, attr_name)
     assert isinstance(attr(), MiniWorldEnv)
+    
     env.domain_rand = True
     # Try multiple random restarts
     for _ in range(15):
@@ -123,11 +126,11 @@ def test_env_checker(env_id):
         return
 
     env = gym.make(env_id).unwrapped
-
-    with pytest.warns() as warnings:
+    warnings.simplefilter("always")
+    with warnings.catch_warnings(record=True) as w:
         check_env(env)
 
-    for warning in warnings.list:
+    for warning in w:
         if warning.message.args[0] not in CHECK_ENV_IGNORE_WARNINGS:
             raise gym.error.Error(f"Unexpected warning: {warning.message}")
 
