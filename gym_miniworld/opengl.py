@@ -128,7 +128,9 @@ class Texture:
                     break
                 paths.append(path)
 
-        assert len(paths) > 0, 'failed to load textures for name "%s"' % tex_name
+        assert len(paths) > 0, ValueError(
+            'failed to load textures for name "%s"' % tex_name
+        )
 
         # If domain-randomization is to be used
         if rng:

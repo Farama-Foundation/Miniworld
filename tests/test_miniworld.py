@@ -1,9 +1,9 @@
-import math
 import importlib
+import math
+import warnings
 
 import gym
 import pytest
-import warnings
 from gym.utils.env_checker import check_env
 
 import gym_miniworld
@@ -92,7 +92,7 @@ def test_all_envs(env_id):
     mode = importlib.import_module(mod_name)
     attr = getattr(mode, attr_name)
     assert isinstance(attr(), MiniWorldEnv)
-    
+
     env.domain_rand = True
     # Try multiple random restarts
     for _ in range(15):

@@ -5,7 +5,7 @@ FROM python:$PYTHON_VERSION
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get -y update
-RUN apt-get install -y freeglut3-dev
+RUN apt-get install -y freeglut3-dev xvfb
 
 COPY . /usr/local/gym_miniworld/
 WORKDIR /usr/local/gym_miniworld/

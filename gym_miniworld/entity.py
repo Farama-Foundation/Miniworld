@@ -294,7 +294,9 @@ class TextFrame(Entity):
                     tex_name = f"chars/ch_0x{ord(ch)}"
                     self.texs.append(Texture.get(tex_name, rng))
             except Exception:
-                raise "only alphanumerical characters supported in TextFrame"
+                raise ValueError(
+                    "only alphanumerical characters supported in TextFrame"
+                )
 
     def render(self):
         """
