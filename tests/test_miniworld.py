@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
-
 import math
+import importlib
 
 import gym
 import pytest
@@ -86,7 +85,11 @@ def test_all_envs(env_id):
         return
 
     env = gym.make(env_id)
-    assert isinstance(env, MiniWorldEnv)
+    spec_entry_point = env.spec.entry_point
+    mod_name, attr_name = spec_entry_point.split(":")
+    mode = importlib.import_module(mod_name)
+    attr = getattr(mode, attr_name)
+    assert isinstance(attr(), MiniWorldEnv)
     env.domain_rand = True
     # Try multiple random restarts
     for _ in range(15):
