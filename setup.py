@@ -18,6 +18,15 @@ setup(
     version="2020.1.9",
     keywords="environment, agent, rl, gym, robotics, 3d",
     packages=["gym_miniworld", "gym_miniworld.envs"],
+    package_data={
+        "gym_miniworld": [
+            "textures/*.png",
+            "textures/chars/*.png",
+            "textures/portraits/*.png",
+            "meshes/*.mtl",
+            "meshes/*.obj",
+        ]
+    },
     long_description=long_description,
     python_requires=">=3.7, <3.11",
     extras_require={"testing": ["pytest==7.0.1", "torch"]},
