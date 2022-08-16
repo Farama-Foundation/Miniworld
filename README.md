@@ -19,9 +19,9 @@ MiniWorld can be seen as a simpler alternative to VizDoom or DMLab. It is writte
 100% in Python and designed to be easily modified or extended by students.
 
 <p align="center">
-<img src="images/maze_top_view.jpg" width=260></img>
-<img src="images/sidewalk_0.jpg" width=260></img>
-<img src="images/collecthealth_0.jpg" width=260></img>
+    <img src="images/maze_top_view.jpg" width=260 alt="Figure of Maze environment from top view">
+    <img src="images/sidewalk_0.jpg" width=260 alt="Figure of Sidewalk environment">
+    <img src="images/collecthealth_0.jpg" width=260 alt="Figure of Collect Health environment">
 </p>
 
 Features:
@@ -86,7 +86,10 @@ If you run into any problems, please take a look at the [troubleshooting guide](
 
 ## Usage
 
-There is a simple UI application which allows you to control the simulation or real robot manually. The `manual_control.py` application will launch the Gym environment, display camera images and send actions (keyboard commands) back to the simulator or robot. The `--env-name` argument specifies which environment to load. See the list of [available environments](docs/environments.md) for more information.
+There is a simple UI application which allows you to control the simulation or real robot manually. 
+The `manual_control.py` application will launch the Gym environment, display camera images and send actions 
+(keyboard commands) back to the simulator or robot. The `--env-name` argument specifies which environment to load. 
+See the list of [available environments](docs/environments.md) for more information.
 
 ```
 ./manual_control.py --env-name MiniWorld-Hallway-v0

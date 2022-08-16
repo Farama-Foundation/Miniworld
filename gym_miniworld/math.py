@@ -1,10 +1,12 @@
 import math
+
 import numpy as np
 
 # X, Y, Z-axis vectors
 X_VEC = np.array([1, 0, 0])
 Y_VEC = np.array([0, 1, 0])
 Z_VEC = np.array([0, 0, 1])
+
 
 def gen_rot_matrix(axis, angle):
     """
@@ -16,11 +18,14 @@ def gen_rot_matrix(axis, angle):
     a = math.cos(angle / 2.0)
     b, c, d = -axis * math.sin(angle / 2.0)
 
-    return np.array([
-        [a*a+b*b-c*c-d*d, 2*(b*c-a*d), 2*(b*d+a*c)],
-        [2*(b*c+a*d), a*a+c*c-b*b-d*d, 2*(c*d-a*b)],
-        [2*(b*d-a*c), 2*(c*d+a*b), a*a+d*d-b*b-c*c]
-    ])
+    return np.array(
+        [
+            [a * a + b * b - c * c - d * d, 2 * (b * c - a * d), 2 * (b * d + a * c)],
+            [2 * (b * c + a * d), a * a + c * c - b * b - d * d, 2 * (c * d - a * b)],
+            [2 * (b * d - a * c), 2 * (c * d + a * b), a * a + d * d - b * b - c * c],
+        ]
+    )
+
 
 def intersect_circle_segs(point, radius, segs):
     """

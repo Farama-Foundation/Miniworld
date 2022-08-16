@@ -1,13 +1,11 @@
-from functools import reduce
 import operator
+from functools import reduce
 
 import numpy as np
-
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
 from torch.autograd import Variable
+
 
 class Print(nn.Module):
     """
@@ -16,11 +14,12 @@ class Print(nn.Module):
     """
 
     def __init__(self):
-        super(Print, self).__init__()
+        super().__init__()
 
     def forward(self, x):
-        print('layer input:', x.shape)
+        print("layer input:", x.shape)
         return x
+
 
 class Flatten(nn.Module):
     """
@@ -29,6 +28,7 @@ class Flatten(nn.Module):
 
     def forward(self, input):
         return input.view(input.size(0), -1)
+
 
 class GradReverse(torch.autograd.Function):
     """
@@ -42,19 +42,21 @@ class GradReverse(torch.autograd.Function):
         return x.view_as(x)
 
     def backward(self, grad_output):
-        return (grad_output * -self.lambd)
+        return grad_output * -self.lambd
+
 
 def init_weights(m):
     classname = m.__class__.__name__
-    if classname.startswith('Conv'):
+    if classname.startswith("Conv"):
         nn.init.orthogonal_(m.weight.data)
         m.bias.data.fill_(0)
-    elif classname.find('Linear') != -1:
+    elif classname.find("Linear") != -1:
         nn.init.xavier_uniform_(m.weight)
         m.bias.data.fill_(0)
-    elif classname.find('BatchNorm') != -1:
+    elif classname.find("BatchNorm") != -1:
         m.weight.data.normal_(1.0, 0.02)
         m.bias.data.fill_(0)
+
 
 def print_model_info(model):
     modelSize = 0
@@ -62,7 +64,8 @@ def print_model_info(model):
         pSize = reduce(operator.mul, p.size(), 1)
         modelSize += pSize
     print(str(model))
-    print('Total model size: %d' % modelSize)
+    print("Total model size: %d" % modelSize)
+
 
 def make_var(arr):
     arr = np.ascontiguousarray(arr)
@@ -71,6 +74,7 @@ def make_var(arr):
     if torch.cuda.is_available():
         arr = arr.cuda()
     return arr
+
 
 def save_img(file_name, img):
     from skimage import io
@@ -90,12 +94,13 @@ def save_img(file_name, img):
 
     io.imsave(file_name, img)
 
+
 def load_img(file_name):
     from skimage import io
 
     # Drop the alpha channel
     img = io.imread(file_name)
-    #img = img[:,:,0:3] / 255
+    # img = img[:,:,0:3] / 255
 
     # Transpose the rows and columns
     img = img.transpose(2, 1, 0)
@@ -105,6 +110,7 @@ def load_img(file_name):
     var = var.unsqueeze(0)
 
     return var
+
 
 def gen_batch(gen_data_fn, batch_size=2):
     """

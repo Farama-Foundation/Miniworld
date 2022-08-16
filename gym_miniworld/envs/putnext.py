@@ -1,7 +1,6 @@
-import numpy as np
-import math
-from ..miniworld import MiniWorldEnv, Room, COLOR_NAMES
-from ..entity import Box
+from gym_miniworld.entity import COLOR_NAMES, Box
+from gym_miniworld.miniworld import MiniWorldEnv
+
 
 class PutNext(MiniWorldEnv):
     """
@@ -13,19 +12,11 @@ class PutNext(MiniWorldEnv):
         assert size >= 2
         self.size = size
 
-        super().__init__(
-            max_episode_steps=250,
-            **kwargs
-        )
+        super().__init__(max_episode_steps=250, **kwargs)
 
     def _gen_world(self):
         # Create a long rectangular room
-        room = self.add_rect_room(
-            min_x=0,
-            max_x=self.size,
-            min_z=0,
-            max_z=self.size
-        )
+        self.add_rect_room(min_x=0, max_x=self.size, min_z=0, max_z=self.size)
 
         for color in COLOR_NAMES:
             box = Box(color=color, size=self.rand.float(0.6, 0.85))

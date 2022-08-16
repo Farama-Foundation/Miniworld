@@ -1,38 +1,96 @@
 import math
+from ctypes import POINTER
 from enum import IntEnum
-import numpy as np
+from typing import Optional, Tuple, Union
+
 import gym
+import numpy as np
+import pyglet
 from gym import spaces
-from .random import *
-from .opengl import *
-from .objmesh import *
-from .entity import *
-from .math import *
-from .params import *
+from gym.core import ObsType
+from pyglet.gl import (
+    GL_AMBIENT,
+    GL_AMBIENT_AND_DIFFUSE,
+    GL_ANY_SAMPLES_PASSED,
+    GL_COLOR_BUFFER_BIT,
+    GL_COLOR_MATERIAL,
+    GL_COMPILE,
+    GL_CULL_FACE,
+    GL_DEPTH_BUFFER_BIT,
+    GL_DEPTH_TEST,
+    GL_DIFFUSE,
+    GL_FRAMEBUFFER,
+    GL_FRONT_AND_BACK,
+    GL_LIGHT0,
+    GL_LIGHTING,
+    GL_MODELVIEW,
+    GL_POLYGON,
+    GL_POSITION,
+    GL_PROJECTION,
+    GL_QUADS,
+    GL_QUERY_RESULT,
+    GL_SMOOTH,
+    GL_TEXTURE_2D,
+    GLfloat,
+    GLubyte,
+    GLuint,
+    glBegin,
+    glBeginQuery,
+    glBindFramebuffer,
+    glCallList,
+    glClear,
+    glClearColor,
+    glClearDepth,
+    glColor3f,
+    glColorMaterial,
+    glDeleteLists,
+    glDeleteQueries,
+    glDisable,
+    glEnable,
+    glEnd,
+    glEndList,
+    glEndQuery,
+    glFlush,
+    glGenQueries,
+    glGetQueryObjectuiv,
+    glLightfv,
+    glLoadIdentity,
+    glLoadMatrixf,
+    glMatrixMode,
+    glNewList,
+    glNormal3f,
+    glOrtho,
+    glShadeModel,
+    glTexCoord2f,
+    gluLookAt,
+    gluPerspective,
+    glVertex3f,
+)
+
+from gym_miniworld.entity import Agent, Entity
+from gym_miniworld.math import Y_VEC, intersect_circle_segs
+from gym_miniworld.opengl import FrameBuffer, Texture, drawBox
+from gym_miniworld.params import DEFAULT_PARAMS
+from gym_miniworld.random import RandGen
 
 # Default wall height for room
-DEFAULT_WALL_HEIGHT=2.74
+DEFAULT_WALL_HEIGHT = 2.74
 
 # Texture size/density in texels/meter
 TEX_DENSITY = 512
 
-def gen_texcs_wall(
-    tex,
-    min_x,
-    min_y,
-    width,
-    height
-):
+
+def gen_texcs_wall(tex, min_x, min_y, width, height):
     """
     Generate texture coordinates for a wall quad
     """
 
-    xc = (TEX_DENSITY / tex.width)
-    yc = (TEX_DENSITY / tex.height)
+    xc = TEX_DENSITY / tex.width
+    yc = TEX_DENSITY / tex.height
 
-    min_u = (min_x) * xc
+    min_u = min_x * xc
     max_u = (min_x + width) * xc
-    min_v = (min_y) * yc
+    min_v = min_y * yc
     max_v = (min_y + height) * yc
 
     return np.array(
@@ -42,13 +100,11 @@ def gen_texcs_wall(
             [max_u, max_v],
             [max_u, min_v],
         ],
-        dtype=np.float32
+        dtype=np.float32,
     )
 
-def gen_texcs_floor(
-    tex,
-    poss
-):
+
+def gen_texcs_floor(tex, poss):
     """
     Generate texture coordinates for the floor or ceiling
     This is done by mapping x,z positions directly to texture
@@ -56,16 +112,13 @@ def gen_texcs_floor(
     """
 
     texc_mul = np.array(
-        [
-            TEX_DENSITY / tex.width,
-            TEX_DENSITY / tex.height
-        ],
-        dtype=float
+        [TEX_DENSITY / tex.width, TEX_DENSITY / tex.height], dtype=float
     )
 
-    coords = np.stack([poss[:,0], poss[:,2]], axis=1) * texc_mul
+    coords = np.stack([poss[:, 0], poss[:, 2]], axis=1) * texc_mul
 
     return coords
+
 
 class Room:
     """
@@ -76,10 +129,10 @@ class Room:
         self,
         outline,
         wall_height=DEFAULT_WALL_HEIGHT,
-        floor_tex='floor_tiles_bw',
-        wall_tex='concrete',
-        ceil_tex='concrete_tiles',
-        no_ceiling=False
+        floor_tex="floor_tiles_bw",
+        wall_tex="concrete",
+        ceil_tex="concrete_tiles",
+        no_ceiling=False,
     ):
         # The outlien should have shape Nx2
         assert len(outline.shape) == 2
@@ -113,11 +166,15 @@ class Room:
         # Compute edge vectors (p1 - p0)
         # For the first point, p0 is the last
         # For the last point, p0 is p_n-1
-        next_pts = np.concatenate([self.outline[1:], np.expand_dims(self.outline[0], axis=0)], axis=0)
+        next_pts = np.concatenate(
+            [self.outline[1:], np.expand_dims(self.outline[0], axis=0)], axis=0
+        )
         self.edge_dirs = next_pts - self.outline
         self.edge_dirs = (self.edge_dirs.T / np.linalg.norm(self.edge_dirs, axis=1)).T
         self.edge_norms = -np.cross(self.edge_dirs, Y_VEC)
-        self.edge_norms = (self.edge_norms.T / np.linalg.norm(self.edge_norms, axis=1)).T
+        self.edge_norms = (
+            self.edge_norms.T / np.linalg.norm(self.edge_norms, axis=1)
+        ).T
 
         # Height of the room walls
         self.wall_height = wall_height
@@ -147,14 +204,13 @@ class Room:
         min_z=None,
         max_z=None,
         min_y=0,
-        max_y=None
-
+        max_y=None,
     ):
         """
         Create a new portal/opening in a wall of this room
         """
 
-        if max_y == None:
+        if max_y is None:
             max_y = self.wall_height
 
         assert edge <= self.num_walls
@@ -162,7 +218,7 @@ class Room:
 
         # Get the edge points, compute the direction vector
         e_p0 = self.outline[edge]
-        e_p1 = self.outline[(edge+1) % self.num_walls]
+        e_p1 = self.outline[(edge + 1) % self.num_walls]
         e_len = np.linalg.norm(e_p1 - e_p0)
         e_dir = (e_p1 - e_p0) / e_len
         x0, _, z0 = e_p0
@@ -170,9 +226,9 @@ class Room:
         dx, _, dz = e_dir
 
         # If the portal extents are specified by x coordinates
-        if min_x != None:
-            assert min_z == None and max_z == None
-            assert start_pos == None and end_pos == None
+        if min_x is not None:
+            assert min_z is None and max_z is None
+            assert start_pos is None and end_pos is None
             assert x0 != x1
 
             m0 = (min_x - x0) / dx
@@ -184,9 +240,9 @@ class Room:
             start_pos, end_pos = m0, m1
 
         # If the portal extents are specified by z coordinates
-        elif min_z != None:
-            assert min_x == None and max_x == None
-            assert start_pos == None and end_pos == None
+        elif min_z is not None:
+            assert min_x is None and max_x is None
+            assert start_pos is None and end_pos is None
             assert z0 != z1
 
             m0 = (min_z - z0) / dz
@@ -198,22 +254,19 @@ class Room:
             start_pos, end_pos = m0, m1
 
         else:
-            assert min_x == None and max_x == None
-            assert min_z == None and max_z == None
+            assert min_x is None and max_x is None
+            assert min_z is None and max_z is None
 
         assert end_pos > start_pos
         assert start_pos >= 0, "portal outside of wall extents"
         assert end_pos <= e_len, "portal outside of wall extents"
 
-        self.portals[edge].append({
-            'start_pos': start_pos,
-            'end_pos': end_pos,
-            'min_y': min_y,
-            'max_y': max_y
-        })
+        self.portals[edge].append(
+            {"start_pos": start_pos, "end_pos": end_pos, "min_y": min_y, "max_y": max_y}
+        )
 
         # Sort the portals by start position
-        self.portals[edge].sort(key=lambda e: e['start_pos'])
+        self.portals[edge].sort(key=lambda e: e["start_pos"])
 
         return start_pos, end_pos
 
@@ -246,32 +299,19 @@ class Room:
 
         # Generate the floor vertices
         self.floor_verts = self.outline
-        self.floor_texcs = gen_texcs_floor(
-            self.floor_tex,
-            self.floor_verts
-        )
+        self.floor_texcs = gen_texcs_floor(self.floor_tex, self.floor_verts)
 
         # Generate the ceiling vertices
         # Flip the ceiling vertex order because of backface culling
         self.ceil_verts = np.flip(self.outline, axis=0) + self.wall_height * Y_VEC
-        self.ceil_texcs = gen_texcs_floor(
-            self.ceil_tex,
-            self.ceil_verts
-        )
+        self.ceil_texcs = gen_texcs_floor(self.ceil_tex, self.ceil_verts)
 
         self.wall_verts = []
         self.wall_norms = []
         self.wall_texcs = []
         self.wall_segs = []
 
-        def gen_seg_poly(
-            edge_p0,
-            side_vec,
-            seg_start,
-            seg_end,
-            min_y,
-            max_y
-        ):
+        def gen_seg_poly(edge_p0, side_vec, seg_start, seg_end, min_y, max_y):
             if seg_end == seg_start:
                 return
 
@@ -300,78 +340,50 @@ class Room:
 
             # Generate the texture coordinates
             texcs = gen_texcs_wall(
-                self.wall_tex,
-                seg_start,
-                min_y,
-                seg_end - seg_start,
-                max_y - min_y
+                self.wall_tex, seg_start, min_y, seg_end - seg_start, max_y - min_y
             )
             self.wall_texcs.append(texcs)
 
         # For each wall
         for wall_idx in range(self.num_walls):
             edge_p0 = self.outline[wall_idx, :]
-            edge_p1 = self.outline[(wall_idx+1) % self.num_walls, :]
+            edge_p1 = self.outline[(wall_idx + 1) % self.num_walls, :]
             wall_width = np.linalg.norm(edge_p1 - edge_p0)
             side_vec = (edge_p1 - edge_p0) / wall_width
 
             if len(self.portals[wall_idx]) > 0:
-                seg_end = self.portals[wall_idx][0]['start_pos']
+                seg_end = self.portals[wall_idx][0]["start_pos"]
             else:
                 seg_end = wall_width
 
             # Generate the first polygon (going up to the first portal)
-            gen_seg_poly(
-                edge_p0,
-                side_vec,
-                0,
-                seg_end,
-                0,
-                self.wall_height
-            )
+            gen_seg_poly(edge_p0, side_vec, 0, seg_end, 0, self.wall_height)
 
             # For each portal in this wall
             for portal_idx, portal in enumerate(self.portals[wall_idx]):
                 portal = self.portals[wall_idx][portal_idx]
-                start_pos = portal['start_pos']
-                end_pos = portal['end_pos']
-                min_y = portal['min_y']
-                max_y = portal['max_y']
+                start_pos = portal["start_pos"]
+                end_pos = portal["end_pos"]
+                min_y = portal["min_y"]
+                max_y = portal["max_y"]
 
                 # Generate the bottom polygon
-                gen_seg_poly(
-                    edge_p0,
-                    side_vec,
-                    start_pos,
-                    end_pos,
-                    0,
-                    min_y
-                )
+                gen_seg_poly(edge_p0, side_vec, start_pos, end_pos, 0, min_y)
 
                 # Generate the top polygon
                 gen_seg_poly(
-                    edge_p0,
-                    side_vec,
-                    start_pos,
-                    end_pos,
-                    max_y,
-                    self.wall_height
+                    edge_p0, side_vec, start_pos, end_pos, max_y, self.wall_height
                 )
 
                 if portal_idx < len(self.portals[wall_idx]) - 1:
-                    next_portal = self.portals[wall_idx][portal_idx+1]
-                    next_portal_start = next_portal['start_pos']
+                    next_portal = self.portals[wall_idx][portal_idx + 1]
+                    next_portal_start = next_portal["start_pos"]
                 else:
                     next_portal_start = wall_width
 
                 # Generate the polygon going up to the next portal
                 gen_seg_poly(
-                    edge_p0,
-                    side_vec,
-                    end_pos,
-                    next_portal_start,
-                    0,
-                    self.wall_height
+                    edge_p0, side_vec, end_pos, next_portal_start, 0, self.wall_height
                 )
 
         self.wall_verts = np.array(self.wall_verts)
@@ -422,6 +434,7 @@ class Room:
             glVertex3f(*self.wall_verts[i, :])
         glEnd()
 
+
 class MiniWorldEnv(gym.Env):
     """
     Base class for MiniWorld environments. Implements the procedural
@@ -429,8 +442,10 @@ class MiniWorldEnv(gym.Env):
     """
 
     metadata = {
-        'render.modes': ['human', 'rgb_array'],
-        'video.frames_per_second' : 30
+        "render.modes": ["human", "rgb_array"],
+        "video.frames_per_second": 30,
+        "render_modes": ["human", "rgb_array"],
+        "video_fps": 30,
     }
 
     # Enumeration of possible actions
@@ -461,7 +476,7 @@ class MiniWorldEnv(gym.Env):
         window_width=800,
         window_height=600,
         params=DEFAULT_PARAMS,
-        domain_rand=False
+        domain_rand=False,
     ):
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions
@@ -471,10 +486,7 @@ class MiniWorldEnv(gym.Env):
 
         # Observations are RGB images with pixels in [0, 255]
         self.observation_space = spaces.Box(
-            low=0,
-            high=255,
-            shape=(obs_height, obs_width, 3),
-            dtype=np.uint8
+            low=0, high=255, shape=(obs_height, obs_width, 3), dtype=np.uint8
         )
 
         self.reward_range = (-math.inf, math.inf)
@@ -514,8 +526,8 @@ class MiniWorldEnv(gym.Env):
             font_size=14,
             multiline=True,
             width=400,
-            x = window_width + 5,
-            y = window_height - (self.obs_disp_height + 19)
+            x=window_width + 5,
+            y=window_height - (self.obs_disp_height + 19),
         )
 
         # Initialize the state
@@ -529,11 +541,20 @@ class MiniWorldEnv(gym.Env):
         self.rand = RandGen(seed)
         return [seed]
 
-    def reset(self):
+    def reset(
+        self,
+        *,
+        seed: Optional[int] = None,
+        return_info: bool = False,
+        options: Optional[dict] = None
+    ) -> Union[ObsType, Tuple[ObsType, dict]]:
         """
         Reset the simulation at the start of a new episode
         This also randomizes many environment parameters (domain randomization)
         """
+        super().reset(seed=seed)
+        if seed is not None:
+            self.rand = RandGen(seed)
 
         # Step count since episode start
         self.step_count = 0
@@ -558,25 +579,22 @@ class MiniWorldEnv(gym.Env):
         rand = self.rand if self.domain_rand else None
 
         # Randomize elements of the world (domain randomization)
-        self.params.sample_many(rand, self, [
-            'sky_color',
-            'light_pos',
-            'light_color',
-            'light_ambient'
-        ])
+        self.params.sample_many(
+            rand, self, ["sky_color", "light_pos", "light_color", "light_ambient"]
+        )
 
         # Get the max forward step distance
-        self.max_forward_step = self.params.get_max('forward_step')
+        self.max_forward_step = self.params.get_max("forward_step")
 
         # Randomize parameters of the entities
         for ent in self.entities:
             ent.randomize(self.params, rand)
 
         # Compute the min and max x, z extents of the whole floorplan
-        self.min_x = min([r.min_x for r in self.rooms])
-        self.max_x = max([r.max_x for r in self.rooms])
-        self.min_z = min([r.min_z for r in self.rooms])
-        self.max_z = max([r.max_z for r in self.rooms])
+        self.min_x = min(r.min_x for r in self.rooms)
+        self.max_x = max(r.max_x for r in self.rooms)
+        self.min_z = min(r.min_z for r in self.rooms)
+        self.max_z = max(r.max_z for r in self.rooms)
 
         # Generate static data
         if len(self.wall_segs) == 0:
@@ -589,7 +607,10 @@ class MiniWorldEnv(gym.Env):
         obs = self.render_obs()
 
         # Return first observation
-        return obs
+        if return_info:
+            return obs, {}
+        else:
+            return obs
 
     def _get_carry_pos(self, agent_pos, ent):
         """
@@ -611,9 +632,9 @@ class MiniWorldEnv(gym.Env):
         """
 
         next_pos = (
-            self.agent.pos +
-            self.agent.dir_vec * fwd_dist +
-            self.agent.right_vec * fwd_drift
+            self.agent.pos
+            + self.agent.dir_vec * fwd_dist
+            + self.agent.right_vec * fwd_drift
         )
 
         if self.intersect(self.agent, next_pos, self.agent.radius):
@@ -637,7 +658,7 @@ class MiniWorldEnv(gym.Env):
         Turn the agent left or right
         """
 
-        turn_angle *= (math.pi / 180)
+        turn_angle *= math.pi / 180
         orig_dir = self.agent.dir
 
         self.agent.dir += turn_angle
@@ -663,9 +684,9 @@ class MiniWorldEnv(gym.Env):
         self.step_count += 1
 
         rand = self.rand if self.domain_rand else None
-        fwd_step = self.params.sample(rand, 'forward_step')
-        fwd_drift = self.params.sample(rand, 'forward_drift')
-        turn_step = self.params.sample(rand, 'turn_step')
+        fwd_step = self.params.sample(rand, "forward_step")
+        fwd_drift = self.params.sample(rand, "forward_drift")
+        turn_step = self.params.sample(rand, "turn_step")
 
         if action == self.actions.move_forward:
             self.move_agent(fwd_step, fwd_drift)
@@ -715,30 +736,25 @@ class MiniWorldEnv(gym.Env):
 
         return obs, reward, done, {}
 
-    def add_rect_room(
-        self,
-        min_x,
-        max_x,
-        min_z,
-        max_z,
-        **kwargs
-    ):
+    def add_rect_room(self, min_x, max_x, min_z, max_z, **kwargs):
         """
         Create a rectangular room
         """
 
         # 2D outline coordinates of the room,
         # listed in counter-clockwise order when viewed from the top
-        outline = np.array([
-            # East wall
-            [max_x, max_z],
-            # North wall
-            [max_x, min_z],
-            # West wall
-            [min_x, min_z],
-            # South wall
-            [min_x, max_z],
-        ])
+        outline = np.array(
+            [
+                # East wall
+                [max_x, max_z],
+                # North wall
+                [max_x, min_z],
+                # West wall
+                [min_x, min_z],
+                # South wall
+                [min_x, max_z],
+            ]
+        )
 
         return self.add_room(outline=outline, **kwargs)
 
@@ -747,7 +763,9 @@ class MiniWorldEnv(gym.Env):
         Create a new room
         """
 
-        assert len(self.wall_segs) == 0, "cannot add rooms after static data is generated"
+        assert (
+            len(self.wall_segs) == 0
+        ), "cannot add rooms after static data is generated"
 
         room = Room(**kwargs)
         self.rooms.append(room)
@@ -755,14 +773,7 @@ class MiniWorldEnv(gym.Env):
         return room
 
     def connect_rooms(
-        self,
-        room_a,
-        room_b,
-        min_x=None,
-        max_x=None,
-        min_z=None,
-        max_z=None,
-        max_y=None
+        self, room_a, room_b, min_x=None, max_x=None, min_z=None, max_z=None, max_y=None
     ):
         """
         Connect two rooms along facing edges
@@ -790,24 +801,14 @@ class MiniWorldEnv(gym.Env):
             return None, None
 
         idx_a, idx_b = find_facing_edges()
-        assert idx_a != None, "matching edges not found in connect_rooms"
+        assert idx_a is not None, "matching edges not found in connect_rooms"
 
         start_a, end_a = room_a.add_portal(
-            edge=idx_a,
-            min_x=min_x,
-            max_x=max_x,
-            min_z=min_z,
-            max_z=max_z,
-            max_y=max_y
+            edge=idx_a, min_x=min_x, max_x=max_x, min_z=min_z, max_z=max_z, max_y=max_y
         )
 
         start_b, end_b = room_b.add_portal(
-            edge=idx_b,
-            min_x=min_x,
-            max_x=max_x,
-            min_z=min_z,
-            max_z=max_z,
-            max_y=max_y
+            edge=idx_b, min_x=min_x, max_x=max_x, min_z=min_z, max_z=max_z, max_y=max_y
         )
 
         a = room_a.outline[idx_a] + room_a.edge_dirs[idx_a] * start_a
@@ -826,7 +827,7 @@ class MiniWorldEnv(gym.Env):
         outline = np.stack([c, b, a, d])
         outline = np.stack([outline[:, 0], outline[:, 2]], axis=1)
 
-        max_y = max_y if max_y != None else room_a.wall_height
+        max_y = max_y if max_y is not None else room_a.wall_height
 
         room = Room(
             outline,
@@ -851,7 +852,7 @@ class MiniWorldEnv(gym.Env):
         min_x=None,
         max_x=None,
         min_z=None,
-        max_z=None
+        max_z=None,
     ):
         """
         Place an entity/object in the world.
@@ -859,7 +860,7 @@ class MiniWorldEnv(gym.Env):
         """
 
         assert len(self.rooms) > 0, "create rooms before calling place_entity"
-        assert ent.radius != None, "entity must have physical size defined"
+        assert ent.radius is not None, "entity must have physical size defined"
 
         # Generate collision detection data
         if len(self.wall_segs) == 0:
@@ -867,7 +868,7 @@ class MiniWorldEnv(gym.Env):
 
         # If an exact position if specified
         if pos is not None:
-            ent.dir = dir if dir != None else self.rand.float(-math.pi, math.pi)
+            ent.dir = dir if dir is not None else self.rand.float(-math.pi, math.pi)
             ent.pos = pos
             self.entities.append(ent)
             return ent
@@ -878,13 +879,13 @@ class MiniWorldEnv(gym.Env):
             r = room if room else self.rand.choice(self.rooms, probs=self.room_probs)
 
             # Choose a random point within the square bounding box of the room
-            lx = r.min_x if min_x == None else min_x
-            hx = r.max_x if max_x == None else max_x
-            lz = r.min_z if min_z == None else min_z
-            hz = r.max_z if max_z == None else max_z
+            lx = r.min_x if min_x is None else min_x
+            hx = r.max_x if max_x is None else max_x
+            lz = r.min_z if min_z is None else min_z
+            hz = r.max_z if max_z is None else max_z
             pos = self.rand.float(
-                low =[lx + ent.radius, 0, lz + ent.radius],
-                high=[hx - ent.radius, 0, hz - ent.radius]
+                low=[lx - ent.radius, 0, lz - ent.radius],
+                high=[hx + ent.radius, 0, hz + ent.radius],
             )
 
             # Make sure the position is within the room's outline
@@ -896,7 +897,7 @@ class MiniWorldEnv(gym.Env):
                 continue
 
             # Pick a direction
-            d = dir if dir != None else self.rand.float(-math.pi, math.pi)
+            d = dir if dir is not None else self.rand.float(-math.pi, math.pi)
 
             ent.pos = pos
             ent.dir = d
@@ -907,13 +908,7 @@ class MiniWorldEnv(gym.Env):
         return ent
 
     def place_agent(
-        self,
-        room=None,
-        dir=None,
-        min_x=None,
-        max_x=None,
-        min_z=None,
-        max_z=None
+        self, room=None, dir=None, min_x=None, max_x=None, min_z=None, max_z=None
     ):
         """
         Place the agent in the environment at a random position
@@ -927,7 +922,7 @@ class MiniWorldEnv(gym.Env):
             min_x=min_x,
             max_x=max_x,
             min_z=min_z,
-            max_z=max_z
+            max_z=max_z,
         )
 
     def intersect(self, ent, pos, radius):
@@ -964,7 +959,7 @@ class MiniWorldEnv(gym.Env):
         Used for "go to" or "put next" type tasks
         """
 
-        if ent1 == None:
+        if ent1 is None:
             ent1 = self.agent
 
         dist = np.linalg.norm(ent0.pos - ent1.pos)
@@ -975,7 +970,7 @@ class MiniWorldEnv(gym.Env):
         Load a texture, with or without domain randomization
         """
 
-        rand = self.rand if self.params.sample(self.rand, 'tex_rand') else None
+        rand = self.rand if self.params.sample(self.rand, "tex_rand") else None
         return Texture.get(tex_name, rand)
 
     def _gen_static_data(self):
@@ -985,10 +980,7 @@ class MiniWorldEnv(gym.Env):
 
         # Generate the static data for each room
         for room in self.rooms:
-            room._gen_static_data(
-                self.params,
-                self.rand if self.domain_rand else None
-            )
+            room._gen_static_data(self.params, self.rand if self.domain_rand else None)
 
         # Concatenate the wall segments
         self.wall_segs = np.concatenate([r.wall_segs for r in self.rooms])
@@ -1019,23 +1011,23 @@ class MiniWorldEnv(gym.Env):
 
         # TODO: manage this automatically
         # glIsList
-        glDeleteLists(1, 1);
-        glNewList(1, GL_COMPILE);
+        glDeleteLists(1, 1)
+        glNewList(1, GL_COMPILE)
 
         # Light position
-        glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat*4)(*self.light_pos + [1]))
+        glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat * 4)(*self.light_pos + [1]))
 
         # Background/minimum light level
-        glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat*4)(*self.light_ambient))
+        glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat * 4)(*self.light_ambient))
 
         # Diffuse light color
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, (GLfloat*4)(*self.light_color))
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, (GLfloat * 4)(*self.light_color))
 
-        #glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180)
-        #glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 0)
-        #glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0)
-        #glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0)
-        #glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0)
+        # glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 180)
+        # glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 0)
+        # glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 0)
+        # glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0)
+        # glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0)
 
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
@@ -1056,11 +1048,7 @@ class MiniWorldEnv(gym.Env):
 
         glEndList()
 
-    def _render_world(
-        self,
-        frame_buffer,
-        render_agent
-    ):
+    def _render_world(self, frame_buffer, render_agent):
         """
         Render the world from a given camera position into a frame buffer,
         and produce a numpy image array as output.
@@ -1074,7 +1062,7 @@ class MiniWorldEnv(gym.Env):
         for ent in self.entities:
             if not ent.is_static and ent is not self.agent:
                 ent.render()
-                #ent.draw_bound()
+                # ent.draw_bound()
 
         if render_agent:
             self.agent.render()
@@ -1089,7 +1077,7 @@ class MiniWorldEnv(gym.Env):
         Render a top view of the whole map (from above)
         """
 
-        if frame_buffer == None:
+        if frame_buffer is None:
             frame_buffer = self.obs_fb
 
         # Switch to the default OpenGL context
@@ -1132,37 +1120,40 @@ class MiniWorldEnv(gym.Env):
         # Set the projection matrix
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        glOrtho(
-            min_x,
-            max_x,
-            -max_z,
-            -min_z,
-            -100, 100.0
-        )
+        glOrtho(min_x, max_x, -max_z, -min_z, -100, 100.0)
 
         # Setup the camera
         # Y maps to +Z, Z maps to +Y
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
         m = [
-            1, 0, 0, 0,
-            0, 0, 1, 0,
-            0, -1, 0, 0,
-            0, 0, 0, 1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            -1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
         ]
         glLoadMatrixf((GLfloat * len(m))(*m))
 
-        return self._render_world(
-            frame_buffer,
-            render_agent=True
-        )
+        return self._render_world(frame_buffer, render_agent=True)
 
     def render_obs(self, frame_buffer=None):
         """
         Render an observation from the point of view of the agent
         """
 
-        if frame_buffer == None:
+        if frame_buffer is None:
             frame_buffer = self.obs_fb
 
         # Switch to the default OpenGL context
@@ -1184,7 +1175,7 @@ class MiniWorldEnv(gym.Env):
             self.agent.cam_fov_y,
             frame_buffer.width / float(frame_buffer.height),
             0.04,
-            100.0
+            100.0,
         )
 
         # Setup the camera
@@ -1196,13 +1187,12 @@ class MiniWorldEnv(gym.Env):
             # Target
             *(self.agent.cam_pos + self.agent.cam_dir),
             # Up vector
-            0, 1.0, 0.0
+            0,
+            1.0,
+            0.0
         )
 
-        return self._render_world(
-            frame_buffer,
-            render_agent=False
-        )
+        return self._render_world(frame_buffer, render_agent=False)
 
     def render_depth(self, frame_buffer=None):
         """
@@ -1211,7 +1201,7 @@ class MiniWorldEnv(gym.Env):
         Distances are in meters from the observer
         """
 
-        if frame_buffer == None:
+        if frame_buffer is None:
             frame_buffer = self.obs_fb
 
         # Render the world
@@ -1253,7 +1243,7 @@ class MiniWorldEnv(gym.Env):
             self.agent.cam_fov_y,
             frame_buffer.width / float(frame_buffer.height),
             0.04,
-            100.0
+            100.0,
         )
 
         # Setup the cameravisible objects
@@ -1265,7 +1255,9 @@ class MiniWorldEnv(gym.Env):
             # Target
             *(self.agent.cam_pos + self.agent.cam_dir),
             # Up vector
-            0, 1.0, 0.0
+            0,
+            1.0,
+            0.0
         )
 
         # Render the rooms, without texturing
@@ -1281,14 +1273,14 @@ class MiniWorldEnv(gym.Env):
             glBeginQuery(GL_ANY_SAMPLES_PASSED, query_ids[ent_idx])
             pos = ent.pos
 
-            #glColor3f(1, 0, 0)
+            # glColor3f(1, 0, 0)
             drawBox(
                 x_min=pos[0] - 0.1,
                 x_max=pos[0] + 0.1,
                 y_min=pos[1],
                 y_max=pos[1] + 0.2,
                 z_min=pos[2] - 0.1,
-                z_max=pos[2] + 0.1
+                z_max=pos[2] + 0.1,
             )
 
             glEndQuery(GL_ANY_SAMPLES_PASSED)
@@ -1300,8 +1292,8 @@ class MiniWorldEnv(gym.Env):
             if ent is self.agent:
                 continue
 
-            visible = (GLuint*1)(1)
-            glGetQueryObjectuiv(query_ids[ent_idx], GL_QUERY_RESULT, visible);
+            visible = (GLuint * 1)(1)
+            glGetQueryObjectuiv(query_ids[ent_idx], GL_QUERY_RESULT, visible)
 
             if visible[0] != 0:
                 vis_objs.add(ent)
@@ -1309,12 +1301,12 @@ class MiniWorldEnv(gym.Env):
         # Free the occlusion query ids
         glDeleteQueries(1, query_ids)
 
-        #img = frame_buffer.resolve()
-        #return img
+        # img = frame_buffer.resolve()
+        # return img
 
         return vis_objs
 
-    def render(self, mode='human', close=False, view='agent'):
+    def render(self, mode="human", close=False, view="agent"):
         """
         Render the environment for human viewing
         """
@@ -1325,15 +1317,15 @@ class MiniWorldEnv(gym.Env):
             return
 
         # Render the human-view image
-        assert view in ['agent', 'top']
-        if view == 'agent':
+        assert view in ["agent", "top"]
+        if view == "agent":
             img = self.render_obs(self.vis_fb)
         else:
             img = self.render_top_view(self.vis_fb)
         img_width = img.shape[1]
         img_height = img.shape[0]
 
-        if mode == 'rgb_array':
+        if mode == "rgb_array":
             return img
 
         # Render the agent's view
@@ -1347,22 +1339,19 @@ class MiniWorldEnv(gym.Env):
         if self.window is None:
             config = pyglet.gl.Config(double_buffer=True)
             self.window = pyglet.window.Window(
-                width=window_width,
-                height=window_height,
-                resizable=False,
-                config=config
+                width=window_width, height=window_height, resizable=False, config=config
             )
 
         self.window.clear()
         self.window.switch_to()
 
         # Bind the default frame buffer
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0)
 
         # Clear the color and depth buffers
         glClearColor(0, 0, 0, 1.0)
         glClearDepth(1.0)
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         # Setup orghogonal projection
         glMatrixMode(GL_PROJECTION)
@@ -1376,24 +1365,18 @@ class MiniWorldEnv(gym.Env):
         img_data = pyglet.image.ImageData(
             img_width,
             img_height,
-            'RGB',
+            "RGB",
             img_flip.ctypes.data_as(POINTER(GLubyte)),
             pitch=img_width * 3,
         )
-        img_data.blit(
-            0,
-            0,
-            0,
-            width=img_width,
-            height=img_height
-        )
+        img_data.blit(0, 0, 0, width=img_width, height=img_height)
 
         # Draw the observation
         obs = np.ascontiguousarray(np.flip(obs, axis=0))
         obs_data = pyglet.image.ImageData(
             obs_width,
             obs_height,
-            'RGB',
+            "RGB",
             obs.ctypes.data_as(POINTER(GLubyte)),
             pitch=obs_width * 3,
         )
@@ -1402,14 +1385,14 @@ class MiniWorldEnv(gym.Env):
             img_height - self.obs_disp_height,
             0,
             width=self.obs_disp_width,
-            height=self.obs_disp_height
+            height=self.obs_disp_height,
         )
 
         # Draw the text label in the window
         self.text_label.text = "pos: (%.2f, %.2f, %.2f)\nangle: %d\nsteps: %d" % (
             *self.agent.pos,
             int(self.agent.dir * 180 / math.pi) % 360,
-            self.step_count
+            self.step_count,
         )
         self.text_label.draw()
 
@@ -1418,7 +1401,7 @@ class MiniWorldEnv(gym.Env):
 
         # If we are not running the Pyglet event loop,
         # we have to manually flip the buffers and dispatch events
-        if mode == 'human':
+        if mode == "human":
             self.window.flip()
             self.window.dispatch_events()
 

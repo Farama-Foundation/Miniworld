@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 import time
-import numpy as np
+
 import gym
-import gym_miniworld
 
 # Benchmark loading time
 st = time.time()
-env = gym.make('MiniWorld-Maze-v0')
+env = gym.make("MiniWorld-Maze-v0")
 env.seed(0)
 env.reset()
 load_time = 1000 * (time.time() - st)
@@ -41,9 +40,9 @@ fps = num_frames / dt
 frame_time = 1000 * dt / num_frames
 
 print()
-print('load time: {} ms'.format(int(load_time)))
-print('reset time: {:,.1f} ms'.format(reset_time))
-print('frame time: {:,.1f} ms'.format(frame_time))
-print('frame rate: {:,.1f} FPS'.format(fps))
+print(f"load time: {int(load_time)} ms")
+print(f"reset time: {reset_time:,.1f} ms")
+print(f"frame time: {frame_time:,.1f} ms")
+print(f"frame rate: {fps:,.1f} FPS")
 
 env.close()

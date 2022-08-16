@@ -1,8 +1,8 @@
-import numpy as np
-import math
 from gym import spaces
-from ..miniworld import MiniWorldEnv, Room
-from ..entity import Box, Ball, Key
+
+from gym_miniworld.entity import Ball, Box, Key
+from gym_miniworld.miniworld import MiniWorldEnv
+
 
 class PickupObjs(MiniWorldEnv):
     """
@@ -15,22 +15,19 @@ class PickupObjs(MiniWorldEnv):
         self.size = size
         self.num_objs = num_objs
 
-        super().__init__(
-            max_episode_steps=400,
-            **kwargs
-        )
+        super().__init__(max_episode_steps=400, **kwargs)
 
         # Reduce the action space
-        self.action_space = spaces.Discrete(self.actions.pickup+1)
+        self.action_space = spaces.Discrete(self.actions.pickup + 1)
 
     def _gen_world(self):
-        room = self.add_rect_room(
+        self.add_rect_room(
             min_x=0,
             max_x=self.size,
             min_z=0,
             max_z=self.size,
-            wall_tex='brick_wall',
-            floor_tex='asphalt',
+            wall_tex="brick_wall",
+            floor_tex="asphalt",
             no_ceiling=True,
         )
 

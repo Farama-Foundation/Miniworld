@@ -1,7 +1,8 @@
-import numpy as np
 import math
-from ..miniworld import MiniWorldEnv, Room
-from ..entity import Box, Ball, Key
+
+from gym_miniworld.entity import Ball, Box, Key
+from gym_miniworld.miniworld import MiniWorldEnv
+
 
 class RoomObjs(MiniWorldEnv):
     """
@@ -15,29 +16,24 @@ class RoomObjs(MiniWorldEnv):
         assert size >= 2
         self.size = size
 
-        super().__init__(
-            max_episode_steps=math.inf,
-            **kwargs
-        )
+        super().__init__(max_episode_steps=math.inf, **kwargs)
 
     def _gen_world(self):
-        room = self.add_rect_room(
+        self.add_rect_room(
             min_x=0,
             max_x=self.size,
             min_z=0,
             max_z=self.size,
-            wall_tex='brick_wall',
-            floor_tex='asphalt',
+            wall_tex="brick_wall",
+            floor_tex="asphalt",
             no_ceiling=True,
         )
 
         # Reduce chances that objects are too close to see
-        self.agent.radius=1.5
+        self.agent.radius = 1.5
 
         self.place_entity(Box(color=self.rand.color(), size=0.9))
-
         self.place_entity(Ball(color=self.rand.color(), size=0.9))
-
         self.place_entity(Key(color=self.rand.color()))
 
         self.place_agent()

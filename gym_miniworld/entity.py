@@ -1,21 +1,44 @@
 import math
+
 import numpy as np
-from .math import *
-from .opengl import *
-from .objmesh import ObjMesh
 
 # Map of color names to RGB values
+from pyglet.gl import (
+    GL_LINES,
+    GL_QUADS,
+    GL_TEXTURE_2D,
+    GL_TRIANGLES,
+    glBegin,
+    glColor3f,
+    glDisable,
+    glEnable,
+    glEnd,
+    glNormal3f,
+    glPopMatrix,
+    glPushMatrix,
+    glRotatef,
+    glScalef,
+    glTexCoord2f,
+    glTranslatef,
+    glVertex3f,
+)
+
+from gym_miniworld.math import X_VEC, Y_VEC, Z_VEC, gen_rot_matrix
+from gym_miniworld.objmesh import ObjMesh
+from gym_miniworld.opengl import Texture, drawBox
+
 COLORS = {
-    'red'   : np.array([1.0, 0.0, 0.0]),
-    'green' : np.array([0.0, 1.0, 0.0]),
-    'blue'  : np.array([0.0, 0.0, 1.0]),
-    'purple': np.array([0.44, 0.15, 0.76]),
-    'yellow': np.array([1.00, 1.00, 0.00]),
-    'grey'  : np.array([0.39, 0.39, 0.39])
+    "red": np.array([1.0, 0.0, 0.0]),
+    "green": np.array([0.0, 1.0, 0.0]),
+    "blue": np.array([0.0, 0.0, 1.0]),
+    "purple": np.array([0.44, 0.15, 0.76]),
+    "yellow": np.array([1.00, 1.00, 0.00]),
+    "grey": np.array([0.39, 0.39, 0.39]),
 }
 
 # List of color names, sorted alphabetically
 COLOR_NAMES = sorted(list(COLORS.keys()))
+
 
 class Entity:
     def __init__(self):
@@ -97,6 +120,7 @@ class Entity:
         """
         return False
 
+
 class MeshEnt(Entity):
     """
     Entity whose appearance is defined by a mesh file
@@ -105,12 +129,7 @@ class MeshEnt(Entity):
     static -- flag indicating this object cannot move
     """
 
-    def __init__(
-        self,
-        mesh_name,
-        height,
-        static=True
-    ):
+    def __init__(self, mesh_name, height, static=True):
         super().__init__()
 
         self.static = static
@@ -125,7 +144,7 @@ class MeshEnt(Entity):
         self.scale = height / sy
 
         # Compute the radius and height
-        self.radius = math.sqrt(sx*sx + sz*sz) * self.scale
+        self.radius = math.sqrt(sx * sx + sz * sz) * self.scale
         self.height = height
 
     def render(self):
@@ -144,6 +163,7 @@ class MeshEnt(Entity):
     @property
     def is_static(self):
         return self.static
+
 
 class ImageFrame(Entity):
     """
@@ -183,7 +203,7 @@ class ImageFrame(Entity):
 
         glPushMatrix()
         glTranslatef(*self.pos)
-        glRotatef(self.dir * (180/math.pi), 0, 1, 0)
+        glRotatef(self.dir * (180 / math.pi), 0, 1, 0)
 
         # Bind texture for front
         glColor3f(1, 1, 1)
@@ -211,35 +231,36 @@ class ImageFrame(Entity):
 
         # Left
         glNormal3f(0, 0, -1)
-        glVertex3f(0  , +hy, -hz)
+        glVertex3f(0, +hy, -hz)
         glVertex3f(+sx, +hy, -hz)
         glVertex3f(+sx, -hy, -hz)
-        glVertex3f(0  , -hy, -hz)
+        glVertex3f(0, -hy, -hz)
 
         # Right
         glNormal3f(0, 0, 1)
         glVertex3f(+sx, +hy, +hz)
-        glVertex3f(0  , +hy, +hz)
-        glVertex3f(0  , -hy, +hz)
+        glVertex3f(0, +hy, +hz)
+        glVertex3f(0, -hy, +hz)
         glVertex3f(+sx, -hy, +hz)
 
         # Top
         glNormal3f(0, 1, 0)
         glVertex3f(+sx, +hy, +hz)
         glVertex3f(+sx, +hy, -hz)
-        glVertex3f(0  , +hy, -hz)
-        glVertex3f(0  , +hy, +hz)
+        glVertex3f(0, +hy, -hz)
+        glVertex3f(0, +hy, +hz)
 
         # Bottom
         glNormal3f(0, -1, 0)
         glVertex3f(+sx, -hy, -hz)
         glVertex3f(+sx, -hy, +hz)
-        glVertex3f(0  , -hy, +hz)
-        glVertex3f(0  , -hy, -hz)
+        glVertex3f(0, -hy, +hz)
+        glVertex3f(0, -hy, -hz)
 
         glEnd()
 
         glPopMatrix()
+
 
 class TextFrame(Entity):
     """
@@ -267,13 +288,15 @@ class TextFrame(Entity):
         self.texs = []
         for ch in self.str:
             try:
-                if ch == ' ':
+                if ch == " ":
                     self.texs.append(None)
                 else:
-                    tex_name = f'chars/ch_0x{ord(ch)}'
+                    tex_name = f"chars/ch_0x{ord(ch)}"
                     self.texs.append(Texture.get(tex_name, rng))
-            except:
-                raise 'only alphanumerical characters supported in TextFrame'
+            except Exception:
+                raise ValueError(
+                    "only alphanumerical characters supported in TextFrame"
+                )
 
     def render(self):
         """
@@ -290,7 +313,7 @@ class TextFrame(Entity):
 
         glPushMatrix()
         glTranslatef(*self.pos)
-        glRotatef(self.dir * (180/math.pi), 0, 1, 0)
+        glRotatef(self.dir * (180 / math.pi), 0, 1, 0)
 
         # Bind texture for front
         glColor3f(1, 1, 1)
@@ -305,7 +328,7 @@ class TextFrame(Entity):
                 glDisable(GL_TEXTURE_2D)
 
             char_width = self.height
-            z_0 = hz - char_width * (idx+1)
+            z_0 = hz - char_width * (idx + 1)
             z_1 = z_0 + char_width
 
             # Front face, showing image
@@ -329,35 +352,36 @@ class TextFrame(Entity):
 
         # Left
         glNormal3f(0, 0, -1)
-        glVertex3f(0  , +hy, -hz)
+        glVertex3f(0, +hy, -hz)
         glVertex3f(+sx, +hy, -hz)
         glVertex3f(+sx, -hy, -hz)
-        glVertex3f(0  , -hy, -hz)
+        glVertex3f(0, -hy, -hz)
 
         # Right
         glNormal3f(0, 0, 1)
         glVertex3f(+sx, +hy, +hz)
-        glVertex3f(0  , +hy, +hz)
-        glVertex3f(0  , -hy, +hz)
+        glVertex3f(0, +hy, +hz)
+        glVertex3f(0, -hy, +hz)
         glVertex3f(+sx, -hy, +hz)
 
         # Top
         glNormal3f(0, 1, 0)
         glVertex3f(+sx, +hy, +hz)
         glVertex3f(+sx, +hy, -hz)
-        glVertex3f(0  , +hy, -hz)
-        glVertex3f(0  , +hy, +hz)
+        glVertex3f(0, +hy, -hz)
+        glVertex3f(0, +hy, +hz)
 
         # Bottom
         glNormal3f(0, -1, 0)
         glVertex3f(+sx, -hy, -hz)
         glVertex3f(+sx, -hy, +hz)
-        glVertex3f(0  , -hy, +hz)
-        glVertex3f(0  , -hy, -hz)
+        glVertex3f(0, -hy, +hz)
+        glVertex3f(0, -hy, -hz)
 
         glEnd()
 
         glPopMatrix()
+
 
 class Box(Entity):
     """
@@ -375,11 +399,11 @@ class Box(Entity):
         self.color = color
         self.size = size
 
-        self.radius = math.sqrt(sx*sx + sz*sz)/2
+        self.radius = math.sqrt(sx * sx + sz * sz) / 2
         self.height = sy
 
     def randomize(self, params, rng):
-        self.color_vec = COLORS[self.color] + params.sample(rng, 'obj_color_bias')
+        self.color_vec = COLORS[self.color] + params.sample(rng, "obj_color_bias")
         self.color_vec = np.clip(self.color_vec, 0, 1)
 
     def render(self):
@@ -394,18 +418,19 @@ class Box(Entity):
 
         glPushMatrix()
         glTranslatef(*self.pos)
-        glRotatef(self.dir * (180/math.pi), 0, 1, 0)
+        glRotatef(self.dir * (180 / math.pi), 0, 1, 0)
 
         drawBox(
-            x_min=-sx/2,
-            x_max=+sx/2,
+            x_min=-sx / 2,
+            x_max=+sx / 2,
             y_min=0,
             y_max=sy,
-            z_min=-sz/2,
-            z_max=+sz/2
+            z_min=-sz / 2,
+            z_max=+sz / 2,
         )
 
         glPopMatrix()
+
 
 class Key(MeshEnt):
     """
@@ -414,11 +439,8 @@ class Key(MeshEnt):
 
     def __init__(self, color):
         assert color in COLOR_NAMES
-        super().__init__(
-            mesh_name='key_{}'.format(color),
-            height=0.35,
-            static=False
-        )
+        super().__init__(mesh_name=f"key_{color}", height=0.35, static=False)
+
 
 class Ball(MeshEnt):
     """
@@ -427,11 +449,8 @@ class Ball(MeshEnt):
 
     def __init__(self, color, size=0.6):
         assert color in COLOR_NAMES
-        super().__init__(
-            mesh_name='ball_{}'.format(color),
-            height=size,
-            static=False
-        )
+        super().__init__(mesh_name=f"ball_{color}", height=size, static=False)
+
 
 class Agent(Entity):
     def __init__(self):
@@ -475,7 +494,7 @@ class Agent(Entity):
         randomization of camera angle
         """
 
-        rot_z = gen_rot_matrix(Z_VEC, self.cam_pitch * math.pi/180)
+        rot_z = gen_rot_matrix(Z_VEC, self.cam_pitch * math.pi / 180)
         rot_y = gen_rot_matrix(Y_VEC, self.dir)
 
         dir = np.dot(X_VEC, rot_z)
@@ -484,13 +503,17 @@ class Agent(Entity):
         return dir
 
     def randomize(self, params, rng):
-        params.sample_many(rng, self, [
-            'cam_height',
-            'cam_fwd_disp',
-            'cam_pitch',
-            'cam_fov_y',
-        ])
-        #self.radius = params.sample(rng, 'bot_radius')
+        params.sample_many(
+            rng,
+            self,
+            [
+                "cam_height",
+                "cam_fwd_disp",
+                "cam_pitch",
+                "cam_fov_y",
+            ],
+        )
+        # self.radius = params.sample(rng, 'bot_radius')
 
     def render(self):
         """
