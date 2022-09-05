@@ -1,4 +1,4 @@
-# MiniWorld (gym-miniworld)
+# MiniWorld (formerly gym-miniworld)
 
 [![Build Status](https://travis-ci.org/maximecb/gym-miniworld.svg?branch=master)](https://travis-ci.org/maximecb/gym-miniworld)
 
