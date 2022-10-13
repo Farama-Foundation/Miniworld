@@ -1,6 +1,8 @@
-# MiniWorld (formerly gym-miniworld)
+<p align="center">
+    <img src="miniworld-text.png" width="500px"/>
+</p>
 
-MiniWorld will eventually be updated, maintained, and made compliant with the standards of the Farama Foundation (https://farama.org/project_standards). However, this is currently a lower priority than other projects we're working to maintain.
+Miniworld (formerly gym-miniworld) will eventually be updated, maintained, and made compliant with the standards of the Farama Foundation (https://farama.org/project_standards). However, this is currently a lower priority than other projects we're working to maintain.
 
 [![Build Status](https://travis-ci.org/maximecb/gym-miniworld.svg?branch=master)](https://travis-ci.org/maximecb/gym-miniworld)
 
