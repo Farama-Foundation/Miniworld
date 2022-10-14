@@ -1,6 +1,6 @@
 """Setups up the Miniworld module."""
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 
 def get_description():
@@ -37,12 +37,12 @@ setup(
     version=version,
     author="Farama Foundation",
     author_email="contact@farama.org",
-    description="Minimalistic 3D interior environment simulator for reinforcement learning & robotics research."
-    url="https://github.com/jjshoots/Miniworld",
+    description="Minimalistic 3D interior environment simulator for reinforcement learning & robotics research.",
+    url="https://github.com/Farama-Foundation/Miniworld",
     license_files=("LICENSE.txt",),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    keywords=["Environment, Agent, RL, Gym, Robotics, 3D"],
+    keywords=["Environment", "Agent", "RL", "Gym", "Robotics", "3D"],
     python_requires=">=3.7, <3.11",
     packages=["gym_miniworld", "gym_miniworld.envs"],
     package_data={
