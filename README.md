@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="miniworld-text.png" width="500px"/>
+    <img src="https://raw.githubusercontent.com/Farama-Foundation/Miniworld/master/miniworld-text.png" width="500px"/>
 </p>
 
 Miniworld (formerly gym-miniworld) will eventually be updated, maintained, and made compliant with the standards of the Farama Foundation (https://farama.org/project_standards). However, this is currently a lower priority than other projects we're working to maintain.
@@ -90,9 +90,9 @@ If you run into any problems, please take a look at the [troubleshooting guide](
 
 ## Usage
 
-There is a simple UI application which allows you to control the simulation or real robot manually. 
-The `manual_control.py` application will launch the Gym environment, display camera images and send actions 
-(keyboard commands) back to the simulator or robot. The `--env-name` argument specifies which environment to load. 
+There is a simple UI application which allows you to control the simulation or real robot manually.
+The `manual_control.py` application will launch the Gym environment, display camera images and send actions
+(keyboard commands) back to the simulator or robot. The `--env-name` argument specifies which environment to load.
 See the list of [available environments](docs/environments.md) for more information.
 
 ```
