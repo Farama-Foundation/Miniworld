@@ -1,22 +1,49 @@
-from setuptools import setup
+"""Setups up the Miniworld module."""
 
-with open("README.md") as fh:
-    long_description = ""
-    header_count = 0
-    for line in fh:
-        if line.startswith("##"):
-            header_count += 1
-        if header_count < 2:
-            long_description += line
-        else:
-            break
+from setuptools import find_packages, setup
+
+
+def get_description():
+    """Gets the description from the readme."""
+    with open("README.md") as fh:
+        long_description = ""
+        header_count = 0
+        for line in fh:
+            if line.startswith("##"):
+                header_count += 1
+            if header_count < 2:
+                long_description += line
+            else:
+                break
+    return header_count, long_description
+
+
+def get_version():
+    """Gets the miniworld version."""
+    path = "gym_miniworld/__init__.py"
+    with open(path) as file:
+        lines = file.readlines()
+
+    for line in lines:
+        if line.startswith("__version__"):
+            return line.strip().split()[-1].strip().strip('"')
+    raise RuntimeError("bad version data in __init__.py")
+
+version = get_version()
+header_count, long_description = get_description()
 
 setup(
     name="gym_miniworld",
+    version=version,
     author="Farama Foundation",
-    author_email="jkterry@farama.org",
-    version="2020.1.9",
-    keywords="environment, agent, rl, gym, robotics, 3d",
+    author_email="contact@farama.org",
+    description="Minimalistic 3D interior environment simulator for reinforcement learning & robotics research."
+    url="https://github.com/jjshoots/Miniworld",
+    license_files=("LICENSE.txt",),
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    keywords=["Environment, Agent, RL, Gym, Robotics, 3D"],
+    python_requires=">=3.7, <3.11",
     packages=["gym_miniworld", "gym_miniworld.envs"],
     package_data={
         "gym_miniworld": [
@@ -27,10 +54,7 @@ setup(
             "meshes/*.obj",
         ]
     },
-    long_description=long_description,
-    python_requires=">=3.7, <3.11",
     extras_require={"testing": ["pytest==7.0.1", "torch"]},
-    long_description_content_type="text/markdown",
     install_requires=[
         "gym>=0.24.0",
         "numpy>=1.18.0",
