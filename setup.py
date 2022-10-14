@@ -29,6 +29,7 @@ def get_version():
             return line.strip().split()[-1].strip().strip('"')
     raise RuntimeError("bad version data in __init__.py")
 
+
 version = get_version()
 header_count, long_description = get_description()
 
