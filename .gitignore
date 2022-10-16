@@ -106,3 +106,12 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# tests
+test_result.txt
+
+# VS Code
+.vscode
+
+# MacOS
+.DS_Store
