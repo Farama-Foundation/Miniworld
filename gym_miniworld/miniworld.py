@@ -445,7 +445,7 @@ class MiniWorldEnv(gym.Env):
         "render.modes": ["human", "rgb_array"],
         "video.frames_per_second": 30,
         "render_modes": ["human", "rgb_array"],
-        "video_fps": 30,
+        "render_fps": 30,
     }
 
     # Enumeration of possible actions
