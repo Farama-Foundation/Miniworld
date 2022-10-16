@@ -1,5 +1,5 @@
 import math
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
 import gymnasium as gym
 from gymnasium.core import ObsType
@@ -151,6 +151,6 @@ class Sign(MiniWorldEnv):
         *,
         seed: Optional[int] = None,
         options: Optional[dict] = None,
-    ) -> Union[ObsType, Tuple[ObsType, dict]]:
+    ) -> Tuple[ObsType, dict]:
         obs, info = super().reset(seed=seed, options=options)
         return {"obs": obs, "goal": self._goal}, info

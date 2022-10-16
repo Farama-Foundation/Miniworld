@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import math
+from typing import Optional
 
 import gymnasium as gym
 import numpy
@@ -121,9 +122,9 @@ class RemoteBot(gym.Env):
         print("Connected")
 
     def close(self):
-        # Stop the motors
-        # self.step(numpy.array([0, 0]))
-        pass
+        if self.window:
+            self.window.close()
+        return
 
     def _recv_frame(self):
         # Receive a camera image from the server
@@ -131,7 +132,11 @@ class RemoteBot(gym.Env):
 
         self.img = img
 
-    def reset(self, seed, options):
+    def reset(
+        self,
+        seed: Optional[int] = None,
+        options: Optional[dict] = None,
+    ):
         # Step count since episode start
         self.step_count = 0
 
@@ -166,18 +171,13 @@ class RemoteBot(gym.Env):
 
         return self.img, reward, termination, truncation, {}
 
-    def render(self, close=False):
+    def render(self):
         if self.render_mode is None:
             gym.logger.warn(
                 "You are calling render method without specifying any render mode. "
                 "You can specify the render_mode at initialization, "
                 f'e.g. gym("{self.spec.id}", render_mode="rgb_array")'
             )
-            return
-
-        if close:
-            if self.window:
-                self.window.close()
             return
 
         if self.render_mode == "rgb_array":

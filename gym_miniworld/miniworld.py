@@ -1,7 +1,7 @@
 import math
 from ctypes import POINTER
 from enum import IntEnum
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
 import gymnasium as gym
 import numpy as np
@@ -478,6 +478,7 @@ class MiniWorldEnv(gym.Env):
         params=DEFAULT_PARAMS,
         domain_rand=False,
         render_mode=None,
+        view="agent",
     ):
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions
@@ -537,12 +538,12 @@ class MiniWorldEnv(gym.Env):
         # Initialize the state
         self.reset()
 
-    def close(self):
-        pass
+        assert view in ["agent", "top"]
+        self.view = view
 
     def reset(
         self, *, seed: Optional[int] = None, options: Optional[dict] = None
-    ) -> Union[ObsType, Tuple[ObsType, dict]]:
+    ) -> Tuple[ObsType, dict]:
         """
         Reset the simulation at the start of a new episode
         This also randomizes many environment parameters (domain randomization)
@@ -1299,7 +1300,12 @@ class MiniWorldEnv(gym.Env):
 
         return vis_objs
 
-    def render(self, close=False, view="agent"):
+    def close(self):
+        if self.window:
+            self.window.close()
+        return
+
+    def render(self):
         """
         Render the environment for human viewing
         """
@@ -1312,14 +1318,8 @@ class MiniWorldEnv(gym.Env):
             )
             return
 
-        if close:
-            if self.window:
-                self.window.close()
-            return
-
         # Render the human-view image
-        assert view in ["agent", "top"]
-        if view == "agent":
+        if self.view == "agent":
             img = self.render_obs(self.vis_fb)
         else:
             img = self.render_top_view(self.vis_fb)

@@ -58,7 +58,6 @@ setup(
     },
     extras_require={"testing": ["pytest==7.0.1", "torch"]},
     install_requires=[
-        "gym>=0.26.2",
         "numpy>=1.18.0",
         "pyglet>=1.5.11",
         "gymnasium>=0.26.2",
