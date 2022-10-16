@@ -126,7 +126,8 @@ class Sign(MiniWorldEnv):
         self.place_agent(min_x=4, max_x=5, min_z=4, max_z=6)
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, done, truncation, info = super().step(action)
+
         if action == self.actions.move_forward + 1:  # custom end episode action
             done = True
 
@@ -143,20 +144,13 @@ class Sign(MiniWorldEnv):
                     )
 
         state = {"obs": obs, "goal": self._goal}
-        return state, reward, done, info
+        return state, reward, truncation, done, info
 
     def reset(
         self,
         *,
         seed: Optional[int] = None,
-        return_info: bool = False,
         options: Optional[dict] = None,
     ) -> Union[ObsType, Tuple[ObsType, dict]]:
-        if return_info:
-            obs, info = super().reset(
-                seed=seed, return_info=return_info, options=options
-            )
-            return {"obs": obs, "goal": self._goal}, info
-        else:
-            obs = super().reset(seed=seed, return_info=return_info, options=options)
-            return {"obs": obs, "goal": self._goal}
+        obs, info = super().reset(seed=seed, options=options)
+        return {"obs": obs, "goal": self._goal}, info

@@ -129,7 +129,7 @@ class SimToRealPush(MiniWorldEnv):
                         box.pos = next_box_pos
                         box.dir += self.rand.float(-math.pi / 5, math.pi / 5)
 
-        obs, reward, done, info = super().step(action)
+        obs, reward, done, truncation, info = super().step(action)
 
         # TODO: give sparse rewards?
         dist = np.linalg.norm(self.box1.pos - self.box2.pos)
@@ -137,4 +137,4 @@ class SimToRealPush(MiniWorldEnv):
             reward = 1
             done = True
 
-        return obs, reward, done, info
+        return obs, reward, done, truncation, info

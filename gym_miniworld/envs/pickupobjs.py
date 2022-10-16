@@ -49,7 +49,7 @@ class PickupObjs(MiniWorldEnv):
         self.num_picked_up = 0
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, done, truncation, info = super().step(action)
 
         if self.agent.carrying:
             self.entities.remove(self.agent.carrying)
@@ -60,4 +60,4 @@ class PickupObjs(MiniWorldEnv):
             if self.num_picked_up == self.num_objs:
                 done = True
 
-        return obs, reward, done, info
+        return obs, reward, done, truncation, info

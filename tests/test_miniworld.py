@@ -18,10 +18,10 @@ def test_miniworld():
     env.reset()
     # Try stepping a few times
     for i in range(0, 10):
-        obs, _, _, _ = env.step(0)
+        obs, _, _, _, _ = env.step(0)
 
     # Check that the human rendering resembles the agent's view
-    first_obs = env.reset()
+    first_obs, info = env.reset()
     first_render = env.render("rgb_array")
     m0 = first_obs.mean()
     m1 = first_render.mean()
@@ -29,7 +29,7 @@ def test_miniworld():
     assert abs(m0 - m1) < 5
 
     # Check that the observation shapes match in reset and step
-    second_obs, _, _, _ = env.step(0)
+    second_obs, _, _, _, _ = env.step(0)
     assert first_obs.shape == env.observation_space.shape
     assert first_obs.shape == second_obs.shape
 
@@ -40,8 +40,8 @@ def test_pytorch_wrapper():
     env = gym.make("MiniWorld-Hallway-v0")
     # Test the PyTorch observation wrapper
     env = PyTorchObsWrapper(env)
-    first_obs = env.reset()
-    second_obs, _, _, _ = env.step(0)
+    first_obs, info = env.reset()
+    second_obs, _, _, _, _ = env.step(0)
     assert first_obs.shape == env.observation_space.shape
     assert first_obs.shape == second_obs.shape
 
@@ -101,7 +101,7 @@ def test_all_envs(env_id):
         # Perform multiple random actions
         for _ in range(0, 20):
             action = env.rand.int(0, env.action_space.n)
-            obs, reward, done, info = env.step(action)
+            obs, reward, done, truncation, info = env.step(action)
             if done:
                 env.reset()
     env.close()

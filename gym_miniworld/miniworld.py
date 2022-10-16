@@ -531,30 +531,20 @@ class MiniWorldEnv(gym.Env):
         )
 
         # Initialize the state
-        self.seed()
         self.reset()
 
     def close(self):
         pass
 
-    def seed(self, seed=None):
-        self.rand = RandGen(seed)
-        return [seed]
-
     def reset(
-        self,
-        *,
-        seed: Optional[int] = None,
-        return_info: bool = False,
-        options: Optional[dict] = None
+        self, *, seed: Optional[int] = None, options: Optional[dict] = None
     ) -> Union[ObsType, Tuple[ObsType, dict]]:
         """
         Reset the simulation at the start of a new episode
         This also randomizes many environment parameters (domain randomization)
         """
         super().reset(seed=seed)
-        if seed is not None:
-            self.rand = RandGen(seed)
+        self.rand = RandGen(seed)
 
         # Step count since episode start
         self.step_count = 0
@@ -607,10 +597,7 @@ class MiniWorldEnv(gym.Env):
         obs = self.render_obs()
 
         # Return first observation
-        if return_info:
-            return obs, {}
-        else:
-            return obs
+        return obs, {}
 
     def _get_carry_pos(self, agent_pos, ent):
         """
@@ -728,13 +715,15 @@ class MiniWorldEnv(gym.Env):
         # If the maximum time step count is reached
         if self.step_count >= self.max_episode_steps:
             done = True
+            truncation = False
             reward = 0
-            return obs, reward, done, {}
+            return obs, reward, done, truncation, {}
 
         reward = 0
         done = False
+        truncation = False
 
-        return obs, reward, done, {}
+        return obs, reward, done, truncation, {}
 
     def add_rect_room(self, min_x, max_x, min_z, max_z, **kwargs):
         """

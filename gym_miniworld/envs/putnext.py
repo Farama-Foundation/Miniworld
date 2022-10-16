@@ -31,11 +31,11 @@ class PutNext(MiniWorldEnv):
         self.place_agent()
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, done, truncation, info = super().step(action)
 
         if not self.agent.carrying:
             if self.near(self.red_box, self.yellow_box):
                 reward += self._reward()
                 done = True
 
-        return obs, reward, done, info
+        return obs, reward, done, truncation, info

@@ -34,10 +34,10 @@ class Hallway(MiniWorldEnv):
         )
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, done, truncation, info = super().step(action)
 
         if self.near(self.box):
             reward += self._reward()
             done = True
 
-        return obs, reward, done, info
+        return obs, reward, done, truncation, info

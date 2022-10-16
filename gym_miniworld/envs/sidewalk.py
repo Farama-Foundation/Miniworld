@@ -65,7 +65,7 @@ class Sidewalk(MiniWorldEnv):
         self.place_agent(room=sidewalk, min_z=0, max_z=1.5)
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, done, truncation, info = super().step(action)
 
         # Walking into the street ends the episode
         if self.street.point_inside(self.agent.pos):
@@ -76,4 +76,4 @@ class Sidewalk(MiniWorldEnv):
             reward += self._reward()
             done = True
 
-        return obs, reward, done, info
+        return obs, reward, done, truncation, info

@@ -7,7 +7,6 @@ import numpy
 import numpy as np
 import pyglet
 from gym import spaces
-from gym.utils import seeding
 
 # Try importing ZMQ
 from pyglet.gl import (
@@ -22,6 +21,9 @@ from pyglet.gl import (
 )
 
 from gym_miniworld.miniworld import MiniWorldEnv
+
+# from gym.utils import seeding
+
 
 try:
     import zmq
@@ -113,7 +115,6 @@ class RemoteBot(gym.Env):
         self.socket.connect(addr_str)
 
         # Initialize the state
-        self.seed()
         self.reset()
         print("Connected")
 
@@ -128,7 +129,7 @@ class RemoteBot(gym.Env):
 
         self.img = img
 
-    def reset(self):
+    def reset(self, seed, options):
         # Step count since episode start
         self.step_count = 0
 
@@ -143,11 +144,7 @@ class RemoteBot(gym.Env):
         # Receive a camera image from the server
         self._recv_frame()
 
-        return self.img
-
-    def seed(self, seed=None):
-        self.np_random, _ = seeding.np_random(seed)
-        return [seed]
+        return self.img, {}
 
     def step(self, action):
         # Send the action to the server
@@ -164,7 +161,9 @@ class RemoteBot(gym.Env):
         reward = 0
         done = False
 
-        return self.img, reward, done, {}
+        truncation = False
+
+        return self.img, reward, done, truncation, {}
 
     def render(self, mode="human", close=False):
         if close:

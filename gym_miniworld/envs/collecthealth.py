@@ -43,7 +43,7 @@ class CollectHealth(MiniWorldEnv):
         self.health = 100
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, done, truncation, info = super().step(action)
 
         self.health -= 2
 
@@ -67,4 +67,4 @@ class CollectHealth(MiniWorldEnv):
         # Pass current health value in info dict
         info["health"] = self.health
 
-        return obs, reward, done, info
+        return obs, reward, done, truncation, info

@@ -48,6 +48,5 @@ class ThreeRooms(MiniWorldEnv):
         self.place_agent()
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
-
-        return obs, reward, done, info
+        obs, reward, done, truncation, info = super().step(action)
+        return obs, reward, done, truncation, info
