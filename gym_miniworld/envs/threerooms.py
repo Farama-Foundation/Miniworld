@@ -1,6 +1,6 @@
 import math
 
-from gym import spaces
+from gymnasium import spaces
 
 from gym_miniworld.entity import Ball, Box, ImageFrame, Key, MeshEnt
 from gym_miniworld.miniworld import MiniWorldEnv

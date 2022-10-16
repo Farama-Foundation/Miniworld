@@ -3,11 +3,11 @@ from ctypes import POINTER
 from enum import IntEnum
 from typing import Optional, Tuple, Union
 
-import gym
+import gymnasium as gym
 import numpy as np
 import pyglet
-from gym import spaces
-from gym.core import ObsType
+from gymnasium import spaces
+from gymnasium.core import ObsType
 from pyglet.gl import (
     GL_AMBIENT,
     GL_AMBIENT_AND_DIFFUSE,

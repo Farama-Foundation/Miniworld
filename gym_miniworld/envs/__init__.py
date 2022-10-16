@@ -1,6 +1,6 @@
 import inspect
 
-import gym
+import gymnasium as gym
 
 from gym_miniworld.envs.collecthealth import CollectHealth
 from gym_miniworld.envs.fourrooms import FourRooms

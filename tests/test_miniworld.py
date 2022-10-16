@@ -2,9 +2,9 @@ import importlib
 import math
 import warnings
 
-import gym
+import gymnasium as gym
 import pytest
-from gym.utils.env_checker import check_env
+from gymnasium.utils.env_checker import check_env
 
 import gym_miniworld
 from gym_miniworld.entity import TextFrame

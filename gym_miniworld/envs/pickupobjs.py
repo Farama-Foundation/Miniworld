@@ -1,4 +1,4 @@
-from gym import spaces
+from gymnasium import spaces
 
 from gym_miniworld.entity import Ball, Box, Key
 from gym_miniworld.miniworld import MiniWorldEnv

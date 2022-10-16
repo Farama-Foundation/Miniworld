@@ -1,9 +1,9 @@
 import math
 from typing import Optional, Tuple, Union
 
-import gym
-from gym.core import ObsType
-from gym.spaces import Dict, Discrete
+import gymnasium as gym
+from gymnasium.core import ObsType
+from gymnasium.spaces import Dict, Discrete
 
 from gym_miniworld.entity import COLOR_NAMES, Box, Key, MeshEnt, TextFrame
 from gym_miniworld.miniworld import MiniWorldEnv

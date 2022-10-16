@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-from gym import spaces
+from gymnasium import spaces
 
 from gym_miniworld.entity import Box, MeshEnt
 from gym_miniworld.miniworld import MiniWorldEnv

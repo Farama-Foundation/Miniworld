@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-from gym import spaces
+from gymnasium import spaces
 
 from gym_miniworld.entity import Box
 from gym_miniworld.math import gen_rot_matrix

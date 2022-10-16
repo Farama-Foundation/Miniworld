@@ -2,11 +2,11 @@
 
 import math
 
-import gym
+import gymnasium as gym
 import numpy
 import numpy as np
 import pyglet
-from gym import spaces
+from gymnasium import spaces
 
 # Try importing ZMQ
 from pyglet.gl import (

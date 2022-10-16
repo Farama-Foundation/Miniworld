@@ -2,6 +2,8 @@ attrs==22.1.0
 cloudpickle==2.2.0
 gym==0.26.2
 gym-notices==0.0.8
+gymnasium==0.26.2
+gymnasium-notices==0.0.1
 importlib-metadata==5.0.0
 iniconfig==1.1.1
 numpy==1.23.4
