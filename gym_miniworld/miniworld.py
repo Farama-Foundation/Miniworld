@@ -521,6 +521,10 @@ class MiniWorldEnv(gym.Env):
         # Set rendering mode
         self.render_mode = render_mode
 
+        # Set view type
+        assert view in ["agent", "top"]
+        self.view = view
+
         # Compute the observation display size
         self.obs_disp_width = 256
         self.obs_disp_height = obs_height * (self.obs_disp_width / obs_width)
@@ -537,9 +541,6 @@ class MiniWorldEnv(gym.Env):
 
         # Initialize the state
         self.reset()
-
-        assert view in ["agent", "top"]
-        self.view = view
 
     def reset(
         self, *, seed: Optional[int] = None, options: Optional[dict] = None
