@@ -109,6 +109,7 @@ venv.bak/
 
 # tests
 test_result.txt
+test_results.txt
 
 # VS Code
 .vscode
