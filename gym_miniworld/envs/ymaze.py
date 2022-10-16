@@ -82,15 +82,15 @@ class YMaze(MiniWorldEnv):
         self.place_agent(dir=self.rand.float(-math.pi / 4, math.pi / 4), room=main_arm)
 
     def step(self, action):
-        obs, reward, done, truncation, info = super().step(action)
+        obs, reward, termination, truncation, info = super().step(action)
 
         if self.near(self.box):
             reward += self._reward()
-            done = True
+            termination = True
 
         info["goal_pos"] = self.box.pos
 
-        return obs, reward, done, truncation, info
+        return obs, reward, termination, truncation, info
 
 
 class YMazeLeft(YMaze):

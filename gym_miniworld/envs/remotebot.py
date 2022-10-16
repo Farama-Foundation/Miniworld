@@ -161,11 +161,10 @@ class RemoteBot(gym.Env):
 
         # We don't care about rewards or episodes since we're not training
         reward = 0
-        done = False
-
+        termination = False
         truncation = False
 
-        return self.img, reward, done, truncation, {}
+        return self.img, reward, termination, truncation, {}
 
     def render(self, close=False):
         if self.render_mode is None:

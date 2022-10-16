@@ -718,16 +718,16 @@ class MiniWorldEnv(gym.Env):
 
         # If the maximum time step count is reached
         if self.step_count >= self.max_episode_steps:
-            done = True
-            truncation = False
+            termination = False
+            truncation = True
             reward = 0
-            return obs, reward, done, truncation, {}
+            return obs, reward, termination, truncation, {}
 
         reward = 0
-        done = False
+        termination = False
         truncation = False
 
-        return obs, reward, done, truncation, {}
+        return obs, reward, termination, truncation, {}
 
     def add_rect_room(self, min_x, max_x, min_z, max_z, **kwargs):
         """
