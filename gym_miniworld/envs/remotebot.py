@@ -72,6 +72,7 @@ class RemoteBot(gym.Env):
         serverPort=SERVER_PORT,
         obs_width=80,
         obs_height=60,
+        render_mode=None,
     ):
         assert zmq is not None, "Please install zmq (pip3 install zmq)"
 
@@ -96,6 +97,7 @@ class RemoteBot(gym.Env):
 
         # For rendering
         self.window = None
+        self.render_mode = render_mode
 
         # We continually stream in images and then just take the latest one.
         self.latest_img = None
@@ -165,13 +167,21 @@ class RemoteBot(gym.Env):
 
         return self.img, reward, done, truncation, {}
 
-    def render(self, mode="human", close=False):
+    def render(self, close=False):
+        if self.render_mode is None:
+            gym.logger.warn(
+                "You are calling render method without specifying any render mode. "
+                "You can specify the render_mode at initialization, "
+                f'e.g. gym("{self.spec.id}", render_mode="rgb_array")'
+            )
+            return
+
         if close:
             if self.window:
                 self.window.close()
             return
 
-        if mode == "rgb_array":
+        if self.render_mode == "rgb_array":
             return self.img
 
         if self.window is None:
@@ -208,6 +218,6 @@ class RemoteBot(gym.Env):
 
         # If we are not running the Pyglet event loop,
         # we have to manually flip the buffers and dispatch events
-        if mode == "human":
+        if self.render_mode == "human":
             self.window.flip()
             self.window.dispatch_events()

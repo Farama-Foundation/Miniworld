@@ -13,7 +13,7 @@ from gym_miniworld.wrappers import PyTorchObsWrapper
 
 
 def test_miniworld():
-    env = gym.make("MiniWorld-Hallway-v0")
+    env = gym.make("MiniWorld-Hallway-v0", render_mode="rgb_array")
 
     env.reset()
     # Try stepping a few times
@@ -22,7 +22,7 @@ def test_miniworld():
 
     # Check that the human rendering resembles the agent's view
     first_obs, info = env.reset()
-    first_render = env.render("rgb_array")
+    first_render = env.render()
     m0 = first_obs.mean()
     m1 = first_render.mean()
     assert m0 > 0 and m0 < 255

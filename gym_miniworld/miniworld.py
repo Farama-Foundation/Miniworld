@@ -477,6 +477,7 @@ class MiniWorldEnv(gym.Env):
         window_height=600,
         params=DEFAULT_PARAMS,
         domain_rand=False,
+        render_mode=None,
     ):
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions
@@ -515,6 +516,9 @@ class MiniWorldEnv(gym.Env):
 
         # Frame buffer used for human visualization
         self.vis_fb = FrameBuffer(window_width, window_height, 16)
+
+        # Set rendering mode
+        self.render_mode = render_mode
 
         # Compute the observation display size
         self.obs_disp_width = 256
@@ -1178,7 +1182,7 @@ class MiniWorldEnv(gym.Env):
             # Up vector
             0,
             1.0,
-            0.0
+            0.0,
         )
 
         return self._render_world(frame_buffer, render_agent=False)
@@ -1246,7 +1250,7 @@ class MiniWorldEnv(gym.Env):
             # Up vector
             0,
             1.0,
-            0.0
+            0.0,
         )
 
         # Render the rooms, without texturing
@@ -1295,10 +1299,18 @@ class MiniWorldEnv(gym.Env):
 
         return vis_objs
 
-    def render(self, mode="human", close=False, view="agent"):
+    def render(self, close=False, view="agent"):
         """
         Render the environment for human viewing
         """
+
+        if self.render_mode is None:
+            gym.logger.warn(
+                "You are calling render method without specifying any render mode. "
+                "You can specify the render_mode at initialization, "
+                f'e.g. gym("{self.spec.id}", render_mode="rgb_array")'
+            )
+            return
 
         if close:
             if self.window:
@@ -1314,7 +1326,7 @@ class MiniWorldEnv(gym.Env):
         img_width = img.shape[1]
         img_height = img.shape[0]
 
-        if mode == "rgb_array":
+        if self.render_mode == "rgb_array":
             return img
 
         # Render the agent's view
@@ -1390,7 +1402,7 @@ class MiniWorldEnv(gym.Env):
 
         # If we are not running the Pyglet event loop,
         # we have to manually flip the buffers and dispatch events
-        if mode == "human":
+        if self.render_mode == "human":
             self.window.flip()
             self.window.dispatch_events()
 
