@@ -1,4 +1,4 @@
-from gym import spaces
+from gymnasium import spaces
 
 from gym_miniworld.entity import Ball, Box, Key
 from gym_miniworld.miniworld import MiniWorldEnv
@@ -49,7 +49,7 @@ class PickupObjs(MiniWorldEnv):
         self.num_picked_up = 0
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, termination, truncation, info = super().step(action)
 
         if self.agent.carrying:
             self.entities.remove(self.agent.carrying)
@@ -58,6 +58,6 @@ class PickupObjs(MiniWorldEnv):
             reward = 1
 
             if self.num_picked_up == self.num_objs:
-                done = True
+                termination = True
 
-        return obs, reward, done, info
+        return obs, reward, termination, truncation, info

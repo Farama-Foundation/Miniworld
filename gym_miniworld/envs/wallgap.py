@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-from gym import spaces
+from gymnasium import spaces
 
 from gym_miniworld.entity import Box, MeshEnt
 from gym_miniworld.miniworld import MiniWorldEnv
@@ -53,10 +53,10 @@ class WallGap(MiniWorldEnv):
         self.place_agent(room=room0)
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, termination, truncation, info = super().step(action)
 
         if self.near(self.box):
             reward += self._reward()
-            done = True
+            termination = True
 
-        return obs, reward, done, info
+        return obs, reward, termination, truncation, info

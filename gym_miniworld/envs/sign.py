@@ -1,9 +1,9 @@
 import math
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
-import gym
-from gym.core import ObsType
-from gym.spaces import Dict, Discrete
+import gymnasium as gym
+from gymnasium.core import ObsType
+from gymnasium.spaces import Dict, Discrete
 
 from gym_miniworld.entity import COLOR_NAMES, Box, Key, MeshEnt, TextFrame
 from gym_miniworld.miniworld import MiniWorldEnv
@@ -126,14 +126,15 @@ class Sign(MiniWorldEnv):
         self.place_agent(min_x=4, max_x=5, min_z=4, max_z=6)
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, termination, truncation, info = super().step(action)
+
         if action == self.actions.move_forward + 1:  # custom end episode action
-            done = True
+            termination = True
 
         for obj_index, object_pair in enumerate(self._objects):
             for color_index, obj in enumerate(object_pair):
                 if self.near(obj):
-                    done = True
+                    termination = True
                     reward = (
                         float(
                             color_index == self._color_index and obj_index == self._goal
@@ -143,20 +144,13 @@ class Sign(MiniWorldEnv):
                     )
 
         state = {"obs": obs, "goal": self._goal}
-        return state, reward, done, info
+        return state, reward, termination, truncation, info
 
     def reset(
         self,
         *,
         seed: Optional[int] = None,
-        return_info: bool = False,
         options: Optional[dict] = None,
-    ) -> Union[ObsType, Tuple[ObsType, dict]]:
-        if return_info:
-            obs, info = super().reset(
-                seed=seed, return_info=return_info, options=options
-            )
-            return {"obs": obs, "goal": self._goal}, info
-        else:
-            obs = super().reset(seed=seed, return_info=return_info, options=options)
-            return {"obs": obs, "goal": self._goal}
+    ) -> Tuple[ObsType, dict]:
+        obs, info = super().reset(seed=seed, options=options)
+        return {"obs": obs, "goal": self._goal}, info

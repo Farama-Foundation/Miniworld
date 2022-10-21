@@ -1,6 +1,6 @@
 import math
 
-from gym import spaces
+from gymnasium import spaces
 
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
@@ -46,15 +46,15 @@ class TMaze(MiniWorldEnv):
         self.place_agent(dir=self.rand.float(-math.pi / 4, math.pi / 4), room=room1)
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
+        obs, reward, termination, truncation, info = super().step(action)
 
         if self.near(self.box):
             reward += self._reward()
-            done = True
+            termination = True
 
         info["goal_pos"] = self.box.pos
 
-        return obs, reward, done, info
+        return obs, reward, termination, truncation, info
 
 
 class TMazeLeft(TMaze):

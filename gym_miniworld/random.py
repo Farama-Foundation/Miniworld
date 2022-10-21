@@ -1,4 +1,4 @@
-from gym.utils import seeding
+from gymnasium.utils import seeding
 
 
 class RandGen:

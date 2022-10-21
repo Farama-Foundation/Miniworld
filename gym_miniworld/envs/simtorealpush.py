@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-from gym import spaces
+from gymnasium import spaces
 
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
@@ -129,12 +129,12 @@ class SimToRealPush(MiniWorldEnv):
                         box.pos = next_box_pos
                         box.dir += self.rand.float(-math.pi / 5, math.pi / 5)
 
-        obs, reward, done, info = super().step(action)
+        obs, reward, termination, truncation, info = super().step(action)
 
         # TODO: give sparse rewards?
         dist = np.linalg.norm(self.box1.pos - self.box2.pos)
         if dist < self.goal_dist:
             reward = 1
-            done = True
+            termination = True
 
-        return obs, reward, done, info
+        return obs, reward, termination, truncation, info

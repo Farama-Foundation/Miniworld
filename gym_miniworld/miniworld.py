@@ -1,13 +1,13 @@
 import math
 from ctypes import POINTER
 from enum import IntEnum
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
 
-import gym
+import gymnasium as gym
 import numpy as np
 import pyglet
-from gym import spaces
-from gym.core import ObsType
+from gymnasium import spaces
+from gymnasium.core import ObsType
 from pyglet.gl import (
     GL_AMBIENT,
     GL_AMBIENT_AND_DIFFUSE,
@@ -445,7 +445,7 @@ class MiniWorldEnv(gym.Env):
         "render.modes": ["human", "rgb_array"],
         "video.frames_per_second": 30,
         "render_modes": ["human", "rgb_array"],
-        "video_fps": 30,
+        "render_fps": 30,
     }
 
     # Enumeration of possible actions
@@ -477,6 +477,8 @@ class MiniWorldEnv(gym.Env):
         window_height=600,
         params=DEFAULT_PARAMS,
         domain_rand=False,
+        render_mode=None,
+        view="agent",
     ):
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions
@@ -516,6 +518,13 @@ class MiniWorldEnv(gym.Env):
         # Frame buffer used for human visualization
         self.vis_fb = FrameBuffer(window_width, window_height, 16)
 
+        # Set rendering mode
+        self.render_mode = render_mode
+
+        # Set view type
+        assert view in ["agent", "top"]
+        self.view = view
+
         # Compute the observation display size
         self.obs_disp_width = 256
         self.obs_disp_height = obs_height * (self.obs_disp_width / obs_width)
@@ -531,30 +540,17 @@ class MiniWorldEnv(gym.Env):
         )
 
         # Initialize the state
-        self.seed()
         self.reset()
 
-    def close(self):
-        pass
-
-    def seed(self, seed=None):
-        self.rand = RandGen(seed)
-        return [seed]
-
     def reset(
-        self,
-        *,
-        seed: Optional[int] = None,
-        return_info: bool = False,
-        options: Optional[dict] = None
-    ) -> Union[ObsType, Tuple[ObsType, dict]]:
+        self, *, seed: Optional[int] = None, options: Optional[dict] = None
+    ) -> Tuple[ObsType, dict]:
         """
         Reset the simulation at the start of a new episode
         This also randomizes many environment parameters (domain randomization)
         """
         super().reset(seed=seed)
-        if seed is not None:
-            self.rand = RandGen(seed)
+        self.rand = RandGen(seed)
 
         # Step count since episode start
         self.step_count = 0
@@ -607,10 +603,7 @@ class MiniWorldEnv(gym.Env):
         obs = self.render_obs()
 
         # Return first observation
-        if return_info:
-            return obs, {}
-        else:
-            return obs
+        return obs, {}
 
     def _get_carry_pos(self, agent_pos, ent):
         """
@@ -727,14 +720,16 @@ class MiniWorldEnv(gym.Env):
 
         # If the maximum time step count is reached
         if self.step_count >= self.max_episode_steps:
-            done = True
+            termination = False
+            truncation = True
             reward = 0
-            return obs, reward, done, {}
+            return obs, reward, termination, truncation, {}
 
         reward = 0
-        done = False
+        termination = False
+        truncation = False
 
-        return obs, reward, done, {}
+        return obs, reward, termination, truncation, {}
 
     def add_rect_room(self, min_x, max_x, min_z, max_z, **kwargs):
         """
@@ -1189,7 +1184,7 @@ class MiniWorldEnv(gym.Env):
             # Up vector
             0,
             1.0,
-            0.0
+            0.0,
         )
 
         return self._render_world(frame_buffer, render_agent=False)
@@ -1257,7 +1252,7 @@ class MiniWorldEnv(gym.Env):
             # Up vector
             0,
             1.0,
-            0.0
+            0.0,
         )
 
         # Render the rooms, without texturing
@@ -1306,26 +1301,33 @@ class MiniWorldEnv(gym.Env):
 
         return vis_objs
 
-    def render(self, mode="human", close=False, view="agent"):
+    def close(self):
+        if self.window:
+            self.window.close()
+        return
+
+    def render(self):
         """
         Render the environment for human viewing
         """
 
-        if close:
-            if self.window:
-                self.window.close()
+        if self.render_mode is None:
+            gym.logger.warn(
+                "You are calling render method without specifying any render mode. "
+                "You can specify the render_mode at initialization, "
+                f'e.g. gym("{self.spec.id}", render_mode="rgb_array")'
+            )
             return
 
         # Render the human-view image
-        assert view in ["agent", "top"]
-        if view == "agent":
+        if self.view == "agent":
             img = self.render_obs(self.vis_fb)
         else:
             img = self.render_top_view(self.vis_fb)
         img_width = img.shape[1]
         img_height = img.shape[0]
 
-        if mode == "rgb_array":
+        if self.render_mode == "rgb_array":
             return img
 
         # Render the agent's view
@@ -1401,7 +1403,7 @@ class MiniWorldEnv(gym.Env):
 
         # If we are not running the Pyglet event loop,
         # we have to manually flip the buffers and dispatch events
-        if mode == "human":
+        if self.render_mode == "human":
             self.window.flip()
             self.window.dispatch_events()
 

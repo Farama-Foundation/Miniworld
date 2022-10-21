@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 import math
+from typing import Optional
 
-import gym
+import gymnasium as gym
 import numpy
 import numpy as np
 import pyglet
-from gym import spaces
-from gym.utils import seeding
+from gymnasium import spaces
 
 # Try importing ZMQ
 from pyglet.gl import (
@@ -22,6 +22,9 @@ from pyglet.gl import (
 )
 
 from gym_miniworld.miniworld import MiniWorldEnv
+
+# from gym.utils import seeding
+
 
 try:
     import zmq
@@ -70,6 +73,7 @@ class RemoteBot(gym.Env):
         serverPort=SERVER_PORT,
         obs_width=80,
         obs_height=60,
+        render_mode=None,
     ):
         assert zmq is not None, "Please install zmq (pip3 install zmq)"
 
@@ -94,6 +98,7 @@ class RemoteBot(gym.Env):
 
         # For rendering
         self.window = None
+        self.render_mode = render_mode
 
         # We continually stream in images and then just take the latest one.
         self.latest_img = None
@@ -113,14 +118,13 @@ class RemoteBot(gym.Env):
         self.socket.connect(addr_str)
 
         # Initialize the state
-        self.seed()
         self.reset()
         print("Connected")
 
     def close(self):
-        # Stop the motors
-        # self.step(numpy.array([0, 0]))
-        pass
+        if self.window:
+            self.window.close()
+        return
 
     def _recv_frame(self):
         # Receive a camera image from the server
@@ -128,7 +132,11 @@ class RemoteBot(gym.Env):
 
         self.img = img
 
-    def reset(self):
+    def reset(
+        self,
+        seed: Optional[int] = None,
+        options: Optional[dict] = None,
+    ):
         # Step count since episode start
         self.step_count = 0
 
@@ -143,11 +151,7 @@ class RemoteBot(gym.Env):
         # Receive a camera image from the server
         self._recv_frame()
 
-        return self.img
-
-    def seed(self, seed=None):
-        self.np_random, _ = seeding.np_random(seed)
-        return [seed]
+        return self.img, {}
 
     def step(self, action):
         # Send the action to the server
@@ -162,17 +166,21 @@ class RemoteBot(gym.Env):
 
         # We don't care about rewards or episodes since we're not training
         reward = 0
-        done = False
+        termination = False
+        truncation = False
 
-        return self.img, reward, done, {}
+        return self.img, reward, termination, truncation, {}
 
-    def render(self, mode="human", close=False):
-        if close:
-            if self.window:
-                self.window.close()
+    def render(self):
+        if self.render_mode is None:
+            gym.logger.warn(
+                "You are calling render method without specifying any render mode. "
+                "You can specify the render_mode at initialization, "
+                f'e.g. gym("{self.spec.id}", render_mode="rgb_array")'
+            )
             return
 
-        if mode == "rgb_array":
+        if self.render_mode == "rgb_array":
             return self.img
 
         if self.window is None:
@@ -209,6 +217,6 @@ class RemoteBot(gym.Env):
 
         # If we are not running the Pyglet event loop,
         # we have to manually flip the buffers and dispatch events
-        if mode == "human":
+        if self.render_mode == "human":
             self.window.flip()
             self.window.dispatch_events()

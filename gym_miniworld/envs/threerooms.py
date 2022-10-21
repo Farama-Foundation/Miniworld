@@ -1,6 +1,6 @@
 import math
 
-from gym import spaces
+from gymnasium import spaces
 
 from gym_miniworld.entity import Ball, Box, ImageFrame, Key, MeshEnt
 from gym_miniworld.miniworld import MiniWorldEnv
@@ -48,6 +48,5 @@ class ThreeRooms(MiniWorldEnv):
         self.place_agent()
 
     def step(self, action):
-        obs, reward, done, info = super().step(action)
-
-        return obs, reward, done, info
+        obs, reward, termination, truncation, info = super().step(action)
+        return obs, reward, termination, truncation, info

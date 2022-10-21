@@ -73,7 +73,7 @@ This simulator was created as part of work done at [Mila](https://mila.quebec/).
 
 Requirements:
 - Python 3.5+
-- OpenAI Gym
+- Gymnasium
 - NumPy
 - Pyglet (OpenGL 3D graphics)
 - GPU for 3D graphics acceleration (optional)
