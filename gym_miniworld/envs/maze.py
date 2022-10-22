@@ -1,13 +1,44 @@
-from gymnasium import spaces
-
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
 from gym_miniworld.params import DEFAULT_PARAMS
+from gymnasium import spaces
 
 
 class Maze(MiniWorldEnv):
     """
+    ## Description
+
     Maze environment in which the agent has to reach a red box
+
+     ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
+    +1 - 0.2 * (step_count / max_episode_steps) when red box reached
+
+    ## Arguments
+
+    ```python
+    Maze(num_rows=8, num_cols=8, room_size=3)
+    ```
+
+    `num_rows`: number of rows
+
+    `num_cols`: number of columns
+
+    `room_size`: size of rooms
+
     """
 
     def __init__(
