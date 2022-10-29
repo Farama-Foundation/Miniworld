@@ -9,12 +9,13 @@ import argparse
 import math
 import sys
 
-import gym
+import gym_miniworld
+import gymnasium as gym
 import pyglet
 from pyglet.window import key
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--env-name", default="MiniWorld-Hallway-v0")
+parser.add_argument("--env-name", default=gym_miniworld.envs.env_ids[0])
 parser.add_argument(
     "--domain-rand", action="store_true", help="enable domain randomization"
 )
@@ -27,20 +28,19 @@ parser.add_argument(
     help="show the top view instead of the agent view",
 )
 args = parser.parse_args()
+view_mode = "top" if args.top_view else "agent"
 
-env = gym.make(args.env_name)
+env = gym.make(args.env_name, view=view_mode, render_mode="human")
 
 if args.no_time_limit:
     env.max_episode_steps = math.inf
 if args.domain_rand:
     env.domain_rand = True
 
-view_mode = "top" if args.top_view else "agent"
-
 env.reset()
 
 # Create the display window
-env.render("pyglet", view=view_mode)
+env.render()
 
 
 def step(action):
@@ -50,16 +50,16 @@ def step(action):
         )
     )
 
-    obs, reward, done, info = env.step(action)
+    obs, reward, termination, truncation, info = env.step(action)
 
     if reward > 0:
         print(f"reward={reward:.2f}")
 
-    if done:
+    if termination:
         print("done!")
         env.reset()
 
-    env.render("pyglet", view=view_mode)
+    env.render()
 
 
 @env.unwrapped.window.event
@@ -72,7 +72,7 @@ def on_key_press(symbol, modifiers):
     if symbol == key.BACKSPACE or symbol == key.SLASH:
         print("RESET")
         env.reset()
-        env.render("pyglet", view=view_mode)
+        env.render()
         return
 
     if symbol == key.ESCAPE:
@@ -105,7 +105,7 @@ def on_key_release(symbol, modifiers):
 
 @env.unwrapped.window.event
 def on_draw():
-    env.render("pyglet", view=view_mode)
+    env.render()
 
 
 @env.unwrapped.window.event

@@ -2,7 +2,7 @@
 
 import time
 
-import gym
+import gymnasium as gym
 
 # Benchmark loading time
 st = time.time()
