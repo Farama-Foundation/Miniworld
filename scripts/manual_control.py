@@ -9,10 +9,11 @@ import argparse
 import math
 import sys
 
-import gym_miniworld
 import gymnasium as gym
 import pyglet
 from pyglet.window import key
+
+import gym_miniworld
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--env-name", default=gym_miniworld.envs.env_ids[0])
