@@ -1,9 +1,10 @@
 import math
 
 import numpy as np
+from gymnasium import spaces
+
 from gym_miniworld.entity import Box, MeshEnt
 from gym_miniworld.miniworld import MiniWorldEnv
-from gymnasium import spaces
 
 
 class Sidewalk(MiniWorldEnv):

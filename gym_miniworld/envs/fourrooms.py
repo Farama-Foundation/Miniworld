@@ -1,6 +1,7 @@
+from gymnasium import spaces
+
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
-from gymnasium import spaces
 
 
 class FourRooms(MiniWorldEnv):

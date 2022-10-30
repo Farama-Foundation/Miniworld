@@ -2,11 +2,12 @@ import math
 from typing import Optional, Tuple
 
 import gymnasium as gym
+from gymnasium.core import ObsType
+from gymnasium.spaces import Dict, Discrete
+
 from gym_miniworld.entity import COLOR_NAMES, Box, Key, MeshEnt, TextFrame
 from gym_miniworld.miniworld import MiniWorldEnv
 from gym_miniworld.params import DEFAULT_PARAMS
-from gymnasium.core import ObsType
-from gymnasium.spaces import Dict, Discrete
 
 
 class BigKey(Key):

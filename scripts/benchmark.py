@@ -2,8 +2,9 @@
 
 import time
 
-import gym_miniworld
 import gymnasium as gym
+
+# import gym_miniworld
 
 # Benchmark loading time
 st = time.time()

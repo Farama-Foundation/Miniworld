@@ -1,10 +1,11 @@
 import math
 
 import numpy as np
+from gymnasium import spaces
+
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
 from gym_miniworld.params import DEFAULT_PARAMS
-from gymnasium import spaces
 
 # Simulation parameters
 # These assume a robot about 15cm tall with a pi camera module v2

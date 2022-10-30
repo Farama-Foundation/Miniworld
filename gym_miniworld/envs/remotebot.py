@@ -7,7 +7,6 @@ import gymnasium as gym
 import numpy
 import numpy as np
 import pyglet
-from gym_miniworld.miniworld import MiniWorldEnv
 from gymnasium import spaces
 
 # Try importing ZMQ
@@ -21,6 +20,8 @@ from pyglet.gl import (
     glOrtho,
     glViewport,
 )
+
+from gym_miniworld.miniworld import MiniWorldEnv
 
 try:
     import zmq

@@ -1,7 +1,8 @@
+from gymnasium import spaces
+
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
 from gym_miniworld.params import DEFAULT_PARAMS
-from gymnasium import spaces
 
 
 class OneRoom(MiniWorldEnv):
