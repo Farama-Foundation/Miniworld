@@ -1,7 +1,6 @@
-from gymnasium import spaces
-
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
+from gymnasium import spaces
 
 
 class FourRooms(MiniWorldEnv):
@@ -25,7 +24,7 @@ class FourRooms(MiniWorldEnv):
 
     ## Rewards:
 
-    +1 - 0.2 * (step_count / max_episode_steps) when red box reached
+    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached
 
     ## Arguments
 

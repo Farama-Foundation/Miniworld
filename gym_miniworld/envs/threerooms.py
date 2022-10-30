@@ -1,14 +1,39 @@
 import math
 
-from gymnasium import spaces
-
 from gym_miniworld.entity import Ball, Box, ImageFrame, Key, MeshEnt
 from gym_miniworld.miniworld import MiniWorldEnv
+from gymnasium import spaces
 
 
 class ThreeRooms(MiniWorldEnv):
     """
+    ## Description
+
     Two small rooms connected to one large room
+
+    ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
+    None
+
+    ## Arguments
+
+    ```python
+    ThreeRooms()
+    ```
+
     """
 
     def __init__(self, **kwargs):

@@ -2,6 +2,7 @@
 
 import time
 
+import gym_miniworld
 import gymnasium as gym
 
 # Benchmark loading time
@@ -29,9 +30,9 @@ while True:
 
     # Slow movement speed to minimize resets
     action = 0
-    obs, reward, done, info = env.step(action)
+    obs, reward, termination, truncation, info = env.step(action)
 
-    if done:
+    if termination or truncation:
         env.reset()
 
     num_frames += 1

@@ -9,11 +9,10 @@ import argparse
 import math
 import sys
 
+import gym_miniworld
 import gymnasium as gym
 import pyglet
 from pyglet.window import key
-
-import gym_miniworld
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--env-name", default=gym_miniworld.envs.env_ids[0])
@@ -56,7 +55,7 @@ def step(action):
     if reward > 0:
         print(f"reward={reward:.2f}")
 
-    if termination:
+    if termination or truncation:
         print("done!")
         env.reset()
 
@@ -78,7 +77,7 @@ def on_key_press(symbol, modifiers):
 
     if symbol == key.ESCAPE:
         env.close()
-        sys.exit(0)
+        # sys.exit(0)
 
     if symbol == key.UP:
         step(env.actions.move_forward)

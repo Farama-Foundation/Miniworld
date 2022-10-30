@@ -1,8 +1,7 @@
-from gymnasium import spaces
-
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
 from gym_miniworld.params import DEFAULT_PARAMS
+from gymnasium import spaces
 
 # Simulation parameters
 # These assume a robot about 15cm tall with a pi camera module v2
@@ -21,8 +20,34 @@ sim_params.set("cam_fwd_disp", 0, -0.02, 0.02)
 
 class SimToRealGoTo(MiniWorldEnv):
     """
+    ## Description
+
     Environment designed for sim-to-real transfer.
     In this environment, the robot has to go to the red box.
+
+    ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
+    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached
+
+    ## Arguments
+
+    ```python
+    SimToRealGoTo()
+    ```
+
     """
 
     def __init__(self, **kwargs):

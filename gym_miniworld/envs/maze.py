@@ -1,8 +1,7 @@
-from gymnasium import spaces
-
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
 from gym_miniworld.params import DEFAULT_PARAMS
+from gymnasium import spaces
 
 
 class Maze(MiniWorldEnv):
@@ -11,7 +10,7 @@ class Maze(MiniWorldEnv):
 
     Maze environment in which the agent has to reach a red box
 
-     ## Action Space
+    ## Action Space
 
     | Num | Action                      |
     |-----|-----------------------------|
@@ -26,19 +25,17 @@ class Maze(MiniWorldEnv):
 
     ## Rewards:
 
-    +1 - 0.2 * (step_count / max_episode_steps) when red box reached
+    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached
 
     ## Arguments
 
     ```python
-    Maze(num_rows=8, num_cols=8, room_size=3)
+    MazeS2()
+    # or
+    MazeS3()
+    # or
+    MazeS3Fast()
     ```
-
-    `num_rows`: number of rows
-
-    `num_cols`: number of columns
-
-    `room_size`: size of rooms
 
     """
 
