@@ -8,8 +8,36 @@ from gym_miniworld.miniworld import MiniWorldEnv
 
 class Hallway(MiniWorldEnv):
     """
+    ## Description
+
     Environment in which the goal is to go to a red box
     at the end of a hallway
+
+    ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
+    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached
+
+    ## Arguments
+
+    ```python
+    FourRooms(length=12)
+    ```
+
+    `length`: length of the entire space
+
     """
 
     def __init__(self, length=12, **kwargs):

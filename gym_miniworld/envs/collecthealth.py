@@ -4,15 +4,45 @@ from gym_miniworld.miniworld import MiniWorldEnv
 
 class CollectHealth(MiniWorldEnv):
     """
+    ## Description
+
     Environment where the agent has to collect health kits and stay
     alive as long as possible. This is inspired from the VizDoom
-    HealthGathering environment. Please note, however, that the rewards
+    `HealthGathering` environment. Please note, however, that the rewards
     produced by this environment are not directly comparable to those
     of the VizDoom environment.
 
-    reward:
+    ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+    | 3   | move back                   |
+    | 4   | pick up                     |
+    | 5   | drop                        |
+    | 6   | toggle / activate an object |
+    | 7   | complete task               |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
     +2 for each time step
     -100 for dying
+
+    ## Arguments
+
+    ```python
+    CollectHealth(size=16)
+    ```
+
+    `size`: size of the room
+
     """
 
     def __init__(self, size=16, **kwargs):

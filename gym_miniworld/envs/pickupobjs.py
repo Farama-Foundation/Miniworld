@@ -6,8 +6,40 @@ from gym_miniworld.miniworld import MiniWorldEnv
 
 class PickupObjs(MiniWorldEnv):
     """
+    ## Description
+
     Room with multiple objects. The agent collects +1 reward for picking up
     each object. Objects disappear when picked up.
+
+    ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+    | 3   | move_back                   |
+    | 4   | pickup                      |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
+    +1 when agent picked up object
+
+    ## Arguments
+
+    ```python
+    PickupObjs(size=12, num_objs=5)
+    ```
+
+    `size`: size of world
+
+    `num_objs`: number of objects
+
     """
 
     def __init__(self, size=12, num_objs=5, **kwargs):

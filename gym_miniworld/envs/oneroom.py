@@ -7,8 +7,36 @@ from gym_miniworld.params import DEFAULT_PARAMS
 
 class OneRoom(MiniWorldEnv):
     """
+    ## Description
+
     Environment in which the goal is to go to a red box
     placed randomly in one big room.
+
+    ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
+    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached
+
+    ## Arguments
+
+    ```python
+    OneRoomS6()
+    # or
+    OneRoomS6Fast()
+    ```
+
     """
 
     def __init__(self, size=10, max_episode_steps=180, **kwargs):
