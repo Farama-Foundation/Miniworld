@@ -44,19 +44,19 @@ class SimToRealGoTo(MiniWorldEnv):
         self.agent.radius = 0.11
 
         floor_tex_list = [
-                "cardboard",
-                "wood",
-                "wood_planks",
-            ]
-        
+            "cardboard",
+            "wood",
+            "wood_planks",
+        ]
+
         wall_tex_list = [
-                "drywall",
-                "stucco",
-                "cardboard",
-                # Chosen because they have visible lines/seams
-                "concrete_tiles",
-                "ceiling_tiles",
-            ]
+            "drywall",
+            "stucco",
+            "cardboard",
+            # Chosen because they have visible lines/seams
+            "concrete_tiles",
+            "ceiling_tiles",
+        ]
 
         floor_tex = self.rand.choice(floor_tex_list)
 

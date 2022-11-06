@@ -871,7 +871,13 @@ class MiniWorldEnv(gym.Env):
         # Keep retrying until we find a suitable position
         while True:
             # Pick a room, sample rooms proportionally to floor surface area
-            r = room if room else list(self.rooms)[self.rand.choice(len(list(self.rooms)), p=self.room_probs)]
+            r = (
+                room
+                if room
+                else list(self.rooms)[
+                    self.rand.choice(len(list(self.rooms)), p=self.room_probs)
+                ]
+            )
 
             # Choose a random point within the square bounding box of the room
             lx = r.min_x if min_x is None else min_x
@@ -880,7 +886,7 @@ class MiniWorldEnv(gym.Env):
             hz = r.max_z if max_z is None else max_z
             pos = self.rand.uniform(
                 low=[lx - ent.radius, 0, lz - ent.radius],
-                high=[hx + ent.radius, 0, hz + ent.radius]
+                high=[hx + ent.radius, 0, hz + ent.radius],
             )
 
             # Make sure the position is within the room's outline

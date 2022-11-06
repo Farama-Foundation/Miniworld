@@ -1,8 +1,7 @@
 import math
 
-from gym_miniworld.entity import Ball, Box, Key
+from gym_miniworld.entity import COLOR_NAMES, Ball, Box, Key
 from gym_miniworld.miniworld import MiniWorldEnv
-from gym_miniworld.entity import COLOR_NAMES
 
 
 class RoomObjs(MiniWorldEnv):
@@ -34,9 +33,13 @@ class RoomObjs(MiniWorldEnv):
         self.agent.radius = 1.5
         colorlist = list(COLOR_NAMES)
 
-        self.place_entity(Box(color=colorlist[self.rand.choice(len(colorlist))], size=0.9))
-        self.place_entity(Ball(color = colorlist[self.rand.choice(len(colorlist))], size=0.9))
-        self.place_entity(Key(color = colorlist[self.rand.choice(len(colorlist))]))
+        self.place_entity(
+            Box(color=colorlist[self.rand.choice(len(colorlist))], size=0.9)
+        )
+        self.place_entity(
+            Ball(color=colorlist[self.rand.choice(len(colorlist))], size=0.9)
+        )
+        self.place_entity(Key(color=colorlist[self.rand.choice(len(colorlist))]))
 
         self.place_agent()
 
