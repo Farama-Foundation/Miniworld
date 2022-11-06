@@ -67,7 +67,7 @@ class Maze(MiniWorldEnv):
 
             # Reorder the neighbors to visit in a random order
             orders = [(0, 1), (0, -1), (-1, 0), (1, 0)] 
-            assert 4 <= len(lst)
+            assert 4 <= len(orders)
             neighbors = []
 
             while len(neighbors) < 4:
