@@ -8,6 +8,7 @@ import numpy as np
 import pyglet
 from gymnasium import spaces
 from gymnasium.core import ObsType
+from gymnasium.utils import seeding
 from pyglet.gl import (
     GL_AMBIENT,
     GL_AMBIENT_AND_DIFFUSE,
@@ -71,7 +72,6 @@ from gym_miniworld.entity import Agent, Entity
 from gym_miniworld.math import Y_VEC, intersect_circle_segs
 from gym_miniworld.opengl import FrameBuffer, Texture, drawBox
 from gym_miniworld.params import DEFAULT_PARAMS
-from gym_miniworld.random import RandGen
 
 # Default wall height for room
 DEFAULT_WALL_HEIGHT = 2.74
@@ -550,7 +550,7 @@ class MiniWorldEnv(gym.Env):
         This also randomizes many environment parameters (domain randomization)
         """
         super().reset(seed=seed)
-        self.rand = RandGen(seed)
+        self.rand, _ = seeding.np_random(seed)
 
         # Step count since episode start
         self.step_count = 0
@@ -863,7 +863,7 @@ class MiniWorldEnv(gym.Env):
 
         # If an exact position if specified
         if pos is not None:
-            ent.dir = dir if dir is not None else self.rand.float(-math.pi, math.pi)
+            ent.dir = dir if dir is not None else self.rand.uniform(-math.pi, math.pi)
             ent.pos = pos
             self.entities.append(ent)
             return ent
@@ -871,16 +871,16 @@ class MiniWorldEnv(gym.Env):
         # Keep retrying until we find a suitable position
         while True:
             # Pick a room, sample rooms proportionally to floor surface area
-            r = room if room else self.rand.choice(self.rooms, probs=self.room_probs)
+            r = room if room else list(self.rooms)[self.rand.choice(len(list(self.rooms)), p=self.room_probs)]
 
             # Choose a random point within the square bounding box of the room
             lx = r.min_x if min_x is None else min_x
             hx = r.max_x if max_x is None else max_x
             lz = r.min_z if min_z is None else min_z
             hz = r.max_z if max_z is None else max_z
-            pos = self.rand.float(
+            pos = self.rand.uniform(
                 low=[lx - ent.radius, 0, lz - ent.radius],
-                high=[hx + ent.radius, 0, hz + ent.radius],
+                high=[hx + ent.radius, 0, hz + ent.radius]
             )
 
             # Make sure the position is within the room's outline
@@ -892,7 +892,7 @@ class MiniWorldEnv(gym.Env):
                 continue
 
             # Pick a direction
-            d = dir if dir is not None else self.rand.float(-math.pi, math.pi)
+            d = dir if dir is not None else self.rand.uniform(-math.pi, math.pi)
 
             ent.pos = pos
             ent.dir = d

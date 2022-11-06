@@ -30,7 +30,7 @@ class Hallway(MiniWorldEnv):
 
         # Place the agent a random distance away from the goal
         self.place_agent(
-            dir=self.rand.float(-math.pi / 4, math.pi / 4), max_x=room.max_x - 2
+            dir=self.rand.uniform(-math.pi / 4, math.pi / 4), max_x=room.max_x - 2
         )
 
     def step(self, action):

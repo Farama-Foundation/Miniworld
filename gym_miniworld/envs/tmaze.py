@@ -37,13 +37,13 @@ class TMaze(MiniWorldEnv):
                 max_z=self.goal_pos[2],
             )
         else:
-            if self.rand.bool():
+            if self.rand.integers(0, 2) == 0:
                 self.place_entity(self.box, room=room2, max_z=room2.min_z + 2)
             else:
                 self.place_entity(self.box, room=room2, min_z=room2.max_z - 2)
 
         # Choose a random room and position to spawn at
-        self.place_agent(dir=self.rand.float(-math.pi / 4, math.pi / 4), room=room1)
+        self.place_agent(dir=self.rand.uniform(-math.pi / 4, math.pi / 4), room=room1)
 
     def step(self, action):
         obs, reward, termination, truncation, info = super().step(action)

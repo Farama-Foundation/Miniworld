@@ -38,31 +38,31 @@ class SimToRealPush(MiniWorldEnv):
 
     def _gen_world(self):
         # Size of the rink the robot is placed in
-        size = self.rand.float(1.6, 1.7)
-        wall_height = self.rand.float(0.42, 0.50)
+        size = self.rand.uniform(1.6, 1.7)
+        wall_height = self.rand.uniform(0.42, 0.50)
 
-        box1_size = self.rand.float(0.075, 0.090)
-        box2_size = self.rand.float(0.075, 0.090)
+        box1_size = self.rand.uniform(0.075, 0.090)
+        box2_size = self.rand.uniform(0.075, 0.090)
 
         self.agent.radius = 0.11
 
-        floor_tex = self.rand.choice(
-            [
+        floor_tex_list = [
                 "cardboard",
                 "wood",
                 "wood_planks",
             ]
-        )
-
-        wall_tex = self.rand.choice(
-            [
+        
+        wall_tex_list = [
                 "drywall",
                 "stucco",
-                # Materials chosen because they have visible lines/seams
+                "cardboard",
+                # Chosen because they have visible lines/seams
                 "concrete_tiles",
                 "ceiling_tiles",
             ]
-        )
+        floor_tex = self.np_random.choice(floor_tex_list)
+
+        wall_tex = self.np_random.choice(wall_tex_list)
 
         # Create a long rectangular room
         self.add_rect_room(

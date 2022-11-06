@@ -100,7 +100,7 @@ def test_all_envs(env_id):
         assert not env.intersect(env.agent, env.agent.pos, env.agent.radius)
         # Perform multiple random actions
         for _ in range(0, 20):
-            action = env.rand.int(0, env.action_space.n)
+            action = env.rand.integers(0, env.action_space.n)
             obs, reward, done, truncation, info = env.step(action)
             if done:
                 env.reset()

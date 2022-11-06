@@ -2,6 +2,7 @@ from gymnasium import spaces
 
 from gym_miniworld.entity import Ball, Box, Key
 from gym_miniworld.miniworld import MiniWorldEnv
+from gym_miniworld.entity import COLOR_NAMES
 
 
 class PickupObjs(MiniWorldEnv):
@@ -32,10 +33,11 @@ class PickupObjs(MiniWorldEnv):
         )
 
         obj_types = [Ball, Box, Key]
+        colorlist = list(COLOR_NAMES)
 
         for obj in range(self.num_objs):
-            obj_type = self.rand.choice(obj_types)
-            color = self.rand.color()
+            obj_type = obj_types[self.rand.choice(len(obj_types))]
+            color = colorlist[self.rand.choice(len(colorlist))]
 
             if obj_type == Box:
                 self.place_entity(Box(color=color, size=0.9))

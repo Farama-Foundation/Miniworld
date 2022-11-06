@@ -73,13 +73,13 @@ class YMaze(MiniWorldEnv):
                 max_z=self.goal_pos[2],
             )
         else:
-            if self.rand.bool():
+            if self.rand.integers(0, 2) == 0:
                 self.place_entity(self.box, room=left_arm, max_z=left_arm.min_z + 2.5)
             else:
                 self.place_entity(self.box, room=right_arm, min_z=right_arm.max_z - 2.5)
 
         # Choose a random room and position to spawn at
-        self.place_agent(dir=self.rand.float(-math.pi / 4, math.pi / 4), room=main_arm)
+        self.place_agent(dir=self.rand.uniform(-math.pi / 4, math.pi / 4), room=main_arm)
 
     def step(self, action):
         obs, reward, termination, truncation, info = super().step(action)
