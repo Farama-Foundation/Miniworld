@@ -127,7 +127,7 @@ class SimToRealPush(MiniWorldEnv):
                     next_box_pos = box.pos + vec
                     if not self.intersect(box, next_box_pos, box.radius):
                         box.pos = next_box_pos
-                        box.dir += self.rand.float(-math.pi / 5, math.pi / 5)
+                        box.dir += self.rand.uniform(-math.pi / 5, math.pi / 5)
 
         obs, reward, termination, truncation, info = super().step(action)
 
