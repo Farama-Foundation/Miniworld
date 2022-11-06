@@ -66,16 +66,14 @@ class Maze(MiniWorldEnv):
             visited.add(room)
 
             # Reorder the neighbors to visit in a random order
-            lst = [(0, 1), (0, -1), (-1, 0), (1, 0)] 
+            orders = [(0, 1), (0, -1), (-1, 0), (1, 0)] 
             assert 4 <= len(lst)
-            out = []
+            neighbors = []
 
-            while len(out) < 4:
-                elem = lst[self.rand.choice(len(lst))]
-                lst.remove(elem)
-                out.append(elem)
-
-            neighbors = out
+            while len(neighbors) < 4:
+                elem = orders[self.rand.choice(len(orders))]
+                orders.remove(elem)
+                neighbors.append(elem)
 
             # For each possible neighbor
             for dj, di in neighbors:
