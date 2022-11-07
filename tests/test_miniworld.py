@@ -101,7 +101,7 @@ def test_all_envs(env_id):
         # Perform multiple random actions
         for _ in range(0, 20):
             # Change to the attribute of np_rand
-            action = env.rand.integers(0, env.action_space.n)
+            action = env.np_random.integers(0, env.action_space.n)
             obs, reward, done, truncation, info = env.step(action)
             if done:
                 env.reset()

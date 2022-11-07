@@ -65,11 +65,11 @@ class SimToRealPush(MiniWorldEnv):
 
     def _gen_world(self):
         # Size of the rink the robot is placed in
-        size = self.rand.uniform(1.6, 1.7)
-        wall_height = self.rand.uniform(0.42, 0.50)
+        size = self.np_random.uniform(1.6, 1.7)
+        wall_height = self.np_random.uniform(0.42, 0.50)
 
-        box1_size = self.rand.uniform(0.075, 0.090)
-        box2_size = self.rand.uniform(0.075, 0.090)
+        box1_size = self.np_random.uniform(0.075, 0.090)
+        box2_size = self.np_random.uniform(0.075, 0.090)
 
         self.agent.radius = 0.11
 
@@ -155,7 +155,7 @@ class SimToRealPush(MiniWorldEnv):
                     next_box_pos = box.pos + vec
                     if not self.intersect(box, next_box_pos, box.radius):
                         box.pos = next_box_pos
-                        box.dir += self.rand.uniform(-math.pi / 5, math.pi / 5)
+                        box.dir += self.np_random.uniform(-math.pi / 5, math.pi / 5)
 
         obs, reward, termination, truncation, info = super().step(action)
 

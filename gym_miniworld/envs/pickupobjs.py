@@ -67,8 +67,8 @@ class PickupObjs(MiniWorldEnv):
         colorlist = list(COLOR_NAMES)
 
         for obj in range(self.num_objs):
-            obj_type = obj_types[self.rand.choice(len(obj_types))]
-            color = colorlist[self.rand.choice(len(colorlist))]
+            obj_type = obj_types[self.np_random.choice(len(obj_types))]
+            color = colorlist[self.np_random.choice(len(colorlist))]
 
             if obj_type == Box:
                 self.place_entity(Box(color=color, size=0.9))

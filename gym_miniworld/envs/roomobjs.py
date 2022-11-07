@@ -67,12 +67,12 @@ class RoomObjs(MiniWorldEnv):
         colorlist = list(COLOR_NAMES)
 
         self.place_entity(
-            Box(color=colorlist[self.rand.choice(len(colorlist))], size=0.9)
+            Box(color=colorlist[self.np_random.choice(len(colorlist))], size=0.9)
         )
         self.place_entity(
-            Ball(color=colorlist[self.rand.choice(len(colorlist))], size=0.9)
+            Ball(color=colorlist[self.np_random.choice(len(colorlist))], size=0.9)
         )
-        self.place_entity(Key(color=colorlist[self.rand.choice(len(colorlist))]))
+        self.place_entity(Key(color=colorlist[self.np_random.choice(len(colorlist))]))
 
         self.place_agent()
 

@@ -52,7 +52,7 @@ class PutNext(MiniWorldEnv):
         self.add_rect_room(min_x=0, max_x=self.size, min_z=0, max_z=self.size)
 
         for color in COLOR_NAMES:
-            box = Box(color=color, size=self.rand.uniform(0.6, 0.85))
+            box = Box(color=color, size=self.np_random.uniform(0.6, 0.85))
             self.place_entity(box)
 
             if box.color == "red":

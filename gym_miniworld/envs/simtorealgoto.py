@@ -61,11 +61,11 @@ class SimToRealGoTo(MiniWorldEnv):
 
     def _gen_world(self):
         # 1-2 meter wide rink
-        size = self.rand.uniform(1, 2)
+        size = self.np_random.uniform(1, 2)
 
-        wall_height = self.rand.uniform(0.20, 0.50)
+        wall_height = self.np_random.uniform(0.20, 0.50)
 
-        box_size = self.rand.uniform(0.07, 0.12)
+        box_size = self.np_random.uniform(0.07, 0.12)
 
         self.agent.radius = 0.11
 
@@ -85,9 +85,9 @@ class SimToRealGoTo(MiniWorldEnv):
             "ceiling_tiles",
         ]
 
-        floor_tex = self.rand.choice(floor_tex_list)
+        floor_tex = self.np_random.choice(floor_tex_list)
 
-        wall_tex = self.rand.choice(wall_tex_list)
+        wall_tex = self.np_random.choice(wall_tex_list)
 
         # Create a long rectangular room
         self.add_rect_room(

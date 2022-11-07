@@ -101,7 +101,7 @@ class Maze(MiniWorldEnv):
             neighbors = []
 
             while len(neighbors) < 4:
-                elem = orders[self.rand.choice(len(orders))]
+                elem = orders[self.np_random.choice(len(orders))]
                 orders.remove(elem)
                 neighbors.append(elem)
 
