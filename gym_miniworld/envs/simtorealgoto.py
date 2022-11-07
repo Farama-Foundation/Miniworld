@@ -69,6 +69,7 @@ class SimToRealGoTo(MiniWorldEnv):
 
         self.agent.radius = 0.11
 
+        # Randomly choosing floor_tex and wall_tex
         floor_tex_list = [
             "cardboard",
             "wood",
