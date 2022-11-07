@@ -23,9 +23,36 @@ sim_params.set("cam_fwd_disp", 0, -0.02, 0.02)
 
 class SimToRealPush(MiniWorldEnv):
     """
+    ## Description
+
     Environment designed for sim-to-real transfer.
     In this environment, the robot has to push the
     red box towards the yellow box.
+
+    ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+    | 3   | move back                   |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
+    +1 when the red box is close to the yellow box
+
+    ## Arguments
+
+    ```python
+    SimToRealPush()
+    ```
+
     """
 
     def __init__(self, **kwargs):

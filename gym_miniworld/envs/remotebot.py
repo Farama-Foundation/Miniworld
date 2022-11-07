@@ -23,9 +23,6 @@ from pyglet.gl import (
 
 from gym_miniworld.miniworld import MiniWorldEnv
 
-# from gym.utils import seeding
-
-
 try:
     import zmq
 except ImportError:

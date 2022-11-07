@@ -19,7 +19,10 @@ class BigKey(Key):
 
 
 class Sign(MiniWorldEnv):
-    """Sign environment from https://arxiv.org/abs/2008.02790.
+    """
+    ## Description
+
+    Sign environment from https://arxiv.org/abs/2008.02790.
 
     If you use this environment, please cite the above paper (Liu et al., 2020).
 
@@ -30,26 +33,48 @@ class Sign(MiniWorldEnv):
     includes a goal under state["goal"] that specifies box or key.
 
     The episode ends when any object is touched.
-    Touching the object where the color matches the sign and the shape matches the
-    goal yields +1 reward.
-    Touching any other object yields -1 reward.
 
     The sign and goal can be configured via the color_index and goal arguments to
     the constructor respectively.
 
     Includes an action to end the episode.
+
+    ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+    | 3   | end episode                 |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
+    +1 for touching the object where the color matches the sign and the shape matches the goal
+    -1 for touching any other object
+
+    ## Arguments
+
+    ```python
+    Sign(size=10, max_episode_steps=20, color_index=0, goal=0)
+    ```
+
+    `size`:  size of the square room.
+
+    `max_episode_steps`: number of steps before the episode ends.
+
+    `color_index`: specifies whether the sign says blue (0), green (1), or red (2).
+
+    `goal`: specifies box (0) or key (1).
+
     """
 
     def __init__(self, size=10, max_episode_steps=20, color_index=0, goal=0):
-        """Constructs.
-
-        Args:
-          size (int): size of the square room.
-          max_episode_steps (int): number of steps before the episode ends.
-          color_index (int): specifies whether the sign says blue (0), green (1), or
-            red (2).
-          goal (int): specifies box (0) or key (1).
-        """
         if color_index not in [0, 1, 2]:
             raise ValueError("Only supported values for color_index are 0, 1, 2.")
 

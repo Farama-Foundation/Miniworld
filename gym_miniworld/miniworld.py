@@ -470,15 +470,15 @@ class MiniWorldEnv(gym.Env):
 
     def __init__(
         self,
-        max_episode_steps=1500,
-        obs_width=80,
-        obs_height=60,
-        window_width=800,
-        window_height=600,
+        max_episode_steps: int = 1500,
+        obs_width: int = 80,
+        obs_height: int = 60,
+        window_width: int = 800,
+        window_height: int = 600,
         params=DEFAULT_PARAMS,
-        domain_rand=False,
-        render_mode=None,
-        view="agent",
+        domain_rand: bool = False,
+        render_mode: Optional[str] = None,
+        view: str = "agent",
     ):
         # Action enumeration for this environment
         self.actions = MiniWorldEnv.Actions

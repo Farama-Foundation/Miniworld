@@ -9,8 +9,34 @@ from gym_miniworld.miniworld import MiniWorldEnv
 
 class Sidewalk(MiniWorldEnv):
     """
+    ## Description
+
     Walk on a sidewalk up to an object to be collected.
     Don't walk into the street.
+
+    ## Action Space
+
+    | Num | Action                      |
+    |-----|-----------------------------|
+    | 0   | turn left                   |
+    | 1   | turn right                  |
+    | 2   | move forward                |
+
+    ## Observation Space
+
+    The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
+    representing the view the agents sees.
+
+    ## Rewards:
+
+    +(1 - 0.2 * (step_count / max_episode_steps)) when object reached
+
+    ## Arguments
+
+    ```python
+    Sidewalk()
+    ```
+
     """
 
     def __init__(self, **kwargs):
