@@ -1,6 +1,6 @@
 import math
 
-from gym_miniworld.entity import Ball, Box, Key
+from gym_miniworld.entity import COLOR_NAMES, Ball, Box, Key
 from gym_miniworld.miniworld import MiniWorldEnv
 
 
@@ -64,10 +64,15 @@ class RoomObjs(MiniWorldEnv):
 
         # Reduce chances that objects are too close to see
         self.agent.radius = 1.5
+        colorlist = list(COLOR_NAMES)
 
-        self.place_entity(Box(color=self.rand.color(), size=0.9))
-        self.place_entity(Ball(color=self.rand.color(), size=0.9))
-        self.place_entity(Key(color=self.rand.color()))
+        self.place_entity(
+            Box(color=colorlist[self.np_random.choice(len(colorlist))], size=0.9)
+        )
+        self.place_entity(
+            Ball(color=colorlist[self.np_random.choice(len(colorlist))], size=0.9)
+        )
+        self.place_entity(Key(color=colorlist[self.np_random.choice(len(colorlist))]))
 
         self.place_agent()
 

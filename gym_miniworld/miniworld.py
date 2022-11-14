@@ -71,7 +71,6 @@ from gym_miniworld.entity import Agent, Entity
 from gym_miniworld.math import Y_VEC, intersect_circle_segs
 from gym_miniworld.opengl import FrameBuffer, Texture, drawBox
 from gym_miniworld.params import DEFAULT_PARAMS
-from gym_miniworld.random import RandGen
 
 # Default wall height for room
 DEFAULT_WALL_HEIGHT = 2.74
@@ -550,7 +549,6 @@ class MiniWorldEnv(gym.Env):
         This also randomizes many environment parameters (domain randomization)
         """
         super().reset(seed=seed)
-        self.rand = RandGen(seed)
 
         # Step count since episode start
         self.step_count = 0
@@ -572,7 +570,7 @@ class MiniWorldEnv(gym.Env):
         self._gen_world()
 
         # Check if domain randomization is enabled or not
-        rand = self.rand if self.domain_rand else None
+        rand = self.np_random if self.domain_rand else None
 
         # Randomize elements of the world (domain randomization)
         self.params.sample_many(
@@ -676,7 +674,7 @@ class MiniWorldEnv(gym.Env):
 
         self.step_count += 1
 
-        rand = self.rand if self.domain_rand else None
+        rand = self.np_random if self.domain_rand else None
         fwd_step = self.params.sample(rand, "forward_step")
         fwd_drift = self.params.sample(rand, "forward_drift")
         turn_step = self.params.sample(rand, "turn_step")
@@ -863,7 +861,9 @@ class MiniWorldEnv(gym.Env):
 
         # If an exact position if specified
         if pos is not None:
-            ent.dir = dir if dir is not None else self.rand.float(-math.pi, math.pi)
+            ent.dir = (
+                dir if dir is not None else self.np_random.uniform(-math.pi, math.pi)
+            )
             ent.pos = pos
             self.entities.append(ent)
             return ent
@@ -871,14 +871,20 @@ class MiniWorldEnv(gym.Env):
         # Keep retrying until we find a suitable position
         while True:
             # Pick a room, sample rooms proportionally to floor surface area
-            r = room if room else self.rand.choice(self.rooms, probs=self.room_probs)
+            r = (
+                room
+                if room
+                else list(self.rooms)[
+                    self.np_random.choice(len(list(self.rooms)), p=self.room_probs)
+                ]
+            )
 
             # Choose a random point within the square bounding box of the room
             lx = r.min_x if min_x is None else min_x
             hx = r.max_x if max_x is None else max_x
             lz = r.min_z if min_z is None else min_z
             hz = r.max_z if max_z is None else max_z
-            pos = self.rand.float(
+            pos = self.np_random.uniform(
                 low=[lx - ent.radius, 0, lz - ent.radius],
                 high=[hx + ent.radius, 0, hz + ent.radius],
             )
@@ -892,7 +898,7 @@ class MiniWorldEnv(gym.Env):
                 continue
 
             # Pick a direction
-            d = dir if dir is not None else self.rand.float(-math.pi, math.pi)
+            d = dir if dir is not None else self.np_random.uniform(-math.pi, math.pi)
 
             ent.pos = pos
             ent.dir = d
@@ -965,7 +971,9 @@ class MiniWorldEnv(gym.Env):
         Load a texture, with or without domain randomization
         """
 
-        rand = self.rand if self.params.sample(self.rand, "tex_rand") else None
+        rand = (
+            self.np_random if self.params.sample(self.np_random, "tex_rand") else None
+        )
         return Texture.get(tex_name, rand)
 
     def _gen_static_data(self):
@@ -975,7 +983,9 @@ class MiniWorldEnv(gym.Env):
 
         # Generate the static data for each room
         for room in self.rooms:
-            room._gen_static_data(self.params, self.rand if self.domain_rand else None)
+            room._gen_static_data(
+                self.params, self.np_random if self.domain_rand else None
+            )
 
         # Concatenate the wall segments
         self.wall_segs = np.concatenate([r.wall_segs for r in self.rooms])

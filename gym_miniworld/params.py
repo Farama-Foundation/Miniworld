@@ -93,9 +93,9 @@ class DomainParams:
             return p.default
 
         if p.type == "float":
-            return rng.float(p.min, p.max)
+            return rng.uniform(p.min, p.max)
         elif p.type == "int":
-            return rng.int(p.min, p.max + 1)
+            return rng.integers(p.min, p.max + 1)
 
         assert False
 

@@ -134,7 +134,7 @@ class Texture:
 
         # If domain-randomization is to be used
         if rng:
-            path_idx = rng.int(0, len(paths))
+            path_idx = rng.integers(0, len(paths))
             path = paths[path_idx]
         else:
             path = paths[0]

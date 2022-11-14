@@ -65,31 +65,32 @@ class SimToRealPush(MiniWorldEnv):
 
     def _gen_world(self):
         # Size of the rink the robot is placed in
-        size = self.rand.float(1.6, 1.7)
-        wall_height = self.rand.float(0.42, 0.50)
+        size = self.np_random.uniform(1.6, 1.7)
+        wall_height = self.np_random.uniform(0.42, 0.50)
 
-        box1_size = self.rand.float(0.075, 0.090)
-        box2_size = self.rand.float(0.075, 0.090)
+        box1_size = self.np_random.uniform(0.075, 0.090)
+        box2_size = self.np_random.uniform(0.075, 0.090)
 
         self.agent.radius = 0.11
 
-        floor_tex = self.rand.choice(
-            [
-                "cardboard",
-                "wood",
-                "wood_planks",
-            ]
-        )
+        # Randomly choosing floor_tex and wall_tex
+        floor_tex_list = [
+            "cardboard",
+            "wood",
+            "wood_planks",
+        ]
 
-        wall_tex = self.rand.choice(
-            [
-                "drywall",
-                "stucco",
-                # Materials chosen because they have visible lines/seams
-                "concrete_tiles",
-                "ceiling_tiles",
-            ]
-        )
+        wall_tex_list = [
+            "drywall",
+            "stucco",
+            "cardboard",
+            # Chosen because they have visible lines/seams
+            "concrete_tiles",
+            "ceiling_tiles",
+        ]
+        floor_tex = self.np_random.choice(floor_tex_list)
+
+        wall_tex = self.np_random.choice(wall_tex_list)
 
         # Create a long rectangular room
         self.add_rect_room(
@@ -154,7 +155,7 @@ class SimToRealPush(MiniWorldEnv):
                     next_box_pos = box.pos + vec
                     if not self.intersect(box, next_box_pos, box.radius):
                         box.pos = next_box_pos
-                        box.dir += self.rand.float(-math.pi / 5, math.pi / 5)
+                        box.dir += self.np_random.uniform(-math.pi / 5, math.pi / 5)
 
         obs, reward, termination, truncation, info = super().step(action)
 
