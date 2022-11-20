@@ -1,12 +1,12 @@
 import math
 
-from gymnasium import spaces
+from gymnasium import spaces, utils
 
 from gym_miniworld.entity import Ball, Box, ImageFrame, Key, MeshEnt
 from gym_miniworld.miniworld import MiniWorldEnv
 
 
-class ThreeRooms(MiniWorldEnv):
+class ThreeRooms(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -38,7 +38,8 @@ class ThreeRooms(MiniWorldEnv):
     """
 
     def __init__(self, **kwargs):
-        super().__init__(max_episode_steps=400, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=400, **kwargs)
+        utils.EzPickle.__init__(self, **kwargs)
 
         # Allow only the movement actions
         self.action_space = spaces.Discrete(self.actions.move_forward + 1)

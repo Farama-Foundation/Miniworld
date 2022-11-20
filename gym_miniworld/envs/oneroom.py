@@ -1,11 +1,11 @@
-from gymnasium import spaces
+from gymnasium import spaces, utils
 
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
 from gym_miniworld.params import DEFAULT_PARAMS
 
 
-class OneRoom(MiniWorldEnv):
+class OneRoom(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -43,7 +43,8 @@ class OneRoom(MiniWorldEnv):
         assert size >= 2
         self.size = size
 
-        super().__init__(max_episode_steps=max_episode_steps, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=max_episode_steps, **kwargs)
+        utils.EzPickle.__init__(self, size, max_episode_steps, **kwargs)
 
         # Allow only movement actions (left/right/forward)
         self.action_space = spaces.Discrete(self.actions.move_forward + 1)

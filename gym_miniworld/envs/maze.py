@@ -1,11 +1,11 @@
-from gymnasium import spaces
+from gymnasium import spaces, utils
 
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
 from gym_miniworld.params import DEFAULT_PARAMS
 
 
-class Maze(MiniWorldEnv):
+class Maze(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -48,8 +48,13 @@ class Maze(MiniWorldEnv):
         self.room_size = room_size
         self.gap_size = 0.25
 
-        super().__init__(
-            max_episode_steps=max_episode_steps or num_rows * num_cols * 24, **kwargs
+        MiniWorldEnv.__init__(
+            self,
+            max_episode_steps=max_episode_steps or num_rows * num_cols * 24,
+            **kwargs
+        )
+        utils.EzPickle.__init__(
+            self, num_rows, num_cols, room_size, max_episode_steps, **kwargs
         )
 
         # Allow only the movement actions

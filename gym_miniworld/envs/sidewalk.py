@@ -1,13 +1,13 @@
 import math
 
 import numpy as np
-from gymnasium import spaces
+from gymnasium import spaces, utils
 
 from gym_miniworld.entity import Box, MeshEnt
 from gym_miniworld.miniworld import MiniWorldEnv
 
 
-class Sidewalk(MiniWorldEnv):
+class Sidewalk(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -40,7 +40,8 @@ class Sidewalk(MiniWorldEnv):
     """
 
     def __init__(self, **kwargs):
-        super().__init__(max_episode_steps=150, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=150, **kwargs)
+        utils.EzPickle.__init__(self, **kwargs)
 
         # Allow only the movement actions
         self.action_space = spaces.Discrete(self.actions.move_forward + 1)

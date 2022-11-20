@@ -1,8 +1,10 @@
+from gymnasium import utils
+
 from gym_miniworld.entity import COLOR_NAMES, Box
 from gym_miniworld.miniworld import MiniWorldEnv
 
 
-class PutNext(MiniWorldEnv):
+class PutNext(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -45,7 +47,8 @@ class PutNext(MiniWorldEnv):
         assert size >= 2
         self.size = size
 
-        super().__init__(max_episode_steps=250, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=250, **kwargs)
+        utils.EzPickle__init__(self, size, **kwargs)
 
     def _gen_world(self):
         # Create a long rectangular room

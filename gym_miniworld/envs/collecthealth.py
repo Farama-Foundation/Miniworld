@@ -1,8 +1,10 @@
+from gymnasium import utils
+
 from gym_miniworld.entity import MeshEnt
 from gym_miniworld.miniworld import MiniWorldEnv
 
 
-class CollectHealth(MiniWorldEnv):
+class CollectHealth(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -49,7 +51,8 @@ class CollectHealth(MiniWorldEnv):
         assert size >= 2
         self.size = size
 
-        super().__init__(max_episode_steps=1000, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=1000, **kwargs)
+        utils.EzPickle.__init__(self, size, **kwargs)
 
     def _gen_world(self):
         # Create a long rectangular room

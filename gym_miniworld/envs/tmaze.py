@@ -1,12 +1,12 @@
 import math
 
-from gymnasium import spaces
+from gymnasium import spaces, utils
 
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
 
 
-class TMaze(MiniWorldEnv):
+class TMaze(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -43,7 +43,8 @@ class TMaze(MiniWorldEnv):
     def __init__(self, goal_pos=None, **kwargs):
         self.goal_pos = goal_pos
 
-        super().__init__(max_episode_steps=280, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=280, **kwargs)
+        utils.EzPickle.__init__(self, goal_pos, **kwargs)
 
         # Allow only movement actions (left/right/forward)
         self.action_space = spaces.Discrete(self.actions.move_forward + 1)

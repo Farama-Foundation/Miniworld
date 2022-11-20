@@ -2,6 +2,7 @@ import math
 from typing import Optional, Tuple
 
 import gymnasium as gym
+from gymnasium import utils
 from gymnasium.core import ObsType
 from gymnasium.spaces import Dict, Discrete
 
@@ -18,7 +19,7 @@ class BigKey(Key):
         MeshEnt.__init__(self, mesh_name=f"key_{color}", height=size, static=False)
 
 
-class Sign(MiniWorldEnv):
+class Sign(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -89,9 +90,11 @@ class Sign(MiniWorldEnv):
         self._goal = goal
         self._color_index = color_index
 
-        super().__init__(
-            params=params, max_episode_steps=max_episode_steps, domain_rand=False
+        MiniWorldEnv.__init__(
+            self, params=params, max_episode_steps=max_episode_steps, domain_rand=False
         )
+        utils.EzPickle.__init__(self, size, max_episode_steps, color_index, goal)
+
         self.observation_space = Dict(obs=self.observation_space, goal=Discrete(2))
 
         # Allow for left / right / forward + custom end episode
