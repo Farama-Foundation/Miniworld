@@ -48,7 +48,7 @@ class PutNext(MiniWorldEnv, utils.EzPickle):
         self.size = size
 
         MiniWorldEnv.__init__(self, max_episode_steps=250, **kwargs)
-        utils.EzPickle__init__(self, size, **kwargs)
+        utils.EzPickle.__init__(self, size, **kwargs)
 
     def _gen_world(self):
         # Create a long rectangular room
