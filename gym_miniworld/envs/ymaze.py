@@ -45,7 +45,7 @@ class YMaze(MiniWorldEnv, utils.EzPickle):
         self.goal_pos = goal_pos
 
         MiniWorldEnv.__init__(self, max_episode_steps=280, **kwargs)
-        utils.EzPickle.__init__(self, goal_pos, max_episode_steps=280, **kwargs)
+        utils.EzPickle.__init__(self, goal_pos, **kwargs)
 
         # Allow only movement actions (left/right/forward)
         self.action_space = spaces.Discrete(self.actions.move_forward + 1)
@@ -125,10 +125,10 @@ class YMaze(MiniWorldEnv, utils.EzPickle):
 
 
 class YMazeLeft(YMaze):
-    def __init__(self):
-        super().__init__(goal_pos=[3.9, 0, -7.0])
+    def __init__(self, goal_pos=[3.9, 0, -7.0], **kwargs):
+        super().__init__(goal_pos=goal_pos, **kwargs)
 
 
 class YMazeRight(YMaze):
-    def __init__(self):
-        super().__init__(goal_pos=[3.9, 0, 7.0])
+    def __init__(self, goal_pos=[3.9, 0, 7.0], **kwargs):
+        super().__init__(goal_pos=goal_pos, **kwargs)

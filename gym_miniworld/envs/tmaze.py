@@ -90,10 +90,10 @@ class TMaze(MiniWorldEnv, utils.EzPickle):
 
 
 class TMazeLeft(TMaze):
-    def __init__(self):
-        super().__init__(goal_pos=[10, 0, -6])
+    def __init__(self, goal_pos=[10, 0, -6], **kwargs):
+        super().__init__(goal_pos=goal_pos, **kwargs)
 
 
 class TMazeRight(TMaze):
-    def __init__(self):
-        super().__init__(goal_pos=[10, 0, 6])
+    def __init__(self, goal_pos=[10, 0, 6], **kwargs):
+        super().__init__(goal_pos=goal_pos, **kwargs)

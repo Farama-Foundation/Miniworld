@@ -44,7 +44,9 @@ class OneRoom(MiniWorldEnv, utils.EzPickle):
         self.size = size
 
         MiniWorldEnv.__init__(self, max_episode_steps=max_episode_steps, **kwargs)
-        utils.EzPickle.__init__(self, size, max_episode_steps, **kwargs)
+        utils.EzPickle.__init__(
+            self, size=size, max_episode_steps=max_episode_steps, **kwargs
+        )
 
         # Allow only movement actions (left/right/forward)
         self.action_space = spaces.Discrete(self.actions.move_forward + 1)
@@ -66,15 +68,24 @@ class OneRoom(MiniWorldEnv, utils.EzPickle):
 
 
 class OneRoomS6(OneRoom):
-    def __init__(self, max_episode_steps=100, **kwargs):
-        super().__init__(size=6, max_episode_steps=max_episode_steps, **kwargs)
+    def __init__(self, size=6, max_episode_steps=100, **kwargs):
+        super().__init__(size=size, max_episode_steps=max_episode_steps, **kwargs)
+
+
+# Parameters for larger movement steps, fast stepping
+default_params = DEFAULT_PARAMS.no_random()
+default_params.set("forward_step", 0.7)
+default_params.set("turn_step", 45)
 
 
 class OneRoomS6Fast(OneRoomS6):
-    def __init__(self, forward_step=0.7, turn_step=45):
-        # Parameters for larger movement steps, fast stepping
-        params = DEFAULT_PARAMS.no_random()
-        params.set("forward_step", forward_step)
-        params.set("turn_step", turn_step)
+    def __init__(
+        self, max_episode_steps=50, params=default_params, domain_rand=False, **kwargs
+    ):
 
-        super().__init__(max_episode_steps=50, params=params, domain_rand=False)
+        super().__init__(
+            max_episode_steps=max_episode_steps,
+            params=params,
+            domain_rand=domain_rand,
+            **kwargs
+        )
