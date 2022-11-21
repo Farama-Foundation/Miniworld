@@ -144,7 +144,7 @@ def test_pickle_env(env_id):
     if "RemoteBot" in env_id:
         return
 
-    env = gym.make(env_id).unwrapped
+    env = gym.make(env_id, max_episode_steps=100).unwrapped
     pickled_env = pickle.loads(pickle.dumps(env))
 
     data_equivalence(env.reset(), pickled_env.reset())
