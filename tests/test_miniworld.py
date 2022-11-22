@@ -1,10 +1,11 @@
 import importlib
 import math
+import pickle
 import warnings
 
 import gymnasium as gym
 import pytest
-from gymnasium.utils.env_checker import check_env
+from gymnasium.utils.env_checker import check_env, data_equivalence
 
 import gym_miniworld
 from gym_miniworld.entity import TextFrame
@@ -136,3 +137,19 @@ def test_env_checker(env_id):
             raise gym.error.Error(f"Unexpected warning: {warning.message}")
 
     env.close()
+
+
+@pytest.mark.parametrize("env_id", gym_miniworld.envs.env_ids)
+def test_pickle_env(env_id):
+    if "RemoteBot" in env_id:
+        return
+
+    env = gym.make(env_id, max_episode_steps=100).unwrapped
+    pickled_env = pickle.loads(pickle.dumps(env))
+
+    data_equivalence(env.reset(), pickled_env.reset())
+    action = env.action_space.sample()
+    data_equivalence(env.step(action), pickled_env.step(action))
+
+    env.close()
+    pickled_env.close()
