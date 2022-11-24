@@ -24,8 +24,8 @@ environments/index
 :hidden:
 :caption: Development
 
-Github <https://github.com/Farama-Foundation/PettingZoo>
-Contribute to the Docs <https://github.com/Farama-Foundation/PettingZoo/tree/master/docs/>
+Github <https://github.com/Farama-Foundation/Miniworld>
+Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/master/docs/>
 
 ```
 
