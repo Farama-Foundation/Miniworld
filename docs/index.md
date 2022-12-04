@@ -14,9 +14,10 @@ content/troubleshooting
 
 ```{toctree}
 :hidden:
+:glob:
 :caption: Environments
 
-environments/index
+environments/*
 ```
 
 
