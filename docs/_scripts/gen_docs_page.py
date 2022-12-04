@@ -2,8 +2,9 @@ import os
 import re
 
 import gymnasium as gym
-from gymnasium.envs.registration import registry
+
 import gym_miniworld
+
 
 # From python docs
 def trim(docstring):
@@ -30,6 +31,7 @@ def trim(docstring):
         trimmed.pop(0)
     # Return a single string:
     return "\n".join(trimmed)
+
 
 LAYOUT = "env"
 
@@ -68,11 +70,10 @@ for env_id in miniworld_env_ids:
         # Docstring
         res_env_md += f"{docstring}\n"
 
-
     file_path = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),
         "environments",
-        f"{env_name_snake_case}.md"
+        f"{env_name_snake_case}.md",
     )
 
     file = open(file_path, "w+", encoding="utf-8")
