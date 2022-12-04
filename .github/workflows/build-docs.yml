@@ -17,10 +17,7 @@ jobs:
             python-version: '3.9'
 
       - name: Install freeglut
-        run: sudo apt-get install -y freeglut3-dev
-
-      - name: No window
-        run: export DISPLAY=localhost:0.0
+        run: sudo apt-get install -y freeglut3-dev xvbf
 
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
@@ -29,7 +26,7 @@ jobs:
         run: pip install .
 
       - name: Generate Environments page
-        run: python docs/_scripts/gen_docs_page.py
+        run: xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python docs/_scripts/gen_docs_page.py
 
       - name: Build
         run: sphinx-build -b dirhtml -v docs _build
