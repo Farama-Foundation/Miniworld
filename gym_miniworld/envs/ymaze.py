@@ -1,14 +1,14 @@
 import math
 
 import numpy as np
-from gymnasium import spaces
+from gymnasium import spaces, utils
 
 from gym_miniworld.entity import Box
 from gym_miniworld.math import gen_rot_matrix
 from gym_miniworld.miniworld import MiniWorldEnv
 
 
-class YMaze(MiniWorldEnv):
+class YMaze(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -44,7 +44,8 @@ class YMaze(MiniWorldEnv):
     def __init__(self, goal_pos=None, **kwargs):
         self.goal_pos = goal_pos
 
-        super().__init__(max_episode_steps=280, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=280, **kwargs)
+        utils.EzPickle.__init__(self, goal_pos, **kwargs)
 
         # Allow only movement actions (left/right/forward)
         self.action_space = spaces.Discrete(self.actions.move_forward + 1)
@@ -124,10 +125,10 @@ class YMaze(MiniWorldEnv):
 
 
 class YMazeLeft(YMaze):
-    def __init__(self):
-        super().__init__(goal_pos=[3.9, 0, -7.0])
+    def __init__(self, goal_pos=[3.9, 0, -7.0], **kwargs):
+        super().__init__(goal_pos=goal_pos, **kwargs)
 
 
 class YMazeRight(YMaze):
-    def __init__(self):
-        super().__init__(goal_pos=[3.9, 0, 7.0])
+    def __init__(self, goal_pos=[3.9, 0, 7.0], **kwargs):
+        super().__init__(goal_pos=goal_pos, **kwargs)

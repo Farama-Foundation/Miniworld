@@ -1,10 +1,12 @@
 import math
 
+from gymnasium import utils
+
 from gym_miniworld.entity import COLOR_NAMES, Ball, Box, Key
 from gym_miniworld.miniworld import MiniWorldEnv
 
 
-class RoomObjs(MiniWorldEnv):
+class RoomObjs(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -49,7 +51,8 @@ class RoomObjs(MiniWorldEnv):
         assert size >= 2
         self.size = size
 
-        super().__init__(max_episode_steps=math.inf, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=math.inf, **kwargs)
+        utils.EzPickle.__init__(self, size, **kwargs)
 
     def _gen_world(self):
         self.add_rect_room(

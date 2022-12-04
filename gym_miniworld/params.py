@@ -3,15 +3,16 @@ from copy import deepcopy
 
 import numpy as np
 
-# Simulation parameter, with domain randomization range
-# The default value is used when domain randomization is disabled
-DomainParam = namedtuple("Domainparam", ["default", "min", "max", "type"])
-
 
 class DomainParams:
     """
     Set of simulation parameters
     """
+
+    # Simulation parameter, with domain randomization range
+    # The default value is used when domain randomization is disabled
+    DomainParam = namedtuple("Domainparam", ["default", "min", "max", "type"])
+    DomainParam.__qualname__ = "DomainParams.DomainParam"
 
     def __init__(self):
         # Dictionary of parameters, indexed by name
@@ -30,7 +31,9 @@ class DomainParams:
         copy = self.copy()
 
         for name, p in copy.params.items():
-            copy.params[name] = DomainParam(p.default, p.default, p.default, p.type)
+            copy.params[name] = DomainParams.DomainParam(
+                p.default, p.default, p.default, p.type
+            )
 
         return copy
 
@@ -72,7 +75,7 @@ class DomainParams:
             if isinstance(p.default, np.ndarray):
                 assert default.shape == p.default.shape
 
-        self.params[name] = DomainParam(default, min, max, type)
+        self.params[name] = DomainParams.DomainParam(default, min, max, type)
 
     def get_max(self, name):
         assert name in self.params, name

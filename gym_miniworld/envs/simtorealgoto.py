@@ -1,4 +1,4 @@
-from gymnasium import spaces
+from gymnasium import spaces, utils
 
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
@@ -19,7 +19,7 @@ sim_params.set("cam_fwd_disp", 0, -0.02, 0.02)
 # TODO: modify lighting parameters
 
 
-class SimToRealGoTo(MiniWorldEnv):
+class SimToRealGoTo(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -52,9 +52,10 @@ class SimToRealGoTo(MiniWorldEnv):
     """
 
     def __init__(self, **kwargs):
-        super().__init__(
-            max_episode_steps=100, params=sim_params, domain_rand=True, **kwargs
+        MiniWorldEnv.__init__(
+            self, max_episode_steps=100, params=sim_params, domain_rand=True, **kwargs
         )
+        utils.EzPickle.__init__(self, **kwargs)
 
         # Allow only the movement actions
         self.action_space = spaces.Discrete(self.actions.move_forward + 1)

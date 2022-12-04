@@ -1,11 +1,11 @@
-from gymnasium import spaces
+from gymnasium import spaces, utils
 
 from gym_miniworld.entity import Box
 from gym_miniworld.miniworld import MiniWorldEnv
 from gym_miniworld.params import DEFAULT_PARAMS
 
 
-class Maze(MiniWorldEnv):
+class Maze(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -48,8 +48,18 @@ class Maze(MiniWorldEnv):
         self.room_size = room_size
         self.gap_size = 0.25
 
-        super().__init__(
-            max_episode_steps=max_episode_steps or num_rows * num_cols * 24, **kwargs
+        MiniWorldEnv.__init__(
+            self,
+            max_episode_steps=max_episode_steps or num_rows * num_cols * 24,
+            **kwargs,
+        )
+        utils.EzPickle.__init__(
+            self,
+            num_rows=num_rows,
+            num_cols=num_cols,
+            room_size=room_size,
+            max_episode_steps=max_episode_steps,
+            **kwargs,
         )
 
         # Allow only the movement actions
@@ -149,29 +159,38 @@ class Maze(MiniWorldEnv):
 
 
 class MazeS2(Maze):
-    def __init__(self):
-        super().__init__(num_rows=2, num_cols=2)
+    def __init__(self, num_rows=2, num_cols=2, **kwargs):
+        Maze.__init__(self, num_rows=num_rows, num_cols=num_cols, **kwargs)
 
 
 class MazeS3(Maze):
-    def __init__(self):
-        super().__init__(num_rows=3, num_cols=3)
+    def __init__(self, num_rows=3, num_cols=3, **kwargs):
+        Maze.__init__(self, num_rows=num_rows, num_cols=num_cols, **kwargs)
+
+
+# Parameters for larger movement steps, fast stepping
+default_params = DEFAULT_PARAMS.no_random()
+default_params.set("forward_step", 0.7)
+default_params.set("turn_step", 45)
 
 
 class MazeS3Fast(Maze):
-    def __init__(self, forward_step=0.7, turn_step=45):
+    def __init__(
+        self,
+        num_rows=3,
+        num_cols=3,
+        max_episode_steps=300,
+        params=default_params,
+        domain_rand=False,
+        **kwargs,
+    ):
 
-        # Parameters for larger movement steps, fast stepping
-        params = DEFAULT_PARAMS.no_random()
-        params.set("forward_step", forward_step)
-        params.set("turn_step", turn_step)
-
-        max_steps = 300
-
-        super().__init__(
-            num_rows=3,
-            num_cols=3,
+        Maze.__init__(
+            self,
+            num_rows=num_rows,
+            num_cols=num_cols,
+            max_episode_steps=max_episode_steps,
             params=params,
-            max_episode_steps=max_steps,
-            domain_rand=False,
+            domain_rand=domain_rand,
+            **kwargs,
         )

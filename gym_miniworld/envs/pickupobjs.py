@@ -1,10 +1,10 @@
-from gymnasium import spaces
+from gymnasium import spaces, utils
 
 from gym_miniworld.entity import COLOR_NAMES, Ball, Box, Key
 from gym_miniworld.miniworld import MiniWorldEnv
 
 
-class PickupObjs(MiniWorldEnv):
+class PickupObjs(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -47,7 +47,8 @@ class PickupObjs(MiniWorldEnv):
         self.size = size
         self.num_objs = num_objs
 
-        super().__init__(max_episode_steps=400, **kwargs)
+        MiniWorldEnv.__init__(self, max_episode_steps=400, **kwargs)
+        utils.EzPickle.__init__(self, size, num_objs, **kwargs)
 
         # Reduce the action space
         self.action_space = spaces.Discrete(self.actions.pickup + 1)
