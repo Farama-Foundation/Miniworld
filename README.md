@@ -84,7 +84,7 @@ You can install it from `PyPI` using (image broken do not use yet):
 python3 -m pip install miniworld
 ```
 
-You can install from source:
+You can also install from source:
 
 ```console
 git clone https://github.com/Farama-Foundation/Miniworld.git
