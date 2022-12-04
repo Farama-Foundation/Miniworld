@@ -4,8 +4,6 @@ import re
 import gymnasium as gym
 from gymnasium.envs.registration import registry
 import gym_miniworld
-from tqdm import tqdm
-from itertools import chain
 
 # From python docs
 def trim(docstring):
