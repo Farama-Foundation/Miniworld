@@ -9,7 +9,7 @@ repos:
     hooks:
       - id: codespell
        args:
-          - --skip=*.svg
+          - '--skip=*.svg'
           # - --ignore-words-list=
   - repo: https://github.com/PyCQA/flake8
     rev: 4.0.1
