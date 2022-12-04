@@ -74,7 +74,7 @@ In order to load a 3D model in an environment, you should create a `MeshEnt` obj
 See the [sidewalk environment](https://github.com/maximecb/gym-miniworld/blob/master/gym_miniworld/envs/sidewalk.py) for an example of how to do this.
 The `height` parameter specifies how to scale the model, based on the height you want it to have, in meters.
 
-```{figure} /_static/environments/sidewalk_0.jpg
+```{figure} /_static/environments/sidewalk.jpg
     :width: 260px
     :alt: Figure of Street cone 3D models
 ```
