@@ -8,8 +8,8 @@ repos:
     rev: v2.1.0
     hooks:
       - id: codespell
-       args:
-          - '--skip=*.svg'
+        args:
+          - --skip=*.svg
           # - --ignore-words-list=
   - repo: https://github.com/PyCQA/flake8
     rev: 4.0.1
