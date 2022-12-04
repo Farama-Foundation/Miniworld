@@ -19,6 +19,9 @@ jobs:
       - name: Install freeglut
         run: sudo apt-get install -y freeglut3-dev
 
+      - name: No window
+        run: export DISPLAY=localhost:0.0
+
       - name: Install dependencies
         run: pip install -r docs/requirements.txt
 
