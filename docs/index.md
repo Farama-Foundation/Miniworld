@@ -32,7 +32,7 @@ Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/mast
 # Miniworld
 
 
-```{figure} _static/environments/collecthealth_0.jpg
+```{figure} _static/environments/collecthealth_v0.jpg
     :width: 400px
     :alt: Observation from Collect Health environment
 ```
