@@ -72,18 +72,24 @@ This simulator was created as part of work done at [Mila](https://mila.quebec/).
 ## Installation
 
 Requirements:
-- Python 3.5+
+- Python 3.7+
 - Gymnasium
 - NumPy
 - Pyglet (OpenGL 3D graphics)
 - GPU for 3D graphics acceleration (optional)
 
-You can install all the dependencies with `pip3`:
+You can install it from `PyPI` using (image broken do not use yet):
 
+```console
+python3 -m pip install miniworld
 ```
-git clone https://github.com/maximecb/gym-miniworld.git
-cd gym-miniworld
-pip3 install -e .
+
+You can install from source:
+
+```console
+git clone https://github.com/Farama-Foundation/Miniworld.git
+cd Miniworld
+python3 -m pip install -e .
 ```
 
 If you run into any problems, please take a look at the [troubleshooting guide](docs/troubleshooting.md).
@@ -107,7 +113,7 @@ There is also a script to run automated tests (`run_tests.py`) and a script to g
 ### Offscreen Rendering (Clusters and Colab)
 
 When running MiniWorld on a cluster or in a Colab environment, you need to render to an offscreen display. You can
-run `gym-miniword` offscreen by setting the environment variable `PYOPENGL_PLATFORM` to `egl` before running MiniWorld, e.g.
+run `gym-miniworld` offscreen by setting the environment variable `PYOPENGL_PLATFORM` to `egl` before running MiniWorld, e.g.
 
 ```
 PYOPENGL_PLATFORM=egl python3 your_script.py
