@@ -52,9 +52,11 @@ def recv_array(socket):
 
 
 class RemoteBot(gym.Env):
-    """
-    An environment that is an interface to remotely
-    control an actual real robot
+    """This is a fake environment that uses ZMQ to connect remotely to a small robot (MiniBot).
+    The robot uses differential drive and discrete actions that match those of MiniWorld.
+    This makes it possible to do sim-to-real transfer experiments. Note that domain randomization
+    needs to be enabled to make this work.
+    This repository contains the code that runs on the robot and interfaces with the RemoteBot environment.
     """
 
     Actions = MiniWorldEnv.Actions
