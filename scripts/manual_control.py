@@ -40,6 +40,12 @@ if args.no_time_limit:
 if args.domain_rand:
     env.domain_rand = True
 
+print("============")
+print("Instructions")
+print("============")
+print("move: arrow keys\npickup: P\ndrop: D\ndone: ENTER\nquit: ESC")
+print("============")
+
 env.reset()
 
 # Create the display window
