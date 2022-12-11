@@ -9,12 +9,9 @@ from miniworld.envs.maze import Maze, MazeS2, MazeS3, MazeS3Fast
 from miniworld.envs.oneroom import OneRoom, OneRoomS6, OneRoomS6Fast
 from miniworld.envs.pickupobjs import PickupObjs
 from miniworld.envs.putnext import PutNext
-from miniworld.envs.remotebot import RemoteBot
 from miniworld.envs.roomobjs import RoomObjs
 from miniworld.envs.sidewalk import Sidewalk
 from miniworld.envs.sign import Sign
-from miniworld.envs.simtorealgoto import SimToRealGoTo
-from miniworld.envs.simtorealpush import SimToRealPush
 from miniworld.envs.threerooms import ThreeRooms
 from miniworld.envs.tmaze import TMaze, TMazeLeft, TMazeRight
 from miniworld.envs.wallgap import WallGap
