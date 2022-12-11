@@ -1,9 +1,8 @@
 import os
 import re
 
-import gymnasium as gym
-
 import gym_miniworld
+import gymnasium as gym
 
 
 # From python docs
