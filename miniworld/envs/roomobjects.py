@@ -6,7 +6,7 @@ from miniworld.entity import COLOR_NAMES, Ball, Box, Key
 from miniworld.miniworld import MiniWorldEnv
 
 
-class RoomObjs(MiniWorldEnv, utils.EzPickle):
+class RoomObjects(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -40,7 +40,7 @@ class RoomObjs(MiniWorldEnv, utils.EzPickle):
     ## Arguments
 
     ```python
-    RoomObjs(size=16)
+    RoomObjects(size=16)
     ```
 
     `size`: size of world

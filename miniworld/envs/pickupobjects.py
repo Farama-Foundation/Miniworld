@@ -4,7 +4,7 @@ from miniworld.entity import COLOR_NAMES, Ball, Box, Key
 from miniworld.miniworld import MiniWorldEnv
 
 
-class PickupObjs(MiniWorldEnv, utils.EzPickle):
+class PickupObjects(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
@@ -33,7 +33,7 @@ class PickupObjs(MiniWorldEnv, utils.EzPickle):
     ## Arguments
 
     ```python
-    PickupObjs(size=12, num_objs=5)
+    PickupObjects(size=12, num_objs=5)
     ```
 
     `size`: size of world
