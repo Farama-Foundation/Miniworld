@@ -12,7 +12,7 @@ parser.add_argument(
     "--dataset_path", required=True, help="path to the by_class dataset"
 )
 parser.add_argument(
-    "--out_path", default="gym_miniworld/textures/chars/", help="output path"
+    "--out_path", default="miniworld/textures/chars/", help="output path"
 )
 parser.add_argument(
     "--chars_per_class", default=50, help="number of chars to extract for each class"

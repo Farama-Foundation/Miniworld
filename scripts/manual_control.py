@@ -12,13 +12,13 @@ import gymnasium as gym
 import pyglet
 from pyglet.window import key
 
-import gym_miniworld
+import miniworld
 
 # import sys
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--env-name", default=gym_miniworld.envs.env_ids[0])
+parser.add_argument("--env-name", default=miniworld.envs.env_ids[0])
 parser.add_argument(
     "--domain-rand", action="store_true", help="enable domain randomization"
 )

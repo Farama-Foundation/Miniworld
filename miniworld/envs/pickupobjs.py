@@ -1,7 +1,7 @@
 from gymnasium import spaces, utils
 
-from gym_miniworld.entity import COLOR_NAMES, Ball, Box, Key
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.entity import COLOR_NAMES, Ball, Box, Key
+from miniworld.miniworld import MiniWorldEnv
 
 
 class PickupObjs(MiniWorldEnv, utils.EzPickle):

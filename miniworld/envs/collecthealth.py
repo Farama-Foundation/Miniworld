@@ -1,7 +1,7 @@
 from gymnasium import utils
 
-from gym_miniworld.entity import MeshEnt
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.entity import MeshEnt
+from miniworld.miniworld import MiniWorldEnv
 
 
 class CollectHealth(MiniWorldEnv, utils.EzPickle):

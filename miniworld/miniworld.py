@@ -67,10 +67,10 @@ from pyglet.gl import (
     glVertex3f,
 )
 
-from gym_miniworld.entity import Agent, Entity
-from gym_miniworld.math import Y_VEC, intersect_circle_segs
-from gym_miniworld.opengl import FrameBuffer, Texture, drawBox
-from gym_miniworld.params import DEFAULT_PARAMS
+from miniworld.entity import Agent, Entity
+from miniworld.math import Y_VEC, intersect_circle_segs
+from miniworld.opengl import FrameBuffer, Texture, drawBox
+from miniworld.params import DEFAULT_PARAMS
 
 # Default wall height for room
 DEFAULT_WALL_HEIGHT = 2.74

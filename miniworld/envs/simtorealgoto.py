@@ -1,8 +1,8 @@
 from gymnasium import spaces, utils
 
-from gym_miniworld.entity import Box
-from gym_miniworld.miniworld import MiniWorldEnv
-from gym_miniworld.params import DEFAULT_PARAMS
+from miniworld.entity import Box
+from miniworld.miniworld import MiniWorldEnv
+from miniworld.params import DEFAULT_PARAMS
 
 # Simulation parameters
 # These assume a robot about 15cm tall with a pi camera module v2

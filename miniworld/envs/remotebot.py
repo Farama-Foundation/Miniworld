@@ -21,7 +21,7 @@ from pyglet.gl import (
     glViewport,
 )
 
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.miniworld import MiniWorldEnv
 
 try:
     import zmq

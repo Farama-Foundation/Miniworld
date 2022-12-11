@@ -4,8 +4,8 @@ import numpy as np
 import pyglet
 from pyglet.gl import GL_TEXTURE_2D, GL_TRIANGLES, glBindTexture, glDisable, glEnable
 
-from gym_miniworld.opengl import Texture
-from gym_miniworld.utils import get_file_path
+from miniworld.opengl import Texture
+from miniworld.utils import get_file_path
 
 
 class ObjMesh:

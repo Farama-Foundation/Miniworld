@@ -20,7 +20,7 @@ def get_description():
 
 def get_version():
     """Gets the miniworld version."""
-    path = "gym_miniworld/__init__.py"
+    path = "miniworld/__init__.py"
     with open(path) as file:
         lines = file.readlines()
 
@@ -34,7 +34,7 @@ version = get_version()
 header_count, long_description = get_description()
 
 setup(
-    name="gym_miniworld",
+    name="miniworld",
     version=version,
     author="Farama Foundation",
     author_email="contact@farama.org",
@@ -46,9 +46,9 @@ setup(
     long_description_content_type="text/markdown",
     keywords=["Environment", "Agent", "RL", "Gym", "Robotics", "3D"],
     python_requires=">=3.7, <3.11",
-    packages=["gym_miniworld", "gym_miniworld.envs"],
+    packages=["miniworld", "miniworld.envs"],
     package_data={
-        "gym_miniworld": [
+        "miniworld": [
             "textures/*.png",
             "textures/chars/*.png",
             "textures/portraits/*.png",

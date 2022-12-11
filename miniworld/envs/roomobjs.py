@@ -2,8 +2,8 @@ import math
 
 from gymnasium import utils
 
-from gym_miniworld.entity import COLOR_NAMES, Ball, Box, Key
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.entity import COLOR_NAMES, Ball, Box, Key
+from miniworld.miniworld import MiniWorldEnv
 
 
 class RoomObjs(MiniWorldEnv, utils.EzPickle):
