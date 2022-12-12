@@ -1,7 +1,7 @@
 from gymnasium import utils
 
-from gym_miniworld.entity import COLOR_NAMES, Box
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.entity import COLOR_NAMES, Box
+from miniworld.miniworld import MiniWorldEnv
 
 
 class PutNext(MiniWorldEnv, utils.EzPickle):

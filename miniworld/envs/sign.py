@@ -6,9 +6,9 @@ from gymnasium import utils
 from gymnasium.core import ObsType
 from gymnasium.spaces import Dict, Discrete
 
-from gym_miniworld.entity import COLOR_NAMES, Box, Key, MeshEnt, TextFrame
-from gym_miniworld.miniworld import MiniWorldEnv
-from gym_miniworld.params import DEFAULT_PARAMS
+from miniworld.entity import COLOR_NAMES, Box, Key, MeshEnt, TextFrame
+from miniworld.miniworld import MiniWorldEnv
+from miniworld.params import DEFAULT_PARAMS
 
 
 class BigKey(Key):

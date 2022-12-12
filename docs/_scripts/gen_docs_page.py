@@ -3,7 +3,7 @@ import re
 
 import gymnasium as gym
 
-import gym_miniworld
+import miniworld
 
 
 # From python docs
@@ -37,7 +37,7 @@ LAYOUT = "env"
 
 pattern = re.compile(r"(?<!^)(?=[A-Z])")
 
-miniworld_env_ids = sorted(list(gym_miniworld.envs.env_ids))
+miniworld_env_ids = sorted(list(miniworld.envs.env_ids))
 
 previous_env_name = None
 

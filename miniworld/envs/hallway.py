@@ -2,8 +2,8 @@ import math
 
 from gymnasium import spaces, utils
 
-from gym_miniworld.entity import Box
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.entity import Box
+from miniworld.miniworld import MiniWorldEnv
 
 
 class Hallway(MiniWorldEnv, utils.EzPickle):

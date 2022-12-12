@@ -3,9 +3,9 @@ import math
 import numpy as np
 from gymnasium import spaces, utils
 
-from gym_miniworld.entity import Box
-from gym_miniworld.math import gen_rot_matrix
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.entity import Box
+from miniworld.math import gen_rot_matrix
+from miniworld.miniworld import MiniWorldEnv
 
 
 class YMaze(MiniWorldEnv, utils.EzPickle):

@@ -2,8 +2,8 @@ import math
 
 from gymnasium import spaces, utils
 
-from gym_miniworld.entity import Ball, Box, ImageFrame, Key, MeshEnt
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.entity import Ball, Box, ImageFrame, Key, MeshEnt
+from miniworld.miniworld import MiniWorldEnv
 
 
 class ThreeRooms(MiniWorldEnv, utils.EzPickle):

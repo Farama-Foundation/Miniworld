@@ -7,10 +7,10 @@ import gymnasium as gym
 import pytest
 from gymnasium.utils.env_checker import check_env, data_equivalence
 
-import gym_miniworld
-from gym_miniworld.entity import TextFrame
-from gym_miniworld.miniworld import MiniWorldEnv
-from gym_miniworld.wrappers import PyTorchObsWrapper
+import miniworld
+from miniworld.entity import TextFrame
+from miniworld.miniworld import MiniWorldEnv
+from miniworld.wrappers import PyTorchObsWrapper
 
 
 def test_miniworld():
@@ -52,7 +52,7 @@ def test_pytorch_wrapper():
 def test_text_frame():
     # Test TextFrame
     # make sure it loads the TextFrame with no issues
-    class TestText(gym_miniworld.envs.ThreeRooms):
+    class TestText(miniworld.envs.ThreeRooms):
         def _gen_world(self):
             super()._gen_world()
             self.entities.append(
@@ -80,7 +80,7 @@ def test_collision_detection():
     env.close()
 
 
-@pytest.mark.parametrize("env_id", gym_miniworld.envs.env_ids)
+@pytest.mark.parametrize("env_id", miniworld.envs.env_ids)
 def test_all_envs(env_id):
     # Try loading each of the available environments
     if "RemoteBot" in env_id:
@@ -122,7 +122,7 @@ CHECK_ENV_IGNORE_WARNINGS = [
 ]
 
 
-@pytest.mark.parametrize("env_id", gym_miniworld.envs.env_ids)
+@pytest.mark.parametrize("env_id", miniworld.envs.env_ids)
 def test_env_checker(env_id):
     if "RemoteBot" in env_id:
         return
@@ -139,7 +139,7 @@ def test_env_checker(env_id):
     env.close()
 
 
-@pytest.mark.parametrize("env_id", gym_miniworld.envs.env_ids)
+@pytest.mark.parametrize("env_id", miniworld.envs.env_ids)
 def test_pickle_env(env_id):
     if "RemoteBot" in env_id:
         return

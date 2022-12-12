@@ -3,8 +3,8 @@ import math
 import numpy as np
 from gymnasium import spaces, utils
 
-from gym_miniworld.entity import Box, MeshEnt
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.entity import Box, MeshEnt
+from miniworld.miniworld import MiniWorldEnv
 
 
 class Sidewalk(MiniWorldEnv, utils.EzPickle):
