@@ -7,15 +7,15 @@
     <meta property="og:title" content="Miniworld Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="" />
-    <meta property="og:url" content="https://miniworld.farama.org/environments/simtorealgoto.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="SimToRealPush" href="../simtorealpush/" /><link rel="prev" title="Sign" href="../sign/" />
-        <link rel="canonical" href="https://miniworld.farama.org/environments/simtorealgoto.html" />
+    <meta property="og:url" content="https://miniworld.farama.org/environments/pickupobjects.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="PutNext" href="../putnext/" /><link rel="prev" title="&lt;no title&gt;" href="../oneroom/" />
+        <link rel="canonical" href="https://miniworld.farama.org/environments/pickupobjects.html" />
 
     <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><meta name="generator" content="sphinx-5.3.0, furo 2022.09.15.dev1"/>
-        <title>SimToRealGoTo - Miniworld Documentation</title>
+        <title>PickupObjects - Miniworld Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=3cf7b839e8c50b5f3a39bb99d90baa7b845de926" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=67b82a225225040789e6a20eecd6d5216a5eebca" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=91b9f2a71a58ed2481980f1e5725e16457fde93d" />
     
     
 
@@ -82,7 +82,7 @@
                 <polyline style="stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-width: 2px;" points="1 7 12 18 23 7"></polyline>
               </svg>
             </button>
-            <div class="farama-header-menu-container" aria-hidden="true" id="farama-menu">
+            <div class="farama-header-menu-container farama-hidden" aria-hidden="true" id="farama-menu">
               <div class="farama-header-menu__header">
                 <a href="https://farama.org">
                   <img class="farama-header-menu__logo farama-white-logo-invert" src="../../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
@@ -234,14 +234,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../collecthealth/">CollectHealth</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../fourrooms/">FourRooms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../hallway/">Hallway</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../pickupobjs/">PickupObjs</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">PickupObjects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../putnext/">PutNext</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../remotebot/">RemoteBot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../roomobjs/">RoomObjs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../roomobjects/">RoomObjects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sidewalk/">Sidewalk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../sign/">Sign</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">SimToRealGoTo</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../simtorealpush/">SimToRealPush</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../threerooms/">ThreeRooms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../wallgap/">WallGap</a></li>
 </ul>
@@ -283,15 +280,15 @@
         </div>
         <article role="main">
           
-          <section id="simtorealgoto">
-<h1>SimToRealGoTo<a class="headerlink" href="#simtorealgoto" title="Permalink to this heading">#</a></h1>
+          <section id="pickupobjects">
+<h1>PickupObjects<a class="headerlink" href="#pickupobjects" title="Permalink to this heading">#</a></h1>
 <figure class="align-default">
-<a class="reference internal image-reference" href="../../_images/simtorealgoto.jpg"><img alt="SimToRealGoTo" src="../../_images/simtorealgoto.jpg" style="width: 300px;" /></a>
+<a class="reference internal image-reference" href="_static/environments/pickupobjects.jpg"><img alt="PickupObjects" src="_static/environments/pickupobjects.jpg" style="width: 300px;" /></a>
 </figure>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">#</a></h2>
-<p>Environment designed for sim-to-real transfer.
-In this environment, the robot has to go to the red box.</p>
+<p>Room with multiple objects. The agent collects +1 reward for picking up
+each object. Objects disappear when picked up.</p>
 </section>
 <section id="action-space">
 <h2>Action Space<a class="headerlink" href="#action-space" title="Permalink to this heading">#</a></h2>
@@ -312,6 +309,12 @@ In this environment, the robot has to go to the red box.</p>
 <tr class="row-even"><td><p>2</p></td>
 <td><p>move forward</p></td>
 </tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>move_back</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>pickup</p></td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -323,13 +326,15 @@ representing the view the agents sees.</p>
 </section>
 <section id="rewards">
 <h2>Rewards:<a class="headerlink" href="#rewards" title="Permalink to this heading">#</a></h2>
-<p>+(1 - 0.2 * (step_count / max_episode_steps)) when red box reached</p>
+<p>+1 when agent picked up object</p>
 </section>
 <section id="arguments">
 <h2>Arguments<a class="headerlink" href="#arguments" title="Permalink to this heading">#</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SimToRealGoTo</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PickupObjects</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">num_objs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">size</span></code>: size of world</p>
+<p><code class="docutils literal notranslate"><span class="pre">num_objs</span></code>: number of objects</p>
 </section>
 </section>
 
@@ -338,23 +343,23 @@ representing the view the agents sees.</p>
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="../simtorealpush/">
+          <a class="next-page" href="../putnext/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">SimToRealPush</div>
+                <div class="title">PutNext</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-            <a class="prev-page" href="../sign/">
+            <a class="prev-page" href="../oneroom/">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Sign</div>
+                <div class="title">&lt;no title&gt;</div>
                 
               </div>
             </a>
@@ -395,7 +400,7 @@ representing the view the agents sees.</p>
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">SimToRealGoTo</a><ul>
+<li><a class="reference internal" href="#">PickupObjects</a><ul>
 <li><a class="reference internal" href="#description">Description</a></li>
 <li><a class="reference internal" href="#action-space">Action Space</a></li>
 <li><a class="reference internal" href="#observation-space">Observation Space</a></li>
