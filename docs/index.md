@@ -17,6 +17,7 @@ content/troubleshooting
 :glob:
 :caption: Environments
 
+content/env_list.md
 environments/*
 ```
 

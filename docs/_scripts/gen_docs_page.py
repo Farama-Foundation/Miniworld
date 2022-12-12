@@ -70,12 +70,12 @@ for env_id in miniworld_env_ids:
         # Docstring
         res_env_md += f"{docstring}\n"
 
-    file_path = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)),
-        "environments",
-        f"{env_name_snake_case}.md",
-    )
+        file_path = os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            "environments",
+            f"{env_name_snake_case}.md",
+        )
 
-    file = open(file_path, "w+", encoding="utf-8")
-    file.write(res_env_md)
-    file.close()
+        file = open(file_path, "w+", encoding="utf-8")
+        file.write(res_env_md)
+        file.close()
