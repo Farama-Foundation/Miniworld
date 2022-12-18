@@ -11,7 +11,7 @@ class Hallway(MiniWorldEnv, utils.EzPickle):
     ## Description
 
     Environment in which the goal is to go to a red box
-    at the end of a hallway
+    at the end of a hallway.
 
     ## Action Space
 
@@ -24,7 +24,7 @@ class Hallway(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 

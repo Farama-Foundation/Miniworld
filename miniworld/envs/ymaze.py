@@ -12,7 +12,7 @@ class YMaze(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Two hallways connected in a Y-junction
+    Two hallways connected in a Y-junction.
 
     ## Action Space
 
@@ -25,7 +25,7 @@ class YMaze(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 
@@ -34,9 +34,9 @@ class YMaze(MiniWorldEnv, utils.EzPickle):
     ## Arguments
 
     ```python
-    YMazeLeft()
+    env = gym.make("MiniWorld-YMazeLeft-v0")
     # or
-    YMazeRight()
+    env = gym.make("MiniWorld-YMazeRight-v0")
     ```
 
     """

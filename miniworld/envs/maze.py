@@ -9,7 +9,11 @@ class Maze(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Maze environment in which the agent has to reach a red box
+    Maze environment in which the agent has to reach a red box. There are a
+    few variants of the `Maze` environment. The `MazeS2` environment gives
+    you a 2x2 maze and the `MazeS3` environment gives you a 3x3 maze. The
+    `MazeS3Fast` also gives you a 2x2 maze, but the turning and moving motion
+    per action is larger.
 
     ## Action Space
 
@@ -22,20 +26,22 @@ class Maze(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 
-    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached
+    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached and zero otherwise.
 
     ## Arguments
 
     ```python
-    MazeS2()
+    env = gym.make("MiniWorld-Maze-v0")
     # or
-    MazeS3()
+    env = gym.make("MiniWorld-MazeS2-v0")
     # or
-    MazeS3Fast()
+    env = gym.make("MiniWorld-MazeS3-v0")
+    # or
+    env = gym.make("MiniWorld-MazeS3Fast-v0")
     ```
 
     """
