@@ -11,7 +11,8 @@ class WallGap(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Outside environment with two rooms connected by a gap in a wall.
+    Outside environment with two rooms connected by a gap in a wall. The
+    goal is to go to a red box within as little steps as possible.
 
     ## Action Space
 

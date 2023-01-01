@@ -8,7 +8,8 @@ class FourRooms(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Classic four rooms environment. The agent must reach the red box to get a reward.
+    Classic four rooms environment. The goal is to reach the red box to get a
+    reward in as few steps as possible.
 
     ## Action Space
 

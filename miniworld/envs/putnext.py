@@ -9,7 +9,8 @@ class PutNext(MiniWorldEnv, utils.EzPickle):
     ## Description
 
     Single-room environment where a red box must be placed next
-    to a yellow box.
+    to a yellow box. The goal is to perform this task in as few
+    steps as possible.
 
     ## Action Space
 

@@ -10,9 +10,8 @@ class RoomObjects(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Single room with multiple objects
-    Inspired by the single room environment of
-    the Generative Query Networks paper:
+    Single room with multiple objects. Inspired by the single room environment
+    of the Generative Query Networks paper:
     https://deepmind.com/blog/neural-scene-representation-and-rendering/
 
     ## Action Space
@@ -35,7 +34,7 @@ class RoomObjects(MiniWorldEnv, utils.EzPickle):
 
     ## Rewards:
 
-    +0
+    None
 
     ## Arguments
 

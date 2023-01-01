@@ -11,8 +11,8 @@ class Sidewalk(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Walk on a sidewalk up to an object to be collected.
-    Don't walk into the street.
+    Walk on a sidewalk up to an object to be collected. Don't walk into the
+    street. The goal is to reach the object in as few steps as possible.
 
     ## Action Space
 

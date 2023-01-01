@@ -10,7 +10,9 @@ class ThreeRooms(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Two small rooms connected to one large room
+    Two small rooms connected to one large room, with five different items
+    placed on the ground: a red box, a green box, a white ball, a key, and
+    a rubber duck.
 
     ## Action Space
 

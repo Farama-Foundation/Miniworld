@@ -10,7 +10,11 @@ class TMaze(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Two hallways connected in a T-junction.
+    Two hallways connected in a T-junction, the goal is to move the agent
+    towards a red box within as few steps as possible. In
+    `MiniWorld-TMazeLeft-v0`, the red box is located on the left wing of
+    the T-shaped junction. In `MiniWorld-TMazeRight-v0`,  the red box is
+    located on the right wing of the T-shaped junction.
 
     ## Action Space
 
@@ -36,8 +40,6 @@ class TMaze(MiniWorldEnv, utils.EzPickle):
     # or
     env = gym.make("MiniWorld-TMazeRight-v0")
     ```
-
-
     """
 
     def __init__(self, goal_pos=None, **kwargs):
