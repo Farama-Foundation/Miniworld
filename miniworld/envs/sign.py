@@ -75,7 +75,7 @@ class Sign(MiniWorldEnv, utils.EzPickle):
 
     """
 
-    def __init__(self, size=10, max_episode_steps=20, color_index=0, goal=0):
+    def __init__(self, size=10, max_episode_steps=20, color_index=0, goal=0, **kwargs):
         if color_index not in [0, 1, 2]:
             raise ValueError("Only supported values for color_index are 0, 1, 2.")
 
@@ -91,9 +91,15 @@ class Sign(MiniWorldEnv, utils.EzPickle):
         self._color_index = color_index
 
         MiniWorldEnv.__init__(
-            self, params=params, max_episode_steps=max_episode_steps, domain_rand=False
+            self,
+            params=params,
+            max_episode_steps=max_episode_steps,
+            domain_rand=False,
+            **kwargs,
         )
-        utils.EzPickle.__init__(self, size, max_episode_steps, color_index, goal)
+        utils.EzPickle.__init__(
+            self, size, max_episode_steps, color_index, goal, **kwargs
+        )
 
         self.observation_space = Dict(obs=self.observation_space, goal=Discrete(2))
 
