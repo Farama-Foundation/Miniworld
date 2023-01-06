@@ -6,7 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 from experiments.utils import init_weights, make_var, print_model_info, save_img
-from gym_miniworld.wrappers import PyTorchObsWrapper
+from miniworld.wrappers import PyTorchObsWrapper
 
 
 class Model(nn.Module):

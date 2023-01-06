@@ -4,7 +4,7 @@ import time
 
 import gymnasium as gym
 
-# import gym_miniworld
+# import miniworld
 
 # Benchmark loading time
 st = time.time()

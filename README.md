@@ -78,7 +78,7 @@ Requirements:
 - Pyglet (OpenGL 3D graphics)
 - GPU for 3D graphics acceleration (optional)
 
-You can install it from `PyPI` using (image broken do not use yet):
+You can install it from `PyPI` using:
 
 ```console
 python3 -m pip install miniworld

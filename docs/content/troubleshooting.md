@@ -59,7 +59,7 @@ cd pytorch-a2c-ppo-acktr
 xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" your_script.py
 ```
 
-alternatively you can set the environment variable `PYOPENGL_PLATFORM` to `egl` (requires `pyglet==1.5.11`) to force `gym-miniworld` to render offscreen:
+alternatively you can set the environment variable `PYOPENGL_PLATFORM` to `egl` (requires `pyglet==1.5.11`) to force `miniworld` to render offscreen:
 ```
 PYOPENGL_PLATFORM=egl your_script.py
 ```

@@ -17,14 +17,14 @@
 # -- Project information -----------------------------------------------------
 from typing import Any, Dict
 
-import gym_miniworld
+import miniworld
 
 project = "Miniworld"
 copyright = "2022 Farama Foundation"
 author = "Farama Foundation"
 
 # The full version, including alpha/beta/rc tags
-release = gym_miniworld.__version__
+release = miniworld.__version__
 
 
 # -- General configuration ---------------------------------------------------

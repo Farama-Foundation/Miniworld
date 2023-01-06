@@ -23,9 +23,9 @@ from pyglet.gl import (
     glVertex3f,
 )
 
-from gym_miniworld.math import X_VEC, Y_VEC, Z_VEC, gen_rot_matrix
-from gym_miniworld.objmesh import ObjMesh
-from gym_miniworld.opengl import Texture, drawBox
+from miniworld.math import X_VEC, Y_VEC, Z_VEC, gen_rot_matrix
+from miniworld.objmesh import ObjMesh
+from miniworld.opengl import Texture, drawBox
 
 COLORS = {
     "red": np.array([1.0, 0.0, 0.0]),
