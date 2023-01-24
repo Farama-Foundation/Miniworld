@@ -12,7 +12,11 @@ class YMaze(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Two hallways connected in a Y-junction
+    Two hallways connected in a Y-junction. the goal is to move the agent
+    towards a red box within as little steps as possible. In
+    `MiniWorld-YMazeLeft-v0`, the red box is located on the left wing of
+    the Y-shaped junction. In `MiniWorld-YMazeRight-v0`,  the red box is
+    located on the right wing of the Y-shaped junction.
 
     ## Action Space
 
@@ -25,7 +29,7 @@ class YMaze(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 
@@ -34,9 +38,9 @@ class YMaze(MiniWorldEnv, utils.EzPickle):
     ## Arguments
 
     ```python
-    YMazeLeft()
+    env = gym.make("MiniWorld-YMazeLeft-v0")
     # or
-    YMazeRight()
+    env = gym.make("MiniWorld-YMazeRight-v0")
     ```
 
     """

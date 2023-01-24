@@ -10,8 +10,8 @@ class Hallway(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Environment in which the goal is to go to a red box
-    at the end of a hallway
+    Environment in which the goal is to go to a red box at the end of a
+    hallway within as few steps as possible.
 
     ## Action Space
 
@@ -24,7 +24,7 @@ class Hallway(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 
@@ -33,7 +33,7 @@ class Hallway(MiniWorldEnv, utils.EzPickle):
     ## Arguments
 
     ```python
-    FourRooms(length=12)
+    Hallway(length=12)
     ```
 
     `length`: length of the entire space

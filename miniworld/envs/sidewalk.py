@@ -11,8 +11,8 @@ class Sidewalk(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Walk on a sidewalk up to an object to be collected.
-    Don't walk into the street.
+    Walk on a sidewalk up to an object to be collected. Don't walk into the
+    street. The goal is to reach the object in as few steps as possible.
 
     ## Action Space
 
@@ -25,7 +25,7 @@ class Sidewalk(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 
@@ -34,7 +34,7 @@ class Sidewalk(MiniWorldEnv, utils.EzPickle):
     ## Arguments
 
     ```python
-    Sidewalk()
+    env = gym.make("MiniWorld-Sidewalk-v0")
     ```
 
     """

@@ -11,7 +11,8 @@ class WallGap(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Outside environment with two rooms connected by a gap in a wall
+    Outside environment with two rooms connected by a gap in a wall. The
+    goal is to go to a red box within as little steps as possible.
 
     ## Action Space
 
@@ -24,7 +25,7 @@ class WallGap(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 
@@ -33,7 +34,7 @@ class WallGap(MiniWorldEnv, utils.EzPickle):
     ## Arguments
 
     ```python
-    WallGap()
+    env = gym.make("MiniWorld-WallGap-v0")
     ```
     """
 
