@@ -9,8 +9,11 @@ class OneRoom(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Environment in which the goal is to go to a red box
-    placed randomly in one big room.
+    Environment in which the goal is to go to a red box placed randomly in one big room.
+    The `OneRoom` environment has two variants. The `OneRoomS6` environment gives you
+    a room with size 6 (the `OneRoom` environment has size 10). The `OneRoomS6Fast`
+    environment also is using a room with size 6, but the turning and moving motion
+    is larger.
 
     ## Action Space
 
@@ -23,18 +26,20 @@ class OneRoom(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 
-    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached
+    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached and zero otherwise.
 
     ## Arguments
 
     ```python
-    OneRoomS6()
+    env = gym.make("MiniWorld-OneRoom-v0")
     # or
-    OneRoomS6Fast()
+    env = gym.make("MiniWorld-OneRoomS6-v0")
+    # or
+    env = gym.make("MiniWorld-OneRoomS6Fast-v0")
     ```
 
     """

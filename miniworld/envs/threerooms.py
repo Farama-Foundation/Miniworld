@@ -10,7 +10,9 @@ class ThreeRooms(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Two small rooms connected to one large room
+    Two small rooms connected to one large room, with five different items
+    placed on the ground: a red box, a green box, a white ball, a key, and
+    a rubber duck.
 
     ## Action Space
 
@@ -23,7 +25,7 @@ class ThreeRooms(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 
@@ -32,7 +34,7 @@ class ThreeRooms(MiniWorldEnv, utils.EzPickle):
     ## Arguments
 
     ```python
-    ThreeRooms()
+    env = gym.make("MiniWorld-ThreeRooms-v0")
     ```
 
     """

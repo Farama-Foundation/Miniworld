@@ -8,7 +8,8 @@ class FourRooms(MiniWorldEnv, utils.EzPickle):
     """
     ## Description
 
-    Classic four rooms environment. The agent must reach the red box to get a reward.
+    Classic four rooms environment. The goal is to reach the red box to get a
+    reward in as few steps as possible.
 
     ## Action Space
 
@@ -21,16 +22,16 @@ class FourRooms(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 
-    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached
+    +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached and zero otherwise.
 
     ## Arguments
 
     ```python
-    FourRooms()
+    env = gym.make("MiniWorld-FourRooms-v0")
     ```
 
     """

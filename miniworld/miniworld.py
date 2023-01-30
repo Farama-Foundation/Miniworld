@@ -1417,4 +1417,6 @@ class MiniWorldEnv(gym.Env):
             self.window.flip()
             self.window.dispatch_events()
 
+            return
+
         return img
