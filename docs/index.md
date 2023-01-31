@@ -17,6 +17,7 @@ content/troubleshooting
 :glob:
 :caption: Environments
 
+content/env_list.md
 environments/*
 ```
 
@@ -33,9 +34,9 @@ Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/mast
 # Miniworld
 
 
-```{figure} _static/environments/collecthealth.jpg
+```{figure} _static/img/miniworld_homepage.gif
     :width: 400px
-    :alt: Observation from Collect Health environment
+    :alt: Sequence of observations from Collect Health environment
 ```
 
 **The Gymnasium interface allows to initialize and interact with the Miniworld default environments as follows:**
