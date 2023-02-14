@@ -39,7 +39,9 @@ Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/mast
     :alt: Sequence of observations from Collect Health environment
 ```
 
-**The Gymnasium interface allows to initialize and interact with the Miniworld default environments as follows:**
+MiniWorld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research that allows environments to be easily edited like Minigrid meets DM Lab. It can simulate environments with rooms, doors, hallways, and various objects (e.g., office and home environments, mazes).
+
+The Gymnasium interface allows to initialize and interact with the Miniworld default environments as follows:
 
 ```python
 import gymnasium as gym
