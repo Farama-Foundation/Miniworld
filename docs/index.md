@@ -31,7 +31,7 @@ Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/mast
 
 ```
 
-# Miniworld
+# Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research
 
 
 ```{figure} _static/img/miniworld_homepage.gif
@@ -39,7 +39,17 @@ Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/mast
     :alt: Sequence of observations from Collect Health environment
 ```
 
-**The Gymnasium interface allows to initialize and interact with the Miniworld default environments as follows:**
+MiniWorld allows environments to be easily edited like Minigrid meets DM Lab. It can simulate environments with rooms, doors, hallways, and various objects (e.g., office and home environments, mazes). 
+
+## Installation
+
+```python
+pip install miniworld
+```
+
+## Usage
+
+The Gymnasium interface allows to initialize and interact with the Miniworld default environments as follows:
 
 ```python
 import gymnasium as gym
