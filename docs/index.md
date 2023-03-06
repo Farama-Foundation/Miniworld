@@ -26,6 +26,7 @@ environments/*
 :hidden:
 :caption: Development
 
+release_notes
 Github <https://github.com/Farama-Foundation/Miniworld>
 Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/master/docs/>
 
