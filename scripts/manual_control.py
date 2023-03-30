@@ -69,10 +69,11 @@ def step(action):
         env.reset()
 
     env.render()
-    
+
     if isinstance(obs, dict):
         if "mission" in obs:
             print(f"Mission: {obs['mission']}")
+
 
 @env.unwrapped.window.event
 def on_key_press(symbol, modifiers):

@@ -1,13 +1,14 @@
+import copy
 from typing import Optional, Tuple
+
 from gymnasium import spaces, utils
 from gymnasium.core import ObsType
 
 from miniworld.entity import COLOR_NAMES, Ball, Box, Key
 from miniworld.miniworld import MiniWorldEnv
 
-import copy
-
 charset = frozenset("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ")
+
 
 class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
     """
@@ -30,12 +31,12 @@ class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is a dictionary with the following entries:
-        - image: 
+        - image:
             an `ndarray` with shape `(obs_height, obs_width, 3)`
             representing a RGB image of what the agents sees.
         - mission:
             a string of the form 'pick up the COLOR TYPE' where
-            COLOR and TYPE are a visible entity's color and type.  
+            COLOR and TYPE are a visible entity's color and type.
 
     ## Rewards:
 
@@ -63,12 +64,14 @@ class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
 
         MiniWorldEnv.__init__(self, max_episode_steps=400, **kwargs)
         utils.EzPickle.__init__(self, size, num_objs, **kwargs)
-        
+
         image_observation_space = self.observation_space
-        self.observation_space = spaces.Dict({
-            "image": image_observation_space,
-            "mission": spaces.Text(max_length=100, charset=charset),
-        })
+        self.observation_space = spaces.Dict(
+            {
+                "image": image_observation_space,
+                "mission": spaces.Text(max_length=100, charset=charset),
+            }
+        )
 
         # Reduce the action space
         self.action_space = spaces.Discrete(self.actions.drop + 1)
@@ -86,14 +89,15 @@ class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
 
         obj_types = [Ball, Box, Key]
         colorlist = list(COLOR_NAMES)
-        
+
         obj_list = []
-        while len(obj_list)<self.num_objs:
+        while len(obj_list) < self.num_objs:
             obj_type = obj_types[self.np_random.choice(len(obj_types))]
             color = colorlist[self.np_random.choice(len(colorlist))]
-            
+
             obj_descr = (obj_type, color)
-            if obj_descr in obj_list:   continue
+            if obj_descr in obj_list:
+                continue
 
             obj_list.append(obj_descr)
 
@@ -107,7 +111,7 @@ class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
         self.place_agent()
         self.agent.cam_pitch = self.cam_pitch
 
-        #Create mission:
+        # Create mission:
         obj = self.np_random.choice(obj_list)
         obj_color = obj[1]
         obj_type = obj[0].__name__.lower()
@@ -126,7 +130,7 @@ class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
             "image": obs,
             "mission": copy.deepcopy(self.mission),
         }
-        
+
         return output_d, info
 
     def step(self, action):
@@ -136,15 +140,14 @@ class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
         if self.agent.carrying:
             obj_type = type(self.agent.carrying).__name__.lower()
             obj_color = getattr(self.agent.carrying, "color", None)
-            if obj_color in self.mission \
-            and obj_type in self.mission:
+            if obj_color in self.mission and obj_type in self.mission:
                 reward = 1
             else:
                 reward = -1
-            
-            if reward>0:
+
+            if reward > 0:
                 termination = True
-        
+
         output_d = {
             "image": obs,
             "mission": copy.deepcopy(self.mission),
