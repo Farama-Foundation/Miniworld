@@ -7,6 +7,7 @@ from miniworld.miniworld import MiniWorldEnv
 
 import copy
 
+charset = frozenset("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ")
 
 class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
     """
@@ -66,7 +67,7 @@ class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
         image_observation_space = self.observation_space
         self.observation_space = spaces.Dict({
             "image": image_observation_space,
-            "mission": spaces.Text(max_length=10),
+            "mission": spaces.Text(max_length=100, charset=charset),
         })
 
         # Reduce the action space
