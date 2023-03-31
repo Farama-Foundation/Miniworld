@@ -117,9 +117,7 @@ class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
         obj_type = obj[0].__name__.lower()
         self.mission = f"pick up the {obj_color} {obj_type}"
 
-    def reset(
-        self, *, seed: Optional[int] = None, options: Optional[dict] = None
-    ) -> Tuple[ObsType, dict]:
+    def reset(self, seed: Optional[int] = None, **kwargs) -> Tuple[ObsType, dict]:
         """
         Reset the simulation at the start of a new episode
         This also randomizes many environment parameters (domain randomization)
