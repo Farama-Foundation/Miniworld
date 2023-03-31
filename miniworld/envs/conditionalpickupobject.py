@@ -63,7 +63,7 @@ class ConditionalPickUpObject(MiniWorldEnv, utils.EzPickle):
         self.cam_pitch = cam_pitch
 
         MiniWorldEnv.__init__(self, max_episode_steps=400, **kwargs)
-        utils.EzPickle.__init__(self, size, num_objs, **kwargs)
+        utils.EzPickle.__init__(self, size, num_objs, cam_pitch, **kwargs)
 
         image_observation_space = self.observation_space
         self.observation_space = spaces.Dict(
