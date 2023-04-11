@@ -1,0 +1,52 @@
+name: Build main branch documentation website
+on:
+  push:
+    branches: [master]
+permissions:
+  contents: write
+jobs:
+  docs:
+    name: Generate Website
+    runs-on: ubuntu-latest
+    env:
+      SPHINX_GITHUB_CHANGELOG_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+            python-version: '3.9'
+
+      - name: Install freeglut
+        run: sudo apt-get install -y freeglut3-dev xvfb
+
+      - name: Install dependencies
+        run: pip install -r docs/requirements.txt
+
+      - name: Install Miniworld
+        run: pip install .
+
+      - name: Generate Environments page
+        run: xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python docs/_scripts/gen_docs_page.py
+
+      - name: Generate Environments page
+        run: xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python docs/_scripts/gen_envs_display.py
+
+      - name: Build
+        run: sphinx-build -b dirhtml -v docs _build
+
+      - name: Move 404
+        run: mv _build/404/index.html _build/404.html
+
+      - name: Update 404 links
+        run: python docs/_scripts/move_404.py _build/404.html
+
+      - name: Remove .doctrees
+        run: rm -r _build/.doctrees
+
+      - name: Upload to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: _build
+          target-folder: main
+          clean: false

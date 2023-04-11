@@ -9,7 +9,8 @@ class PutNext(MiniWorldEnv, utils.EzPickle):
     ## Description
 
     Single-room environment where a red box must be placed next
-    to a yellow box.
+    to a yellow box. The goal is to perform this task in as few
+    steps as possible.
 
     ## Action Space
 
@@ -27,7 +28,7 @@ class PutNext(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing the view the agents sees.
+    representing a RGB image of what the agents sees.
 
     ## Rewards:
 

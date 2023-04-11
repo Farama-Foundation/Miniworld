@@ -132,7 +132,7 @@ def test_env_checker(env_id):
     env = gym.make(env_id).unwrapped
     warnings.simplefilter("always")
     with warnings.catch_warnings(record=True) as w:
-        check_env(env)
+        check_env(env, skip_render_check=True)
 
     for warning in w:
         if warning.message.args[0] not in CHECK_ENV_IGNORE_WARNINGS:

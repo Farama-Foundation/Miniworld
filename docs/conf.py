@@ -15,7 +15,7 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
-from typing import Any, Dict
+import os
 
 import miniworld
 
@@ -38,6 +38,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
     "myst_parser",
+    "sphinx_github_changelog",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -68,14 +69,15 @@ html_theme_options = {
     "light_logo": "img/miniworld.svg",
     "dark_logo": "img/miniworld-white.svg",
     "gtag": "",
+    "versioning": True,
+    "source_repository": "https://github.com/Farama-Foundation/Miniworld/",
+    "source_branch": "master",
+    "source_directory": "docs/",
 }
-html_context: Dict[str, Any] = {}
-html_context["conf_py_path"] = "/docs/"
-html_context["display_github"] = True
-html_context["github_user"] = "Farama-Foundation"
-html_context["github_repo"] = "Miniworld"
-html_context["github_version"] = "master"
-html_context["slug"] = "miniworld"
 
 html_static_path = ["_static"]
 html_css_files = []
+
+# -- Generate Changelog -------------------------------------------------
+
+sphinx_github_changelog_token = os.environ.get("SPHINX_GITHUB_CHANGELOG_TOKEN")
