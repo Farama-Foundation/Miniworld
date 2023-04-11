@@ -1,5 +1,46 @@
 import gymnasium as gym
 
+from miniworld.envs.collecthealth import CollectHealth
+from miniworld.envs.fourrooms import FourRooms
+from miniworld.envs.hallway import Hallway
+from miniworld.envs.maze import Maze, MazeS2, MazeS3, MazeS3Fast
+from miniworld.envs.oneroom import OneRoom, OneRoomS6, OneRoomS6Fast
+from miniworld.envs.pickupobjects import PickupObjects
+from miniworld.envs.putnext import PutNext
+from miniworld.envs.roomobjects import RoomObjects
+from miniworld.envs.sidewalk import Sidewalk
+from miniworld.envs.sign import Sign
+from miniworld.envs.threerooms import ThreeRooms
+from miniworld.envs.tmaze import TMaze, TMazeLeft, TMazeRight
+from miniworld.envs.wallgap import WallGap
+from miniworld.envs.ymaze import YMaze, YMazeLeft, YMazeRight
+
+__all__ = [
+    "CollectHealth",
+    "FourRooms",
+    "Hallway",
+    "Maze",
+    "MazeS2",
+    "MazeS3",
+    "MazeS3Fast",
+    "OneRoom",
+    "OneRoomS6",
+    "OneRoomS6Fast",
+    "PickupObjects",
+    "PutNext",
+    "RoomObjects",
+    "Sidewalk",
+    "Sign",
+    "ThreeRooms",
+    "TMaze",
+    "TMazeLeft",
+    "TMazeRight",
+    "WallGap",
+    "YMaze",
+    "YMazeLeft",
+    "YMazeRight",
+]
+
 gym.register(
     id="MiniWorld-CollectHealth-v0",
     entry_point="miniworld.envs.collecthealth:CollectHealth",
