@@ -87,7 +87,6 @@ class OneRoomS6Fast(OneRoomS6):
     def __init__(
         self, max_episode_steps=50, params=default_params, domain_rand=False, **kwargs
     ):
-
         super().__init__(
             max_episode_steps=max_episode_steps,
             params=params,

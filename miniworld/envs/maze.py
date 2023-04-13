@@ -80,7 +80,6 @@ class Maze(MiniWorldEnv, utils.EzPickle):
 
             # For each column
             for i in range(self.num_cols):
-
                 min_x = i * (self.room_size + self.gap_size)
                 max_x = min_x + self.room_size
 
@@ -190,7 +189,6 @@ class MazeS3Fast(Maze):
         domain_rand=False,
         **kwargs,
     ):
-
         Maze.__init__(
             self,
             num_rows=num_rows,
