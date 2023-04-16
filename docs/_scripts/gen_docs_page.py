@@ -3,8 +3,6 @@ import re
 
 import gymnasium as gym
 
-import miniworld
-
 
 # From python docs
 def trim(docstring):
@@ -37,7 +35,9 @@ LAYOUT = "env"
 
 pattern = re.compile(r"(?<!^)(?=[A-Z])")
 
-miniworld_env_ids = sorted(list(miniworld.envs.env_ids))
+miniworld_env_ids = sorted(
+    [env_id for env_id in gym.envs.registry if "MiniWorld-" in env_id]
+)
 
 previous_env_name = None
 
