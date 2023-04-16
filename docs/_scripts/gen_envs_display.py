@@ -2,8 +2,6 @@ import os
 
 import gymnasium as gym
 
-import miniworld
-
 
 def create_grid_cell(env_id):
     env_name = env_id.split("-")[-2]
@@ -33,7 +31,10 @@ def generate_page(env_list):
 
 
 if __name__ == "__main__":
-    miniworld_env_ids = sorted(list(miniworld.envs.env_ids))
+    miniworld_env_ids = sorted(
+        [env_id for env_id in gym.envs.registry if "MiniWorld-" in env_id]
+    )
+
     filtered_env_ids = []
     previous_env_name = None
 
