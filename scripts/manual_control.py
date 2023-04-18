@@ -9,9 +9,10 @@ import argparse
 import math
 
 import gymnasium as gym
-import miniworld
 import pyglet
 from pyglet.window import key
+
+# import miniworld
 
 
 class ManualControl:
