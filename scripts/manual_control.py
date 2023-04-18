@@ -9,10 +9,9 @@ import argparse
 import math
 
 import gymnasium as gym
+import miniworld
 import pyglet
 from pyglet.window import key
-
-# import miniworld
 
 
 class ManualControl:
@@ -125,6 +124,9 @@ def main():
     view_mode = "top" if args.top_view else "agent"
 
     env = gym.make(args.env_name, view=view_mode, render_mode="human")
+    miniworld_version = miniworld.__version__
+
+    print(f"Miniworld v{miniworld_version}, Env: {args.env_name}")
 
     manual_control = ManualControl(env, args.no_time_limit, args.domain_rand)
     manual_control.run()
