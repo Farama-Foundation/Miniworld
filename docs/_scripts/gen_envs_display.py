@@ -1,7 +1,7 @@
 import os
 
 import gymnasium as gym
-import miniworld # noqa: F401
+import miniworld  # noqa: F401
 
 
 def create_grid_cell(env_id):
