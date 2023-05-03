@@ -1,6 +1,7 @@
 import os
 
 import gymnasium as gym
+
 import miniworld  # noqa: F401
 
 
