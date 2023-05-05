@@ -3,6 +3,8 @@ import re
 
 import gymnasium as gym
 
+import miniworld  # noqa: F401
+
 
 # From python docs
 def trim(docstring):
