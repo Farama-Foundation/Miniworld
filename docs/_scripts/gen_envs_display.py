@@ -2,11 +2,13 @@ import os
 
 import gymnasium as gym
 
+import miniworld  # noqa: F401
+
 
 def create_grid_cell(env_id):
     env_name = env_id.split("-")[-2]
     return f"""
-            <a href="/environments/{env_name}">
+            <a href="/environments/{env_name.lower()}">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
                         <img src="/_static/environments/{env_name.lower()}.jpg">
