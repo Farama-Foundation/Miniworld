@@ -909,7 +909,14 @@ class MiniWorldEnv(gym.Env):
         return ent
 
     def place_agent(
-        self, room=None, dir=None, min_x=None, max_x=None, min_z=None, max_z=None
+        self,
+        room=None,
+        pos=None,
+        dir=None,
+        min_x=None,
+        max_x=None,
+        min_z=None,
+        max_z=None,
     ):
         """
         Place the agent in the environment at a random position
@@ -919,6 +926,7 @@ class MiniWorldEnv(gym.Env):
         return self.place_entity(
             self.agent,
             room=room,
+            pos=pos,
             dir=dir,
             min_x=min_x,
             max_x=max_x,
