@@ -10,6 +10,7 @@ lastpage:
 
 content/design
 content/troubleshooting
+content/create_env
 ```
 
 ```{toctree}
