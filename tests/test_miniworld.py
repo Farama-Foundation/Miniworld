@@ -10,7 +10,7 @@ from gymnasium.utils.env_checker import check_env, data_equivalence
 import miniworld
 from miniworld.entity import TextFrame
 from miniworld.miniworld import MiniWorldEnv
-from miniworld.wrappers import PyTorchObsWrapper
+from miniworld.wrappers import PyTorchObsWrapper, StochasticActionWrapper
 
 miniworld_env_ids = [env_id for env_id in gym.envs.registry if "MiniWorld" in env_id]
 
@@ -48,6 +48,20 @@ def test_pytorch_wrapper():
     assert first_obs.shape == env.observation_space.shape
     assert first_obs.shape == second_obs.shape
 
+    env.close()
+
+
+def test_stochastic_wrapper():
+    env = gym.make("MiniWorld-Hallway-v0")
+    # Test the stochastic action wrapper
+    env = StochasticActionWrapper(env, prob=0.9)
+    _, _ = env.reset()
+    _, _, _, _, _ = env.step(0)
+    env.close()
+
+    env = StochasticActionWrapper(env, prob=0.9, random_action=1)
+    _, _ = env.reset()
+    _, _, _, _, _ = env.step(0)
     env.close()
 
 
