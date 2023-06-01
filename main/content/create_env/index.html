@@ -7,15 +7,15 @@
     <meta property="og:title" content="Miniworld Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research" />
-    <meta property="og:url" content="https://miniworld.farama.org/README.html" /><meta property="og:image" content="https://miniworld.farama.org/_static/img/miniworld-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" />
-        <link rel="canonical" href="https://miniworld.farama.org/README.html" />
+    <meta property="og:url" content="https://miniworld.farama.org/content/create_env.html" /><meta property="og:image" content="https://miniworld.farama.org/_static/img/miniworld-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Environment List" href="../env_list/" /><link rel="prev" title="Troubleshooting Guide" href="../troubleshooting/" />
+        <link rel="canonical" href="https://miniworld.farama.org/content/create_env.html" />
 
-    <link rel="shortcut icon" href="../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 6.2.1 and Furo 2022.12.07.dev1 -->
-        <title>Miniworld docs - Miniworld Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
+    <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 6.2.1 and Furo 2022.12.07.dev1 -->
+        <title>Tutorial on Creating Environments - Miniworld Documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=cfd2cc3354364f303ef4a892d279bfffada5835d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=6342a809aabeb35cfac296000cfa245808bc1d78" />
     
     
 
@@ -68,16 +68,16 @@
           </label>
         </div>
         <div class="farama-header__left farama-header__center--mobile">
-          <a href="../">
-              <img class="farama-header__logo only-light" src="../_static/img/miniworld.svg" alt="Light Logo"/>
-              <img class="farama-header__logo only-dark" src="../_static/img/miniworld-white.svg" alt="Dark Logo"/>
+          <a href="../../">
+              <img class="farama-header__logo only-light" src="../../_static/img/miniworld.svg" alt="Light Logo"/>
+              <img class="farama-header__logo only-dark" src="../../_static/img/miniworld-white.svg" alt="Dark Logo"/>
             <span class="farama-header__title">Miniworld Documentation</span>
           </a>
         </div>
         <div class="farama-header__right">
           <div class="farama-header-menu">
             <button class="farama-header-menu__btn" aria-label="Open Farama Menu" aria-expanded="false" aria-haspopup="true" aria-controls="farama-menu">
-              <img class="farama-black-logo-invert" src="../_static/img/farama-logo-header.svg">
+              <img class="farama-black-logo-invert" src="../../_static/img/farama-logo-header.svg">
               <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <polyline style="stroke-linecap: round; stroke-linejoin: round; fill: none; stroke-width: 2px;" points="1 7 12 18 23 7"></polyline>
               </svg>
@@ -85,7 +85,7 @@
             <div class="farama-header-menu-container farama-hidden" aria-hidden="true" id="farama-menu">
               <div class="farama-header-menu__header">
                 <a href="https://farama.org">
-                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
+                  <img class="farama-header-menu__logo farama-white-logo-invert" src="../../_static/img/farama_solid_white.svg" alt="Farama Foundation logo">
                   <span>Farama Foundation</span>
                 </a>
                 <div class="farama-header-menu-header__right">
@@ -192,7 +192,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../"><div class="brand">Miniworld Documentation</div></a>
+      <a href="../../"><div class="brand">Miniworld Documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -212,43 +212,43 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../">
-      <img class="farama-header__logo only-light" src="../_static/img/miniworld.svg" alt="Light Logo"/>
-      <img class="farama-header__logo only-dark" src="../_static/img/miniworld-white.svg" alt="Dark Logo"/>
+      <div class="sidebar-sticky"><a class="farama-sidebar__title" href="../../">
+      <img class="farama-header__logo only-light" src="../../_static/img/miniworld.svg" alt="Light Logo"/>
+      <img class="farama-header__logo only-dark" src="../../_static/img/miniworld-white.svg" alt="Dark Logo"/>
     <span class="farama-header__title">Miniworld Documentation</span>
-  </a><form class="sidebar-search-container" method="get" action="../search/" role="search">
+  </a><form class="sidebar-search-container" method="get" action="../../search/" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../content/design/">Design and Customization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../content/troubleshooting/">Troubleshooting Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../content/create_env/">Tutorial on Creating Environments</a></li>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../design/">Design and Customization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../troubleshooting/">Troubleshooting Guide</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Tutorial on Creating Environments</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Environments</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../content/env_list/">Environment List</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/collecthealth/">CollectHealth</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/fourrooms/">FourRooms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/hallway/">Hallway</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/maze/">Maze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/oneroom/">OneRoom</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/pickupobjects/">PickupObjects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/putnext/">PutNext</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/roomobjects/">RoomObjects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/sidewalk/">Sidewalk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/sign/">Sign</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/threerooms/">ThreeRooms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/tmaze/">TMaze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/wallgap/">WallGap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/ymaze/">YMaze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../env_list/">Environment List</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/collecthealth/">CollectHealth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/fourrooms/">FourRooms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/hallway/">Hallway</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/maze/">Maze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/oneroom/">OneRoom</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/pickupobjects/">PickupObjects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/putnext/">PutNext</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/roomobjects/">RoomObjects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/sidewalk/">Sidewalk</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/sign/">Sign</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/threerooms/">ThreeRooms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/tmaze/">TMaze</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/wallgap/">WallGap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../environments/ymaze/">YMaze</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../release_notes/">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release_notes/">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/Miniworld">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/Farama-Foundation/Miniworld/tree/master/docs/">Contribute to the Docs</a></li>
 </ul>
@@ -276,7 +276,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Miniworld/edit/master/docs/README.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Miniworld/edit/master/docs/content/create_env.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -307,27 +307,60 @@
           </div>
           <article role="main">
             
-            <section id="miniworld-docs">
-<h1>Miniworld docs<a class="headerlink" href="#miniworld-docs" title="Permalink to this heading">#</a></h1>
-<p>This folder contains the documentation for Miniworld.</p>
-<p>For more information about how to contribute to the documentation go to our <a class="reference external" href="https://github.com/Farama-Foundation/Celshast/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a></p>
-<section id="build-the-documentation">
-<h2>Build the Documentation<a class="headerlink" href="#build-the-documentation" title="Permalink to this heading">#</a></h2>
-<p>Install the required packages and PettingZoo:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">docs</span><span class="o">/</span><span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">e</span> <span class="o">.</span>
+            <section id="tutorial-on-creating-environments">
+<h1>Tutorial on Creating Environments<a class="headerlink" href="#tutorial-on-creating-environments" title="Permalink to this heading">#</a></h1>
+<p>In this tutorial, we will go through the process of creating a new environment.</p>
+<section id="boilerplate-code">
+<h2>Boilerplate Code<a class="headerlink" href="#boilerplate-code" title="Permalink to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="c1"># Size of environment</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="c1"># Allow only the movement actions</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">move_forward</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>To build the documentation once:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span>
-<span class="n">make</span> <span class="n">dirhtml</span>
+<p>First, we need to create a class the inherits from <code class="docutils literal notranslate"><span class="pre">MiniWorldEnv</span></code>, we call our class <code class="docutils literal notranslate"><span class="pre">SimpleEnv</span></code>. Then, we define the action space to be only consisting of turn left (0), turn right (1), move forward (2), and move backward (3).</p>
+</section>
+<section id="generate-the-walls">
+<h2>Generate the walls<a class="headerlink" href="#generate-the-walls" title="Permalink to this heading">#</a></h2>
+<p>To generate the walls, we override the function <code class="docutils literal notranslate"><span class="pre">_gen_world</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_gen_world</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_rect_room</span><span class="p">(</span><span class="n">min_x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">min_z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">place_agent</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>To rebuild the documentation automatically every time a change is made:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span>
-<span class="n">sphinx</span><span class="o">-</span><span class="n">autobuild</span> <span class="o">-</span><span class="n">b</span> <span class="n">dirhtml</span> <span class="o">.</span> <span class="n">_build</span>
+<p>The function <code class="docutils literal notranslate"><span class="pre">_gen_world</span></code> takes the arguments: <code class="docutils literal notranslate"><span class="pre">min_x</span></code>, <code class="docutils literal notranslate"><span class="pre">max_x</span></code>, <code class="docutils literal notranslate"><span class="pre">min_z</span></code>, <code class="docutils literal notranslate"><span class="pre">max_z</span></code>. Note that instead of using the X-Y plane, we use the X-Z plane for movement. After doing this, the environment should look like this:</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/first_step.png"><img alt="env after first step" src="../../_images/first_step.png" style="width: 500px;" /></a>
+</figure>
+<section id="place-goal">
+<h3>Place Goal<a class="headerlink" href="#place-goal" title="Permalink to this heading">#</a></h3>
+<p>To place a goal in the environment, we use the function</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_entity</span><span class="p">(</span><span class="n">Box</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_NAMES</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">pos</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">]),</span> <span class="nb">dir</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>which places the goal in the middle. Now the environment should look like this:</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/second_step.png"><img alt="env after second step" src="../../_images/second_step.png" style="width: 500px;" /></a>
+</figure>
+</section>
+<section id="add-reward">
+<h3>Add reward<a class="headerlink" href="#add-reward" title="Permalink to this heading">#</a></h3>
+<p>To add a reward when the agent gets close to the box, we can do the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+    <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">termination</span><span class="p">,</span> <span class="n">truncation</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box</span><span class="p">):</span>
+        <span class="n">reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">()</span>
+        <span class="n">termination</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">termination</span><span class="p">,</span> <span class="n">truncation</span><span class="p">,</span> <span class="n">info</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 
@@ -336,8 +369,30 @@
         <footer>
           
           <div class="related-pages">
-            
-            
+            <a class="next-page" href="../env_list/">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Environment List</div>
+              </div>
+              <svg class="furo-related-icon">
+                <use href="#svg-arrow-right"></use>
+              </svg>
+            </a>
+            <a class="prev-page" href="../troubleshooting/">
+              <svg class="furo-related-icon">
+                <use href="#svg-arrow-right"></use>
+              </svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Troubleshooting Guide</div>
+                
+              </div>
+            </a>
           </div>
           <div class="bottom-of-page">
             <div class="left-details">
@@ -378,8 +433,13 @@
           <div class="toc-tree-container">
             <div class="toc-tree">
               <ul>
-<li><a class="reference internal" href="#">Miniworld docs</a><ul>
-<li><a class="reference internal" href="#build-the-documentation">Build the Documentation</a></li>
+<li><a class="reference internal" href="#">Tutorial on Creating Environments</a><ul>
+<li><a class="reference internal" href="#boilerplate-code">Boilerplate Code</a></li>
+<li><a class="reference internal" href="#generate-the-walls">Generate the walls</a><ul>
+<li><a class="reference internal" href="#place-goal">Place Goal</a></li>
+<li><a class="reference internal" href="#add-reward">Add reward</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -414,10 +474,10 @@
     
     
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/scripts/furo.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/scripts/furo.js"></script>
     
     <script>
       // Create menu with Farama projects by using the API at farama.org/api/projects.json
