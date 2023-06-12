@@ -33,7 +33,7 @@ Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/mast
 
 ```
 
-```{project-logo} _static/img/miniworld-text.svg
+```{project-logo} _static/img/miniworld-text.png
 :alt: Miniworld Logo
 ```
 
