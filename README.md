@@ -125,3 +125,24 @@ Alternatively, if this doesn't work, you can also try running MiniWorld with `xv
 xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python3 your_script.py
 ```
 
+# Citation
+
+To cite this project please use:
+
+```
+@article{MinigridMiniworld23,
+  author       = {Maxime Chevalier-Boisvert and
+                  Bolun Dai and
+                  Mark Towers and
+                  Rodrigo de Lazcano and
+                  Lucas Willems and
+                  Salem Lahlou and
+                  Suman Pal and
+                  Pablo Samuel Castro and
+                  Jordan Terry},
+  title        = {Minigrid \& Miniworld: Modular \& Customizable Reinforcement Learning Environments for Goal-Oriented Tasks},
+  journal      = {CoRR},
+  volume       = {abs/2306.13831},
+  year         = {2023},
+}
+```
