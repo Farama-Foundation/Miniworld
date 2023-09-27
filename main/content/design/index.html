@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Troubleshooting Guide" href="../troubleshooting/" /><link rel="prev" title="Installation" href="../../" />
         <link rel="canonical" href="https://miniworld.farama.org/content/design.html" />
 
-    <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.0.1 and Furo 2023.05.20.dev1 -->
+    <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
         <title>Design and Customization - Miniworld Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=a022fd11c0d7e10ac71ac296890386cea7a2fa24" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=093e2efd5a2c7b46ab7c7157e45f5f05a1e0a463" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
     
     
 
@@ -53,18 +53,6 @@
               <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
               <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
             </svg>
-            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
-              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
-              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
-              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
-            </svg> -->
-            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
-              <defs></defs>
-              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
-              <line x1="8" y1="1" x2="8" y2="23"></line>
-              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
-            </svg> -->
           </label>
         </div>
         <div class="farama-header__left farama-header__center--mobile">
@@ -308,13 +296,13 @@
           <article role="main">
             
             <section id="design-and-customization">
-<h1>Design and Customization<a class="headerlink" href="#design-and-customization" title="Permalink to this heading">#</a></h1>
+<h1>Design and Customization<a class="headerlink" href="#design-and-customization" title="Link to this heading">#</a></h1>
 <p>MiniWorld is essentially a very simple 3D game engine.
 At a few thousand lines of code, it is <a class="reference external" href="https://pointersgonewild.com/2018/02/18/minimalism-in-programming/">minimalistic by design</a>.
 It has a limited feature set, but its simplicity means that it’s easier to troubleshoot and relatively easy to customize based on your needs.
 If you need any help, please never hesitate to open an issue on this repository, even if it’s just to ask a question.</p>
 <section id="the-world">
-<h2>The World<a class="headerlink" href="#the-world" title="Permalink to this heading">#</a></h2>
+<h2>The World<a class="headerlink" href="#the-world" title="Link to this heading">#</a></h2>
 <p>In MiniWorld, the world is made of static elements (rooms and hallways), as well as objects which may be dynamic, which we call entities.
 Environments are essentially 2D floorplans made of connected rooms.
 Rooms can have any convex outline defined by at least 3 points.
@@ -329,7 +317,7 @@ To get an idea how to create and connect rooms, you should take a look at the im
 </ul>
 </section>
 <section id="coordinate-system">
-<h2>Coordinate System<a class="headerlink" href="#coordinate-system" title="Permalink to this heading">#</a></h2>
+<h2>Coordinate System<a class="headerlink" href="#coordinate-system" title="Link to this heading">#</a></h2>
 <p>MiniWorld uses OpenGL’s right-handed coordinate system.
 The ground plane lies along the X and Z axes, and the Y axis points up.
 The coordinate units are in meters by convention.
@@ -337,7 +325,7 @@ When direction angles are specified, a positive angle corresponds to a counter-c
 Angles are in degrees for ease of hand-editing. By convention, angle zero points towards the positive X axis.</p>
 </section>
 <section id="observations">
-<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">#</a></h2>
+<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading">#</a></h2>
 <p>The observations are single camera images, as numpy arrays of size (80, 60, 3).
 These arrays contain unsigned 8-bit integer values (<code class="docutils literal notranslate"><span class="pre">uint8</span></code>) in the [0, 255] range.
 It is possible to change the observation image size by directly instantiating the environment class (<code class="docutils literal notranslate"><span class="pre">MiniWorldEnv</span></code>)
@@ -349,7 +337,7 @@ and setting the appropriate parameters in the constructor.</p>
 To produce this view, you can call the <code class="docutils literal notranslate"><span class="pre">env.render_top_view()</span></code> method, which returns a NumPy RGB array as output.</p>
 </section>
 <section id="actions">
-<h2>Actions<a class="headerlink" href="#actions" title="Permalink to this heading">#</a></h2>
+<h2>Actions<a class="headerlink" href="#actions" title="Link to this heading">#</a></h2>
 <p>For simplicity, actions are discrete. The default available actions are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">turn_left</span></code></p></li>
@@ -365,13 +353,13 @@ The simulator assumes that the agent behaves like a <a class="reference external
 However, it is possible to implement new actions and different motion dynamics in your own environments.</p>
 </section>
 <section id="reward-function">
-<h2>Reward Function<a class="headerlink" href="#reward-function" title="Permalink to this heading">#</a></h2>
+<h2>Reward Function<a class="headerlink" href="#reward-function" title="Link to this heading">#</a></h2>
 <p>Each environment has an associated <code class="docutils literal notranslate"><span class="pre">max_episode_steps</span></code> variable which specifies the maximum number of time steps allowed to complete an episode.
 By default, rewards are sparse and in the [0, 1] range, with a small penalty being given based on the number of time steps needed to successfully complete the task.
 If the task is not completed within <code class="docutils literal notranslate"><span class="pre">max_episode_steps</span></code>, the current episode is terminated and a reward of 0 is produced.
 See the <code class="docutils literal notranslate"><span class="pre">_reward()</span></code> method of <code class="docutils literal notranslate"><span class="pre">MiniWorldEnv</span></code>.</p>
 <section id="loading-3d-models">
-<h3>Loading 3D Models<a class="headerlink" href="#loading-3d-models" title="Permalink to this heading">#</a></h3>
+<h3>Loading 3D Models<a class="headerlink" href="#loading-3d-models" title="Link to this heading">#</a></h3>
 <p>MiniWorld has built-in support for <a class="reference external" href="https://en.wikipedia.org/wiki/Wavefront_.obj_file">OBJ mesh files</a>.
 Some 3D models are included under the <a class="reference external" href="https://github.com/maximecb/gym-miniworld/tree/master/gym_miniworld/meshes">miniworld/meshes</a> directory.
 These models are all tested and working with MiniWorld.
@@ -505,12 +493,43 @@ which is relatively simple and easy to use.</p>
     
     
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/documentation_options.js?v=b21b538c"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
     <script>
+
+      const createProjectsList = (projects, displayImages) => {
+        const ulElem = Object.assign(document.createElement('ul'),
+          {
+            className:'farama-header-menu-list',
+          }
+        )
+        for (let project of projects) {
+          const liElem = document.createElement("li");
+          const aElem = Object.assign(document.createElement("a"),
+            {
+              href: project.link
+            }
+          );
+          liElem.appendChild(aElem);
+          if (displayImages) {
+            const imgElem = Object.assign(document.createElement("img"),
+              {
+                src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                alt: `${project.name} logo`,
+                className: "farama-black-logo-invert"
+              }
+            );
+            aElem.appendChild(imgElem);
+          }
+          aElem.appendChild(document.createTextNode(project.name));
+          ulElem.appendChild(liElem);
+        }
+        return ulElem;
+      }
+
       // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
@@ -537,9 +556,15 @@ which is relatively simple and easy to use.</p>
       xhr.onload = () => {
         const jsonResponse = xhr.response;
         const sections = {
-          "Documentation": [],
-          "Mature Projects": [],
-          "Incubating Projects": [],
+          "Core Projects": [],
+          "Mature Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
           "Foundation": [
             {
               name: "About",
@@ -555,28 +580,38 @@ which is relatively simple and easy to use.</p>
             }
           ]
         }
+
+        // Categorize projects
         Object.keys(jsonResponse).forEach(key => {
           projectJson = jsonResponse[key];
           if (projectJson.website !== null) {
             projectJson.link = projectJson.website;
-            sections["Documentation"].push(projectJson)
-          } else if (projectJson.type == "mature") {
-            projectJson.link = projectJson.github;
-            sections["Mature Projects"].push(projectJson)
           } else {
             projectJson.link = projectJson.github;
-            sections["Incubating Projects"].push(projectJson)
+          }
+          if (projectJson.type === "core") {
+            sections["Core Projects"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            if (projectJson.website !== null) {
+              sections["Mature Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Mature Projects"]["Repositories"].push(projectJson)
+            }
+          } else {
+            if (projectJson.website !== null) {
+              sections["Incubating Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Incubating Projects"]["Repositories"].push(projectJson)
+            }
           }
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
 
         Object.keys(sections).forEach((key, i) => {
-          projects = sections[key];
           const sectionElem = Object.assign(
             document.createElement('div'), {
               className:'farama-header-menu__section',
-              style: "padding-left: 24px"
             }
           )
           sectionElem.appendChild(Object.assign(document.createElement('span'),
@@ -585,33 +620,37 @@ which is relatively simple and easy to use.</p>
               innerText: key
             }
           ))
-          const ulElem = Object.assign(document.createElement('ul'),
-            {
-              className:'farama-header-menu-list',
-            }
-          )
-          for (let project of projects) {
-            const liElem = document.createElement("li");
-            const aElem = Object.assign(document.createElement("a"),
-              {
-                href: project.link
-              }
-            );
-            liElem.appendChild(aElem);
-            if (key !== "Foundation") {
-              const imgElem = Object.assign(document.createElement("img"),
-                {
-                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
-                  alt: `${project.name} logo`,
-                  className: "farama-black-logo-invert"
+          // is not a list
+          if (sections[key].constructor !== Array) {
+            const subSections = sections[key];
+            const subSectionContainerElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsections-container',
+                  style: 'display: flex'
                 }
-              );
-              aElem.appendChild(imgElem);
-            }
-            aElem.appendChild(document.createTextNode(project.name));
-            ulElem.appendChild(liElem);
+            )
+            Object.keys(subSections).forEach((subKey, i) => {
+              const subSectionElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsection',
+                }
+              )
+              subSectionElem.appendChild(Object.assign(document.createElement('span'),
+                {
+                  className:'farama-header-menu__subsection-title' ,
+                  innerText: subKey
+                }
+              ))
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
+              subSectionElem.appendChild(ulElem);
+              subSectionContainerElem.appendChild(subSectionElem);
+            })
+            sectionElem.appendChild(subSectionContainerElem);
+          } else {
+            const projects = sections[key];
+            const ulElem = createProjectsList(projects, true);
+            sectionElem.appendChild(ulElem);
           }
-          sectionElem.appendChild(ulElem);
           menuContainer.appendChild(sectionElem)
         });
       }

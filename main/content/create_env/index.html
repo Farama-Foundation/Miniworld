@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Environment List" href="../env_list/" /><link rel="prev" title="Troubleshooting Guide" href="../troubleshooting/" />
         <link rel="canonical" href="https://miniworld.farama.org/content/create_env.html" />
 
-    <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.0.1 and Furo 2023.05.20.dev1 -->
+    <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
         <title>Tutorial on Creating Environments - Miniworld Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=a022fd11c0d7e10ac71ac296890386cea7a2fa24" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=093e2efd5a2c7b46ab7c7157e45f5f05a1e0a463" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
     
     
 
@@ -53,18 +53,6 @@
               <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
               <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
             </svg>
-            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
-              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
-              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
-              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
-            </svg> -->
-            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
-              <defs></defs>
-              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
-              <line x1="8" y1="1" x2="8" y2="23"></line>
-              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
-            </svg> -->
           </label>
         </div>
         <div class="farama-header__left farama-header__center--mobile">
@@ -308,10 +296,10 @@
           <article role="main">
             
             <section id="tutorial-on-creating-environments">
-<h1>Tutorial on Creating Environments<a class="headerlink" href="#tutorial-on-creating-environments" title="Permalink to this heading">#</a></h1>
+<h1>Tutorial on Creating Environments<a class="headerlink" href="#tutorial-on-creating-environments" title="Link to this heading">#</a></h1>
 <p>In this tutorial, we will go through the process of creating a new environment.</p>
 <section id="boilerplate-code">
-<h2>Boilerplate Code<a class="headerlink" href="#boilerplate-code" title="Permalink to this heading">#</a></h2>
+<h2>Boilerplate Code<a class="headerlink" href="#boilerplate-code" title="Link to this heading">#</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="c1"># Size of environment</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
@@ -325,7 +313,7 @@
 <p>First, we need to create a class the inherits from <code class="docutils literal notranslate"><span class="pre">MiniWorldEnv</span></code>, we call our class <code class="docutils literal notranslate"><span class="pre">SimpleEnv</span></code>. Then, we define the action space to be only consisting of turn left (0), turn right (1), move forward (2), and move backward (3).</p>
 </section>
 <section id="generate-the-walls">
-<h2>Generate the walls<a class="headerlink" href="#generate-the-walls" title="Permalink to this heading">#</a></h2>
+<h2>Generate the walls<a class="headerlink" href="#generate-the-walls" title="Link to this heading">#</a></h2>
 <p>To generate the walls, we override the function <code class="docutils literal notranslate"><span class="pre">_gen_world</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_gen_world</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">add_rect_room</span><span class="p">(</span><span class="n">min_x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">min_z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
@@ -337,7 +325,7 @@
 <a class="reference internal image-reference" href="../../_images/first_step.png"><img alt="env after first step" src="../../_images/first_step.png" style="width: 500px;" /></a>
 </figure>
 <section id="place-goal">
-<h3>Place Goal<a class="headerlink" href="#place-goal" title="Permalink to this heading">#</a></h3>
+<h3>Place Goal<a class="headerlink" href="#place-goal" title="Link to this heading">#</a></h3>
 <p>To place a goal in the environment, we use the function</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_entity</span><span class="p">(</span><span class="n">Box</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_NAMES</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">pos</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">]),</span> <span class="nb">dir</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
@@ -348,7 +336,7 @@
 </figure>
 </section>
 <section id="add-reward">
-<h3>Add reward<a class="headerlink" href="#add-reward" title="Permalink to this heading">#</a></h3>
+<h3>Add reward<a class="headerlink" href="#add-reward" title="Link to this heading">#</a></h3>
 <p>To add a reward when the agent gets close to the box, we can do the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
     <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">termination</span><span class="p">,</span> <span class="n">truncation</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
@@ -474,12 +462,43 @@
     
     
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/documentation_options.js?v=b21b538c"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
     <script>
+
+      const createProjectsList = (projects, displayImages) => {
+        const ulElem = Object.assign(document.createElement('ul'),
+          {
+            className:'farama-header-menu-list',
+          }
+        )
+        for (let project of projects) {
+          const liElem = document.createElement("li");
+          const aElem = Object.assign(document.createElement("a"),
+            {
+              href: project.link
+            }
+          );
+          liElem.appendChild(aElem);
+          if (displayImages) {
+            const imgElem = Object.assign(document.createElement("img"),
+              {
+                src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                alt: `${project.name} logo`,
+                className: "farama-black-logo-invert"
+              }
+            );
+            aElem.appendChild(imgElem);
+          }
+          aElem.appendChild(document.createTextNode(project.name));
+          ulElem.appendChild(liElem);
+        }
+        return ulElem;
+      }
+
       // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
@@ -506,9 +525,15 @@
       xhr.onload = () => {
         const jsonResponse = xhr.response;
         const sections = {
-          "Documentation": [],
-          "Mature Projects": [],
-          "Incubating Projects": [],
+          "Core Projects": [],
+          "Mature Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
           "Foundation": [
             {
               name: "About",
@@ -524,28 +549,38 @@
             }
           ]
         }
+
+        // Categorize projects
         Object.keys(jsonResponse).forEach(key => {
           projectJson = jsonResponse[key];
           if (projectJson.website !== null) {
             projectJson.link = projectJson.website;
-            sections["Documentation"].push(projectJson)
-          } else if (projectJson.type == "mature") {
-            projectJson.link = projectJson.github;
-            sections["Mature Projects"].push(projectJson)
           } else {
             projectJson.link = projectJson.github;
-            sections["Incubating Projects"].push(projectJson)
+          }
+          if (projectJson.type === "core") {
+            sections["Core Projects"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            if (projectJson.website !== null) {
+              sections["Mature Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Mature Projects"]["Repositories"].push(projectJson)
+            }
+          } else {
+            if (projectJson.website !== null) {
+              sections["Incubating Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Incubating Projects"]["Repositories"].push(projectJson)
+            }
           }
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
 
         Object.keys(sections).forEach((key, i) => {
-          projects = sections[key];
           const sectionElem = Object.assign(
             document.createElement('div'), {
               className:'farama-header-menu__section',
-              style: "padding-left: 24px"
             }
           )
           sectionElem.appendChild(Object.assign(document.createElement('span'),
@@ -554,33 +589,37 @@
               innerText: key
             }
           ))
-          const ulElem = Object.assign(document.createElement('ul'),
-            {
-              className:'farama-header-menu-list',
-            }
-          )
-          for (let project of projects) {
-            const liElem = document.createElement("li");
-            const aElem = Object.assign(document.createElement("a"),
-              {
-                href: project.link
-              }
-            );
-            liElem.appendChild(aElem);
-            if (key !== "Foundation") {
-              const imgElem = Object.assign(document.createElement("img"),
-                {
-                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
-                  alt: `${project.name} logo`,
-                  className: "farama-black-logo-invert"
+          // is not a list
+          if (sections[key].constructor !== Array) {
+            const subSections = sections[key];
+            const subSectionContainerElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsections-container',
+                  style: 'display: flex'
                 }
-              );
-              aElem.appendChild(imgElem);
-            }
-            aElem.appendChild(document.createTextNode(project.name));
-            ulElem.appendChild(liElem);
+            )
+            Object.keys(subSections).forEach((subKey, i) => {
+              const subSectionElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsection',
+                }
+              )
+              subSectionElem.appendChild(Object.assign(document.createElement('span'),
+                {
+                  className:'farama-header-menu__subsection-title' ,
+                  innerText: subKey
+                }
+              ))
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
+              subSectionElem.appendChild(ulElem);
+              subSectionContainerElem.appendChild(subSectionElem);
+            })
+            sectionElem.appendChild(subSectionContainerElem);
+          } else {
+            const projects = sections[key];
+            const ulElem = createProjectsList(projects, true);
+            sectionElem.appendChild(ulElem);
           }
-          sectionElem.appendChild(ulElem);
           menuContainer.appendChild(sectionElem)
         });
       }

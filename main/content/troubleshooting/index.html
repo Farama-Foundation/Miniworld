@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
@@ -11,11 +11,11 @@
 <link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Tutorial on Creating Environments" href="../create_env/" /><link rel="prev" title="Design and Customization" href="../design/" />
         <link rel="canonical" href="https://miniworld.farama.org/content/troubleshooting.html" />
 
-    <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.0.1 and Furo 2023.05.20.dev1 -->
+    <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.2.6 and Furo 2023.08.19.dev1 -->
         <title>Troubleshooting Guide - Miniworld Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?digest=a022fd11c0d7e10ac71ac296890386cea7a2fa24" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?digest=093e2efd5a2c7b46ab7c7157e45f5f05a1e0a463" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=49cbaffd" />
     
     
 
@@ -53,18 +53,6 @@
               <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
               <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
             </svg>
-            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
-              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
-              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
-              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
-            </svg> -->
-            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
-              <defs></defs>
-              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
-              <line x1="8" y1="1" x2="8" y2="23"></line>
-              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
-            </svg> -->
           </label>
         </div>
         <div class="farama-header__left farama-header__center--mobile">
@@ -308,13 +296,13 @@
           <article role="main">
             
             <section id="troubleshooting-guide">
-<h1>Troubleshooting Guide<a class="headerlink" href="#troubleshooting-guide" title="Permalink to this heading">#</a></h1>
+<h1>Troubleshooting Guide<a class="headerlink" href="#troubleshooting-guide" title="Link to this heading">#</a></h1>
 <p>If you run into problems of any kind, don’t hesitate to <a class="reference external" href="https://github.com/maximecb/gym-miniworld/issues">open an issue</a> on this repository.
 It’s quite possible that you’ve run into some bug we aren’t aware of.
 Please make sure to give some details about your system configuration (ie: PC or Mac, operating system, etc),
 and to paste the command you used to run the simulator, as well as the complete error message that was produced, if any.</p>
 <section id="importerror-library-glu-not-found">
-<h2>ImportError: Library “GLU” not found<a class="headerlink" href="#importerror-library-glu-not-found" title="Permalink to this heading">#</a></h2>
+<h2>ImportError: Library “GLU” not found<a class="headerlink" href="#importerror-library-glu-not-found" title="Link to this heading">#</a></h2>
 <p>You may need to manually install packaged needed by Pyglet or OpenAI Gym on your system.
 The command you need to use will vary depending on which OS you are running.
 For example, to install the glut package on Ubuntu:</p>
@@ -327,7 +315,7 @@ For example, to install the glut package on Ubuntu:</p>
 </div>
 </section>
 <section id="nosuchdisplayexception-cannot-connect-to-none">
-<h2>NoSuchDisplayException: Cannot connect to “None”<a class="headerlink" href="#nosuchdisplayexception-cannot-connect-to-none" title="Permalink to this heading">#</a></h2>
+<h2>NoSuchDisplayException: Cannot connect to “None”<a class="headerlink" href="#nosuchdisplayexception-cannot-connect-to-none" title="Link to this heading">#</a></h2>
 <p>If you are connected through SSH, or running the simulator in a Docker image, you will need to use <code class="docutils literal notranslate"><span class="pre">xvfb-run</span></code>
 to create a virtual frame buffer (virtual display) in order to run the simulator.
 The following command can be used to test that the simulator is working correctly:</p>
@@ -337,7 +325,7 @@ The following command can be used to test that the simulator is working correctl
 <p>Depending on which system you are running this command, you may need to install xvfb and mesa packages.</p>
 </section>
 <section id="running-headless-and-training-on-aws">
-<h2>Running headless and training on AWS<a class="headerlink" href="#running-headless-and-training-on-aws" title="Permalink to this heading">#</a></h2>
+<h2>Running headless and training on AWS<a class="headerlink" href="#running-headless-and-training-on-aws" title="Link to this heading">#</a></h2>
 <p>We recommend using the Ubuntu-based <a class="reference external" href="https://aws.amazon.com/marketplace/pp/B077GCH38C">Deep Learning AMI</a>
 to provision your server which comes with all the deep learning libraries.
 To begin with, you will want to install xvfb and mesa.
@@ -364,7 +352,7 @@ You may also need to uninstall the Nvidia display drivers in order for OpenGL/GL
 </div>
 </section>
 <section id="poor-performance-low-frame-rate">
-<h2>Poor performance, low frame rate<a class="headerlink" href="#poor-performance-low-frame-rate" title="Permalink to this heading">#</a></h2>
+<h2>Poor performance, low frame rate<a class="headerlink" href="#poor-performance-low-frame-rate" title="Link to this heading">#</a></h2>
 <p>It’s possible to improve the performance of the simulator by disabling Pyglet error-checking code.
 Export this environment variable before running the simulator:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">PYGLET_DEBUG_GL</span><span class="o">=</span><span class="kc">True</span>
@@ -372,13 +360,13 @@ Export this environment variable before running the simulator:</p>
 </div>
 </section>
 <section id="training-not-converging-or-taking-too-long-to-converge">
-<h2>Training not converging or taking too long to converge<a class="headerlink" href="#training-not-converging-or-taking-too-long-to-converge" title="Permalink to this heading">#</a></h2>
+<h2>Training not converging or taking too long to converge<a class="headerlink" href="#training-not-converging-or-taking-too-long-to-converge" title="Link to this heading">#</a></h2>
 <p>If training is taking too long to converge, you can make environments easier by making them smaller,
 or by increasing the step size, that is, the amount of distance the agent can go forward or turns at each step.
 An example of an environment that does this is <code class="docutils literal notranslate"><span class="pre">MazeS3Fast</span></code>, which <a class="reference external" href="https://github.com/maximecb/gym-miniworld/blob/master/gym_miniworld/envs/maze.py#L123">can be found here</a>.</p>
 </section>
 <section id="unknown-encoder-libx264-when-using-gym-wrappers-monitor">
-<h2>Unknown encoder ‘libx264’ when using gym.wrappers.Monitor<a class="headerlink" href="#unknown-encoder-libx264-when-using-gym-wrappers-monitor" title="Permalink to this heading">#</a></h2>
+<h2>Unknown encoder ‘libx264’ when using gym.wrappers.Monitor<a class="headerlink" href="#unknown-encoder-libx264-when-using-gym-wrappers-monitor" title="Link to this heading">#</a></h2>
 <p>It is possible to use <code class="docutils literal notranslate"><span class="pre">gym.wrappers.Monitor</span></code> to record videos of the agent performing a task.
 See <a class="reference external" href="https://www.programcreek.com/python/example/100947/gym.wrappers.Monitor">examples here</a>.</p>
 <p>The libx264 error is due to a problem with the way ffmpeg is installed on some linux distributions.
@@ -500,12 +488,43 @@ One possible way to circumvent this is to reinstall ffmpeg using conda:</p>
     
     
 
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/scripts/furo.js"></script>
+    <script src="../../_static/documentation_options.js?v=b21b538c"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=7660844c"></script>
     
     <script>
+
+      const createProjectsList = (projects, displayImages) => {
+        const ulElem = Object.assign(document.createElement('ul'),
+          {
+            className:'farama-header-menu-list',
+          }
+        )
+        for (let project of projects) {
+          const liElem = document.createElement("li");
+          const aElem = Object.assign(document.createElement("a"),
+            {
+              href: project.link
+            }
+          );
+          liElem.appendChild(aElem);
+          if (displayImages) {
+            const imgElem = Object.assign(document.createElement("img"),
+              {
+                src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                alt: `${project.name} logo`,
+                className: "farama-black-logo-invert"
+              }
+            );
+            aElem.appendChild(imgElem);
+          }
+          aElem.appendChild(document.createTextNode(project.name));
+          ulElem.appendChild(liElem);
+        }
+        return ulElem;
+      }
+
       // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
@@ -532,9 +551,15 @@ One possible way to circumvent this is to reinstall ffmpeg using conda:</p>
       xhr.onload = () => {
         const jsonResponse = xhr.response;
         const sections = {
-          "Documentation": [],
-          "Mature Projects": [],
-          "Incubating Projects": [],
+          "Core Projects": [],
+          "Mature Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
           "Foundation": [
             {
               name: "About",
@@ -550,28 +575,38 @@ One possible way to circumvent this is to reinstall ffmpeg using conda:</p>
             }
           ]
         }
+
+        // Categorize projects
         Object.keys(jsonResponse).forEach(key => {
           projectJson = jsonResponse[key];
           if (projectJson.website !== null) {
             projectJson.link = projectJson.website;
-            sections["Documentation"].push(projectJson)
-          } else if (projectJson.type == "mature") {
-            projectJson.link = projectJson.github;
-            sections["Mature Projects"].push(projectJson)
           } else {
             projectJson.link = projectJson.github;
-            sections["Incubating Projects"].push(projectJson)
+          }
+          if (projectJson.type === "core") {
+            sections["Core Projects"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            if (projectJson.website !== null) {
+              sections["Mature Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Mature Projects"]["Repositories"].push(projectJson)
+            }
+          } else {
+            if (projectJson.website !== null) {
+              sections["Incubating Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Incubating Projects"]["Repositories"].push(projectJson)
+            }
           }
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
 
         Object.keys(sections).forEach((key, i) => {
-          projects = sections[key];
           const sectionElem = Object.assign(
             document.createElement('div'), {
               className:'farama-header-menu__section',
-              style: "padding-left: 24px"
             }
           )
           sectionElem.appendChild(Object.assign(document.createElement('span'),
@@ -580,33 +615,37 @@ One possible way to circumvent this is to reinstall ffmpeg using conda:</p>
               innerText: key
             }
           ))
-          const ulElem = Object.assign(document.createElement('ul'),
-            {
-              className:'farama-header-menu-list',
-            }
-          )
-          for (let project of projects) {
-            const liElem = document.createElement("li");
-            const aElem = Object.assign(document.createElement("a"),
-              {
-                href: project.link
-              }
-            );
-            liElem.appendChild(aElem);
-            if (key !== "Foundation") {
-              const imgElem = Object.assign(document.createElement("img"),
-                {
-                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
-                  alt: `${project.name} logo`,
-                  className: "farama-black-logo-invert"
+          // is not a list
+          if (sections[key].constructor !== Array) {
+            const subSections = sections[key];
+            const subSectionContainerElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsections-container',
+                  style: 'display: flex'
                 }
-              );
-              aElem.appendChild(imgElem);
-            }
-            aElem.appendChild(document.createTextNode(project.name));
-            ulElem.appendChild(liElem);
+            )
+            Object.keys(subSections).forEach((subKey, i) => {
+              const subSectionElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsection',
+                }
+              )
+              subSectionElem.appendChild(Object.assign(document.createElement('span'),
+                {
+                  className:'farama-header-menu__subsection-title' ,
+                  innerText: subKey
+                }
+              ))
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
+              subSectionElem.appendChild(ulElem);
+              subSectionContainerElem.appendChild(subSectionElem);
+            })
+            sectionElem.appendChild(subSectionContainerElem);
+          } else {
+            const projects = sections[key];
+            const ulElem = createProjectsList(projects, true);
+            sectionElem.appendChild(ulElem);
           }
-          sectionElem.appendChild(ulElem);
           menuContainer.appendChild(sectionElem)
         });
       }
