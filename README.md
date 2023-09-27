@@ -44,19 +44,6 @@ Limitations:
 - Graphics are basic, nowhere near photorealism
 - Physics are very basic, not sufficient for robot arms or manipulation
 
-Please use this bibtex if you want to cite this repository in your publications:
-
-```
-@misc{gym_miniworld,
-  author = {Chevalier-Boisvert, Maxime},
-  title = {MiniWorld: Minimalistic 3D Environment for RL & Robotics Research},
-  year = {2018},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/maximecb/gym-miniworld}},
-}
-```
-
 List of publications & submissions using MiniWorld (please open a pull request to add missing entries):
 - [Decoupling Exploration and Exploitation for Meta-Reinforcement Learning without Sacrifices](https://arxiv.org/abs/2008.02790) (Stanford University, ICML 2021)
 - [Rank the Episodes: A Simple Approach for Exploration in Procedurally-Generated Environments](https://openreview.net/forum?id=MtEE0CktZht) (Texas A&M University, Kuai Inc., ICLR 2021)
