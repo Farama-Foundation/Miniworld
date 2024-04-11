@@ -943,6 +943,15 @@ class MiniWorldEnv(gym.Env):
         px, _, pz = pos
         pos = np.array([px, 0, pz])
 
+        # Find room containing the position
+        room = None
+        for r in self.rooms:
+            if r.point_inside(pos):
+                room = r
+                break
+        if room is None:
+            return True   # The position is outside of the rooms
+        
         # Check for intersection with walls
         if intersect_circle_segs(pos, radius, self.wall_segs):
             return True
