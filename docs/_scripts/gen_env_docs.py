@@ -3,7 +3,7 @@ import re
 
 import gymnasium as gym
 
-import miniworld
+import miniworld  # noqa: F401
 
 
 # From python docs
@@ -33,11 +33,9 @@ def trim(docstring):
     return "\n".join(trimmed)
 
 
-LAYOUT = "env"
-
-pattern = re.compile(r"(?<!^)(?=[A-Z])")
-
-miniworld_env_ids = sorted(list(miniworld.envs.env_ids))
+miniworld_env_ids = sorted(
+    [env_id for env_id in gym.envs.registry if "MiniWorld-" in env_id]
+)
 
 previous_env_name = None
 
@@ -67,6 +65,21 @@ for env_id in miniworld_env_ids:
             + f" ../_static/environments/{env_name_snake_case}.jpg"
             + f" \n:width: 300px\n:alt: {env_name}\n```\n\n"
         )
+
+        # Environment Attributes
+        env = env_spec.make()
+        action_space_table = env.action_space.__repr__().replace("\n", "")
+        observation_space_table = env.observation_space.__repr__().replace("\n", "")
+        env_attributes = f"""
+|   |   |
+|---|---|
+| Action Space | `{re.sub(' +', ' ', action_space_table)}` |
+| Observation Space | `{re.sub(' +', ' ', observation_space_table)}` |
+| Reward Range | `{env.reward_range}` |
+| Creation | `gymnasium.make("{env_spec.id}")` |
+"""
+        res_env_md += f"{env_attributes}\n"
+
         # Docstring
         res_env_md += f"{docstring}\n"
 

@@ -20,7 +20,7 @@ import os
 import miniworld
 
 project = "Miniworld"
-copyright = "2022 Farama Foundation"
+copyright = "2023 Farama Foundation"
 author = "Farama Foundation"
 
 # The full version, including alpha/beta/rc tags
@@ -37,6 +37,7 @@ extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
+    "sphinx.ext.viewcode",
     "myst_parser",
     "sphinx_github_changelog",
 ]
@@ -68,6 +69,8 @@ html_favicon = "_static/img/miniworld-favicon.png"
 html_theme_options = {
     "light_logo": "img/miniworld.svg",
     "dark_logo": "img/miniworld-white.svg",
+    "image": "img/miniworld-github.png",
+    "description": "Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research",
     "gtag": "",
     "versioning": True,
     "source_repository": "https://github.com/Farama-Foundation/Miniworld/",

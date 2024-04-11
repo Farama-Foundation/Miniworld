@@ -27,7 +27,7 @@ jobs:
         run: pip install .
 
       - name: Generate Environments page
-        run: xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python docs/_scripts/gen_docs_page.py
+        run: xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python docs/_scripts/gen_env_docs.py
 
       - name: Generate Environments page
         run: xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python docs/_scripts/gen_envs_display.py

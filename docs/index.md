@@ -10,6 +10,7 @@ lastpage:
 
 content/design
 content/troubleshooting
+content/create_env
 ```
 
 ```{toctree}
@@ -32,15 +33,20 @@ Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/mast
 
 ```
 
-# Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research
+```{project-logo} _static/img/miniworld-text.png
+:alt: Miniworld Logo
+```
 
+```{project-heading}
+Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research
+```
 
 ```{figure} _static/img/miniworld_homepage.gif
     :width: 400px
     :alt: Sequence of observations from Collect Health environment
 ```
 
-MiniWorld allows environments to be easily edited like Minigrid meets DM Lab. It can simulate environments with rooms, doors, hallways, and various objects (e.g., office and home environments, mazes). 
+MiniWorld allows environments to be easily edited like Minigrid meets DM Lab. It can simulate environments with rooms, doors, hallways, and various objects (e.g., office and home environments, mazes).
 
 ## Installation
 
@@ -63,4 +69,18 @@ for _ in range(1000):
    if terminated or truncated:
       observation, info = env.reset()
 env.close()
+```
+
+## Citation
+
+To cite this project please use:
+
+```bibtex
+@article{MinigridMiniworld23,
+  author       = {Maxime Chevalier-Boisvert and Bolun Dai and Mark Towers and Rodrigo de Lazcano and Lucas Willems and Salem Lahlou and Suman Pal and Pablo Samuel Castro and Jordan Terry},
+  title        = {Minigrid \& Miniworld: Modular \& Customizable Reinforcement Learning Environments for Goal-Oriented Tasks},
+  journal      = {CoRR},
+  volume       = {abs/2306.13831},
+  year         = {2023},
+}
 ```

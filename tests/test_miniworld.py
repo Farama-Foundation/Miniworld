@@ -10,7 +10,9 @@ from gymnasium.utils.env_checker import check_env, data_equivalence
 import miniworld
 from miniworld.entity import TextFrame
 from miniworld.miniworld import MiniWorldEnv
-from miniworld.wrappers import PyTorchObsWrapper
+from miniworld.wrappers import PyTorchObsWrapper, StochasticActionWrapper
+
+miniworld_env_ids = [env_id for env_id in gym.envs.registry if "MiniWorld" in env_id]
 
 
 def test_miniworld():
@@ -49,6 +51,20 @@ def test_pytorch_wrapper():
     env.close()
 
 
+def test_stochastic_wrapper():
+    env = gym.make("MiniWorld-Hallway-v0")
+    # Test the stochastic action wrapper
+    env = StochasticActionWrapper(env, prob=0.9)
+    _, _ = env.reset()
+    _, _, _, _, _ = env.step(0)
+    env.close()
+
+    env = StochasticActionWrapper(env, prob=0.9, random_action=1)
+    _, _ = env.reset()
+    _, _, _, _, _ = env.step(0)
+    env.close()
+
+
 def test_text_frame():
     # Test TextFrame
     # make sure it loads the TextFrame with no issues
@@ -80,7 +96,7 @@ def test_collision_detection():
     env.close()
 
 
-@pytest.mark.parametrize("env_id", miniworld.envs.env_ids)
+@pytest.mark.parametrize("env_id", miniworld_env_ids)
 def test_all_envs(env_id):
     # Try loading each of the available environments
     if "RemoteBot" in env_id:
@@ -122,7 +138,7 @@ CHECK_ENV_IGNORE_WARNINGS = [
 ]
 
 
-@pytest.mark.parametrize("env_id", miniworld.envs.env_ids)
+@pytest.mark.parametrize("env_id", miniworld_env_ids)
 def test_env_checker(env_id):
     if "RemoteBot" in env_id:
         return
@@ -139,7 +155,7 @@ def test_env_checker(env_id):
     env.close()
 
 
-@pytest.mark.parametrize("env_id", miniworld.envs.env_ids)
+@pytest.mark.parametrize("env_id", miniworld_env_ids)
 def test_pickle_env(env_id):
     if "RemoteBot" in env_id:
         return

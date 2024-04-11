@@ -32,7 +32,7 @@ jobs:
         run: pip install .
 
       - name: Generate Environments page
-        run: xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python docs/_scripts/gen_docs_page.py
+        run: xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python docs/_scripts/gen_env_docs.py
 
       - name: Generate Environments page
         run: xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python docs/_scripts/gen_envs_display.py
@@ -44,7 +44,7 @@ jobs:
         run: mv _build/404/index.html _build/404.html
 
       - name: Update 404 links
-        run: python docs/scripts/move_404.py _build/404.html
+        run: python docs/_scripts/move_404.py _build/404.html
 
       - name: Remove .doctrees
         run: rm -r _build/.doctrees

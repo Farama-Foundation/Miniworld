@@ -2,13 +2,13 @@ import os
 
 import gymnasium as gym
 
-import miniworld
+import miniworld  # noqa: F401
 
 
 def create_grid_cell(env_id):
     env_name = env_id.split("-")[-2]
     return f"""
-            <a href="/environments/{env_name}">
+            <a href="/environments/{env_name.lower()}">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
                         <img src="/_static/environments/{env_name.lower()}.jpg">
@@ -33,7 +33,10 @@ def generate_page(env_list):
 
 
 if __name__ == "__main__":
-    miniworld_env_ids = sorted(list(miniworld.envs.env_ids))
+    miniworld_env_ids = sorted(
+        [env_id for env_id in gym.envs.registry if "MiniWorld-" in env_id]
+    )
+
     filtered_env_ids = []
     previous_env_name = None
 

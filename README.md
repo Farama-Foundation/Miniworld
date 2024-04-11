@@ -2,7 +2,7 @@
     <img src="https://raw.githubusercontent.com/Farama-Foundation/Miniworld/master/miniworld-text.png" width="500px"/>
 </p>
 
-Miniworld (formerly gym-miniworld) is currently under development to be made compliant with the standards of the Farama Foundation (https://farama.org/project_standards), and when complete this will be maintained long term.
+Miniworld is being maintained by the Farama Foundation (https://farama.org/project_standards). See the [Project Roadmap](https://github.com/Farama-Foundation/Miniworld/issues/103) for details regarding the long-term plans.
 
 [![Build Status](https://travis-ci.org/maximecb/gym-miniworld.svg?branch=master)](https://travis-ci.org/maximecb/gym-miniworld)
 
@@ -43,19 +43,6 @@ Features:
 Limitations:
 - Graphics are basic, nowhere near photorealism
 - Physics are very basic, not sufficient for robot arms or manipulation
-
-Please use this bibtex if you want to cite this repository in your publications:
-
-```
-@misc{gym_miniworld,
-  author = {Chevalier-Boisvert, Maxime},
-  title = {MiniWorld: Minimalistic 3D Environment for RL & Robotics Research},
-  year = {2018},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/maximecb/gym-miniworld}},
-}
-```
 
 List of publications & submissions using MiniWorld (please open a pull request to add missing entries):
 - [Decoupling Exploration and Exploitation for Meta-Reinforcement Learning without Sacrifices](https://arxiv.org/abs/2008.02790) (Stanford University, ICML 2021)
@@ -125,3 +112,16 @@ Alternatively, if this doesn't work, you can also try running MiniWorld with `xv
 xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" python3 your_script.py
 ```
 
+# Citation
+
+To cite this project please use:
+
+```bibtex
+@article{MinigridMiniworld23,
+  author       = {Maxime Chevalier-Boisvert and Bolun Dai and Mark Towers and Rodrigo de Lazcano and Lucas Willems and Salem Lahlou and Suman Pal and Pablo Samuel Castro and Jordan Terry},
+  title        = {Minigrid \& Miniworld: Modular \& Customizable Reinforcement Learning Environments for Goal-Oriented Tasks},
+  journal      = {CoRR},
+  volume       = {abs/2306.13831},
+  year         = {2023},
+}
+```

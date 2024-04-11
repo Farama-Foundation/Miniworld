@@ -909,7 +909,14 @@ class MiniWorldEnv(gym.Env):
         return ent
 
     def place_agent(
-        self, room=None, dir=None, min_x=None, max_x=None, min_z=None, max_z=None
+        self,
+        room=None,
+        pos=None,
+        dir=None,
+        min_x=None,
+        max_x=None,
+        min_z=None,
+        max_z=None,
     ):
         """
         Place the agent in the environment at a random position
@@ -919,6 +926,7 @@ class MiniWorldEnv(gym.Env):
         return self.place_entity(
             self.agent,
             room=room,
+            pos=pos,
             dir=dir,
             min_x=min_x,
             max_x=max_x,
@@ -1077,7 +1085,7 @@ class MiniWorldEnv(gym.Env):
 
         return img
 
-    def render_top_view(self, frame_buffer=None):
+    def render_top_view(self, frame_buffer=None, render_agent=True, return_scale=False):
         """
         Render a top view of the whole map (from above)
         """
@@ -1151,7 +1159,20 @@ class MiniWorldEnv(gym.Env):
         ]
         glLoadMatrixf((GLfloat * len(m))(*m))
 
-        return self._render_world(frame_buffer, render_agent=True)
+        if return_scale:
+            x_scale = frame_buffer.width / (max_x - min_x)
+            z_scale = frame_buffer.height / (max_z - min_z)
+
+            scale = {
+                "x_scale": x_scale,
+                "z_scale": z_scale,
+                "x_offset": int(0 - min_x * x_scale),
+                "z_offset": int(0 - min_z * z_scale),
+            }
+
+            return self._render_world(frame_buffer, render_agent=render_agent), scale
+        else:
+            return self._render_world(frame_buffer, render_agent=render_agent)
 
     def render_obs(self, frame_buffer=None):
         """
