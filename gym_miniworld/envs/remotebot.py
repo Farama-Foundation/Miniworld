@@ -31,8 +31,8 @@ except ImportError:
 buffer = memoryview
 
 # Rendering window size
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 640
+WINDOW_HEIGHT = 640
 
 # Port to connect to on the server
 SERVER_PORT = 7777
@@ -68,8 +68,8 @@ class RemoteBot(gym.Env):
         self,
         serverAddr="minibot1.local",
         serverPort=SERVER_PORT,
-        obs_width=80,
-        obs_height=60,
+        obs_width=64,
+        obs_height=64,
     ):
         assert zmq is not None, "Please install zmq (pip3 install zmq)"
 

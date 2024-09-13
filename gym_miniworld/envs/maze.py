@@ -138,3 +138,22 @@ class MazeS3Fast(Maze):
             max_episode_steps=max_steps,
             domain_rand=False,
         )
+
+
+class MazeS4(Maze):
+    def __init__(self):
+        super().__init__(num_rows=4, num_cols=4)
+
+
+class MazeS5(Maze):
+    def __init__(self):
+        super().__init__(num_rows=5, num_cols=5)
+
+
+class MazeS6(Maze):
+    def __init__(self):
+        super().__init__(num_rows=6, num_cols=6)
+
+class MazeS7(Maze):
+    def __init__(self):
+        super().__init__(num_rows=7, num_cols=7)
