@@ -1,4 +1,5 @@
 import math
+import numpy as np
 from gym import spaces
 
 from gym_miniworld.entity import Box
@@ -147,16 +148,14 @@ class MazeS4(Maze):
 
 
 class CustomMaze(Maze):
-    def __init__(self, num_rows=8, num_cols=8, **kwargs):
+    def __init__(self, num_rows=8, num_cols=8, image_noise_scale=0.0, **kwargs):
         self.wall_textures = ['brick_wall', 'drywall', 'wood']
         self.floor_textures = ['asphalt', 'floor_tiles_bw', 'grass']
+        self.image_noise_scale = image_noise_scale
         super().__init__(num_rows, num_cols, **kwargs)
 
     def _gen_world(self):
         rows = []
-
-        wall_tex = self.rand.choice(self.wall_textures)
-        floor_tex = self.rand.choice(self.floor_textures)
 
         # For each row
         for j in range(self.num_rows):
@@ -176,8 +175,8 @@ class CustomMaze(Maze):
                     max_x=max_x,
                     min_z=min_z,
                     max_z=max_z,
-                    wall_tex=wall_tex,
-                    floor_tex=floor_tex,
+                    wall_tex="brick_wall",
+                    # floor_tex="floor_tiles_bw",
                 )
                 row.append(room)
 
@@ -231,7 +230,7 @@ class CustomMaze(Maze):
         self.box = self.place_entity_at_room_center(Box(color="red"), rows[-1][-1])
 
         # Place the agent in the top-left of the maze
-        self.place_entity_at_room_center(self.agent, rows[0][0], dir=0)
+        self.place_entity_at_room_center(self.agent, rows[0][0])
 
     def place_entity_at_room_center(self, ent, room, dir=None):
         """
@@ -242,18 +241,26 @@ class CustomMaze(Maze):
         assert ent.radius is not None, "entity must have physical size defined"
         assert room in self.rooms, "room must be in the maze"
 
-        pos = (room.mid_x, 0, room.mid_z)
+        pos = np.asarray([room.mid_x, 0, room.mid_z])
         ent.pos = pos
         ent.dir = dir if dir is not None else self.rand.float(-math.pi, math.pi)
         self.entities.append(ent)
         return ent
 
+    def render_obs(self, frame_buffer=None):
+        obs = super().render_obs(frame_buffer)
+        if self.image_noise_scale > 0:
+            obs_noise = self.np_random.normal(loc=0.0, scale=self.image_noise_scale, size=obs.shape)
+            return (obs + obs_noise).astype(obs.dtype)
+        else:
+            return obs
+
 
 class CustomMazeS3(CustomMaze):
-    def __init__(self):
-        super().__init__(num_rows=3, num_cols=3)
+    def __init__(self, image_noise_scale=0.0):
+        super().__init__(num_rows=3, num_cols=3, image_noise_scale=image_noise_scale)
 
 
 class CustomMazeS4(CustomMaze):
-    def __init__(self):
-        super().__init__(num_rows=4, num_cols=4)
+    def __init__(self, image_noise_scale=0.0):
+        super().__init__(num_rows=4, num_cols=4, image_noise_scale=image_noise_scale)
