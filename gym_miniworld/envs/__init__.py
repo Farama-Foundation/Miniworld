@@ -5,7 +5,11 @@ import gym
 from gym_miniworld.envs.collecthealth import CollectHealth
 from gym_miniworld.envs.fourrooms import FourRooms
 from gym_miniworld.envs.hallway import Hallway
-from gym_miniworld.envs.maze import Maze, MazeS2, MazeS3, MazeS3Fast, MazeS4, CustomMaze, CustomMazeS3, CustomMazeS4
+from gym_miniworld.envs.maze import (
+    Maze, MazeS2, MazeS3, MazeS3Fast, MazeS4,
+    CornerMaze, CornerMazeS3, CornerMazeS4, CornerMazeS5,
+    TextureMaze, TextureMazeS3, TextureMazeS4, TextureMazeS5,
+)
 from gym_miniworld.envs.oneroom import OneRoom, OneRoomS6, OneRoomS6Fast
 from gym_miniworld.envs.pickupobjs import PickupObjs
 from gym_miniworld.envs.putnext import PutNext

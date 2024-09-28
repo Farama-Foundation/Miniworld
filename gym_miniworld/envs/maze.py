@@ -147,12 +147,20 @@ class MazeS4(Maze):
         super().__init__(num_rows=4, num_cols=4)
 
 
-class CustomMaze(Maze):
-    def __init__(self, num_rows=8, num_cols=8, image_noise_scale=0.0, **kwargs):
-        self.wall_textures = ['brick_wall', 'drywall', 'wood']
-        self.floor_textures = ['asphalt', 'floor_tiles_bw', 'grass']
+class CornerMaze(Maze):
+    def __init__(self, num_rows=8, num_cols=8, image_noise_scale=0.0, room_size=3, forward_step=1.2, turn_step=22.5):
         self.image_noise_scale = image_noise_scale
-        super().__init__(num_rows, num_cols, **kwargs)
+        params = DEFAULT_PARAMS.no_random()
+        params.set("forward_step", forward_step)
+        params.set("turn_step", turn_step)
+
+        super().__init__(
+            num_rows=num_rows,
+            num_cols=num_cols,
+            room_size=room_size,
+            params=params,
+            domain_rand=False,
+        )
 
     def _gen_world(self):
         rows = []
@@ -176,7 +184,6 @@ class CustomMaze(Maze):
                     min_z=min_z,
                     max_z=max_z,
                     wall_tex="brick_wall",
-                    # floor_tex="floor_tiles_bw",
                 )
                 row.append(room)
 
@@ -229,7 +236,7 @@ class CustomMaze(Maze):
         # Place the box in the bottom-right of the maze
         self.box = self.place_entity_at_room_center(Box(color="red"), rows[-1][-1])
 
-        # Place the agent in the top-left of the maze
+        # Place the agent in the top-left of the maze (random direction)
         self.place_entity_at_room_center(self.agent, rows[0][0])
 
     def place_entity_at_room_center(self, ent, room, dir=None):
@@ -256,11 +263,116 @@ class CustomMaze(Maze):
             return obs
 
 
-class CustomMazeS3(CustomMaze):
+class CornerMazeS3(CornerMaze):
     def __init__(self, image_noise_scale=0.0):
         super().__init__(num_rows=3, num_cols=3, image_noise_scale=image_noise_scale)
 
 
-class CustomMazeS4(CustomMaze):
+class CornerMazeS4(CornerMaze):
     def __init__(self, image_noise_scale=0.0):
         super().__init__(num_rows=4, num_cols=4, image_noise_scale=image_noise_scale)
+
+
+class CornerMazeS5(CornerMaze):
+    def __init__(self, image_noise_scale=0.0):
+        super().__init__(num_rows=5, num_cols=5, image_noise_scale=image_noise_scale)
+
+
+class TextureMaze(CornerMaze):
+    def __init__(self, num_rows=8, num_cols=8, image_noise_scale=0.0, **kwargs):
+        self.wall_textures = ['brick_wall', 'drywall', 'wood']
+        self.floor_textures = ['asphalt', 'floor_tiles_bw', 'grass']
+        super().__init__(num_rows, num_cols, image_noise_scale, **kwargs)
+
+    def _gen_world(self):
+        rows = []
+
+        # For each row
+        for j in range(self.num_rows):
+            row = []
+
+            # For each column
+            for i in range(self.num_cols):
+
+                min_x = i * (self.room_size + self.gap_size)
+                max_x = min_x + self.room_size
+
+                min_z = j * (self.room_size + self.gap_size)
+                max_z = min_z + self.room_size
+
+                room = self.add_rect_room(
+                    min_x=min_x,
+                    max_x=max_x,
+                    min_z=min_z,
+                    max_z=max_z,
+                    wall_tex=self.rand.choice(self.wall_textures),
+                    floor_tex=self.rand.choice(self.floor_textures)
+                )
+                row.append(room)
+
+            rows.append(row)
+
+        visited = set()
+
+        def visit(i, j):
+            """
+            Recursive backtracking maze construction algorithm
+            https://stackoverflow.com/questions/38502
+            """
+
+            room = rows[j][i]
+
+            visited.add(room)
+
+            # Reorder the neighbors to visit in a random order
+            neighbors = self.rand.subset([(0, 1), (0, -1), (-1, 0), (1, 0)], 4)
+
+            # For each possible neighbor
+            for dj, di in neighbors:
+                ni = i + di
+                nj = j + dj
+
+                if nj < 0 or nj >= self.num_rows:
+                    continue
+                if ni < 0 or ni >= self.num_cols:
+                    continue
+
+                neighbor = rows[nj][ni]
+
+                if neighbor in visited:
+                    continue
+
+                if di == 0:
+                    self.connect_rooms(
+                        room, neighbor, min_x=room.min_x, max_x=room.max_x
+                    )
+                elif dj == 0:
+                    self.connect_rooms(
+                        room, neighbor, min_z=room.min_z, max_z=room.max_z
+                    )
+
+                visit(ni, nj)
+
+        # Generate the maze starting from the top-left corner
+        visit(0, 0)
+
+        # Place the box in the bottom-right of the maze
+        self.box = self.place_entity_at_room_center(Box(color="red"), rows[-1][-1])
+
+        # Place the agent in the top-left of the maze (random direction)
+        self.place_entity_at_room_center(self.agent, rows[0][0])
+
+
+class TextureMazeS3(TextureMaze):
+    def __init__(self, image_noise_scale=0.0):
+        super().__init__(num_rows=3, num_cols=3, image_noise_scale=image_noise_scale)
+
+
+class TextureMazeS4(TextureMaze):
+    def __init__(self, image_noise_scale=0.0):
+        super().__init__(num_rows=4, num_cols=4, image_noise_scale=image_noise_scale)
+
+
+class TextureMazeS5(TextureMaze):
+    def __init__(self, image_noise_scale=0.0):
+        super().__init__(num_rows=5, num_cols=5, image_noise_scale=image_noise_scale)
