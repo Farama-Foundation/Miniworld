@@ -148,7 +148,7 @@ class MazeS4(Maze):
 
 
 class CornerMaze(Maze):
-    def __init__(self, num_rows=8, num_cols=8, image_noise_scale=0.0, room_size=3, forward_step=1.2, turn_step=22.5):
+    def __init__(self, num_rows=8, num_cols=8, image_noise_scale=0.0, room_size=3, forward_step=0.4, turn_step=22.5):
         self.image_noise_scale = image_noise_scale
         params = DEFAULT_PARAMS.no_random()
         params.set("forward_step", forward_step)
@@ -236,8 +236,8 @@ class CornerMaze(Maze):
         # Place the box in the bottom-right of the maze
         self.box = self.place_entity_at_room_center(Box(color="red"), rows[-1][-1])
 
-        # Place the agent in the top-left of the maze (random direction)
-        self.place_entity_at_room_center(self.agent, rows[0][0])
+        # Place the agent in the top-left of the maze (fixed direction)
+        self.place_entity_at_room_center(self.agent, rows[0][0], 0)
 
     def place_entity_at_room_center(self, ent, room, dir=None):
         """
@@ -261,6 +261,14 @@ class CornerMaze(Maze):
             return (obs + obs_noise).astype(obs.dtype)
         else:
             return obs
+
+    def render(self, mode="human", close=False, view="agent"):
+        if mode == "rgb_array":
+            img_agent = super().render(mode, close, view="agent")
+            img_top = super().render(mode, close, view="top")
+            return np.concatenate([img_agent, img_top], axis=1)
+        else:
+            return super().render(mode, close, view)
 
 
 class CornerMazeS3(CornerMaze):
@@ -359,8 +367,8 @@ class TextureMaze(CornerMaze):
         # Place the box in the bottom-right of the maze
         self.box = self.place_entity_at_room_center(Box(color="red"), rows[-1][-1])
 
-        # Place the agent in the top-left of the maze (random direction)
-        self.place_entity_at_room_center(self.agent, rows[0][0])
+        # Place the agent in the top-left of the maze (fixed direction)
+        self.place_entity_at_room_center(self.agent, rows[0][0], 0)
 
 
 class TextureMazeS3(TextureMaze):

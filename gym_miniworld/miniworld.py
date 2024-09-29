@@ -473,8 +473,8 @@ class MiniWorldEnv(gym.Env):
         max_episode_steps=1500,
         obs_width=64,
         obs_height=64,
-        window_width=640,
-        window_height=640,
+        window_width=128,
+        window_height=128,
         params=DEFAULT_PARAMS,
         domain_rand=False,
     ):
