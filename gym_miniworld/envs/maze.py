@@ -150,7 +150,7 @@ class MazeS4(Maze):
 
 class CustomMaze(MiniWorldEnv):
     def __init__(
-        self, num_rows=8, num_cols=8, room_size=3, gap_size=0.25, forward_step=0.4, turn_step=22.5,
+        self, num_rows=8, num_cols=8, room_size=3, gap_size=0.25, forward_step=0.6, turn_step=90,
         center_room=False, fixed_agent_dir=False, random_texture=False, deep_maze=False,
         image_noise_scale=0.0, max_episode_steps=None, **kwargs
     ):
@@ -288,8 +288,8 @@ class CustomMaze(MiniWorldEnv):
             # Step 3: Perform BFS from node_a
             node_b, self.maze_diameter = bfs(node_a)
 
-            box_room = rows[node_b[0]][node_b[1]]
-            agent_room = rows[node_a[0]][node_a[1]]
+            box_room = rows[node_a[0]][node_a[1]]
+            agent_room = rows[node_b[0]][node_b[1]]
 
         # Place the box & agent in center of the corresponding room
         if self.center_room:
@@ -340,44 +340,23 @@ class CustomMaze(MiniWorldEnv):
             return super().render(mode, close, view)
 
 
-class CornerMaze(CustomMaze):
+class FullMaze(CustomMaze):
     def __init__(self, num_rows=8, num_cols=8, image_noise_scale=0.0, **kwargs):
         super().__init__(num_rows=num_rows, num_cols=num_cols, center_room=True, fixed_agent_dir=True,
-                         image_noise_scale=image_noise_scale, **kwargs)
+                         deep_maze=True, image_noise_scale=image_noise_scale, **kwargs)
 
 
-class CornerMazeS3(CornerMaze):
+class FullMazeS3(FullMaze):
     def __init__(self, image_noise_scale=0.0):
         super().__init__(num_rows=3, num_cols=3, image_noise_scale=image_noise_scale)
 
 
-class CornerMazeS4(CornerMaze):
+class FullMazeS4(FullMaze):
     def __init__(self, image_noise_scale=0.0):
         super().__init__(num_rows=4, num_cols=4, image_noise_scale=image_noise_scale)
 
 
-class CornerMazeS5(CornerMaze):
-    def __init__(self, image_noise_scale=0.0):
-        super().__init__(num_rows=5, num_cols=5, image_noise_scale=image_noise_scale)
-
-
-class TextureMaze(CustomMaze):
-    def __init__(self, num_rows=8, num_cols=8, image_noise_scale=0.0, **kwargs):
-        super().__init__(num_rows=num_rows, num_cols=num_cols, center_room=True, fixed_agent_dir=True,
-                         random_texture=True, image_noise_scale=image_noise_scale, **kwargs)
-
-
-class TextureMazeS3(TextureMaze):
-    def __init__(self, image_noise_scale=0.0):
-        super().__init__(num_rows=3, num_cols=3, image_noise_scale=image_noise_scale)
-
-
-class TextureMazeS4(TextureMaze):
-    def __init__(self, image_noise_scale=0.0):
-        super().__init__(num_rows=4, num_cols=4, image_noise_scale=image_noise_scale)
-
-
-class TextureMazeS5(TextureMaze):
+class FullMazeS5(FullMaze):
     def __init__(self, image_noise_scale=0.0):
         super().__init__(num_rows=5, num_cols=5, image_noise_scale=image_noise_scale)
 

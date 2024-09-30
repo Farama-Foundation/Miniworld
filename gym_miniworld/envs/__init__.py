@@ -7,8 +7,7 @@ from gym_miniworld.envs.fourrooms import FourRooms
 from gym_miniworld.envs.hallway import Hallway
 from gym_miniworld.envs.maze import (
     Maze, MazeS2, MazeS3, MazeS3Fast, MazeS4,
-    CornerMaze, CornerMazeS3, CornerMazeS4, CornerMazeS5,
-    TextureMaze, TextureMazeS3, TextureMazeS4, TextureMazeS5,
+    FullMaze, FullMazeS3, FullMazeS4, FullMazeS5,
     FullRandomMaze, FullRandomMazeS3, FullRandomMazeS4, FullRandomMazeS5,
 )
 from gym_miniworld.envs.oneroom import OneRoom, OneRoomS6, OneRoomS6Fast
