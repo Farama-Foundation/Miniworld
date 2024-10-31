@@ -6,7 +6,7 @@ from pyglet.window import key
 
 class ManualControl:
     def __init__(self, env, no_time_limit, domain_rand):
-        self.env = env
+        self.env = env.unwrapped
 
         if no_time_limit:
             self.env.max_episode_steps = math.inf
