@@ -38,6 +38,10 @@ def main():
     manual_control = ManualControl(env, args.no_time_limit, args.domain_rand)
     manual_control.run()
 
+    if isinstance(obs, dict):
+        if "mission" in obs:
+            print(f"Mission: {obs['mission']}")
+
 
 if __name__ == "__main__":
     main()
