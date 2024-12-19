@@ -44,19 +44,19 @@ class ManualControl:
                 self.env.close()
 
             if symbol == key.UP:
-                self.step(self.env.actions.move_forward)
+                self.step(self.env.unwrapped.actions.move_forward)
             elif symbol == key.DOWN:
-                self.step(self.env.actions.move_back)
+                self.step(self.env.unwrapped.actions.move_back)
             elif symbol == key.LEFT:
-                self.step(self.env.actions.turn_left)
+                self.step(self.env.unwrapped.actions.turn_left)
             elif symbol == key.RIGHT:
-                self.step(self.env.actions.turn_right)
+                self.step(self.env.unwrapped.actions.turn_right)
             elif symbol == key.PAGEUP or symbol == key.P:
-                self.step(self.env.actions.pickup)
+                self.step(self.env.unwrapped.actions.pickup)
             elif symbol == key.PAGEDOWN or symbol == key.D:
-                self.step(self.env.actions.drop)
+                self.step(self.env.unwrapped.actions.drop)
             elif symbol == key.ENTER:
-                self.step(self.env.actions.done)
+                self.step(self.env.unwrapped.actions.done)
 
         @env.unwrapped.window.event
         def on_key_release(symbol, modifiers):
@@ -78,9 +78,9 @@ class ManualControl:
     def step(self, action):
         print(
             "step {}/{}: {}".format(
-                self.env.step_count + 1,
-                self.env.max_episode_steps,
-                self.env.actions(action).name,
+                self.env.unwrapped.step_count + 1,
+                self.env.unwrapped.max_episode_steps,
+                self.env.unwrapped.actions(action).name,
             )
         )
 
