@@ -11,8 +11,8 @@ Contents:
 - [Installation](#installation)
 - [Usage](#usage)
 - [Environments](docs/environments.md)
-- [Design and Customization](docs/design.md)
-- [Troubleshooting](docs/troubleshooting.md)
+- [Design and Customization](docs/content/design.md)
+- [Troubleshooting](docs/content/troubleshooting.md)
 
 ## Introduction
 
@@ -80,7 +80,7 @@ cd Miniworld
 python3 -m pip install -e .
 ```
 
-If you run into any problems, please take a look at the [troubleshooting guide](docs/troubleshooting.md).
+If you run into any problems, please take a look at the [troubleshooting guide](docs/content/troubleshooting.md).
 
 ## Usage
 
