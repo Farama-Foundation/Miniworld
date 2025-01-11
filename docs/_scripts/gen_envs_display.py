@@ -10,10 +10,10 @@ gym.register_envs(miniworld)
 def create_grid_cell(env_id):
     env_name = env_id.split("-")[-2]
     return f"""
-            <a href="../environments/{env_name.lower()}.html">
+            <a href="{env_name.lower()}">
                 <div class="env-grid__cell">
                     <div class="cell__image-container">
-                        <img src="../_static/environments/{env_name.lower()}.jpg">
+                        <img src="/_static/environments/{env_name.lower()}.jpg">
                     </div>
                     <div class="cell__title">
                         <span>{env_name}</span>
@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     file_path = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),
-        "content",
+        "environments",
         "env_list.html",
     )
 
