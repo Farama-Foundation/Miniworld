@@ -307,8 +307,8 @@ Environments are essentially 2D floorplans made of connected rooms.
 Rooms can have any convex outline defined by at least 3 points.
 Portals (openings) can be created in walls to create doors or windows into other rooms.
 Hallways are themselves small rooms with some walls removed.
-To get an idea how to create and connect rooms, you should take a look at the implementation of the <a class="reference internal" href="#/miniworld/envs/threerooms.py"><span class="xref myst">ThreeRooms environment</span></a>.</p>
-<p>The entities are defined in <a class="reference internal" href="#/miniworld/entity.py"><span class="xref myst">miniworld/entity.py</span></a> and include:</p>
+To get an idea how to create and connect rooms, you should take a look at the implementation of the <a class="reference external" href="https://github.com/Farama-Foundation/Miniworld/blob/master/miniworld/envs/threerooms.py">ThreeRooms environment</a>.</p>
+<p>The entities are defined in <a class="reference external" href="https://github.com/Farama-Foundation/Miniworld/blob/master/miniworld/entity.py">miniworld/entity.py</a> and include:</p>
 <ul class="simple">
 <li><p>The agent/robot</p></li>
 <li><p>Movable colored boxes</p></li>
@@ -364,7 +364,7 @@ See the <code class="docutils literal notranslate"><span class="pre">_reward()</
 Some 3D models are included under the <a class="reference external" href="https://github.com/maximecb/gym-miniworld/tree/master/gym_miniworld/meshes">miniworld/meshes</a> directory.
 These models are all tested and working with MiniWorld.
 In order to load a 3D model in an environment, you should create a <code class="docutils literal notranslate"><span class="pre">MeshEnt</span></code> object and specify the name of the model to load.
-See the <a class="reference external" href="https://github.com/maximecb/gym-miniworld/blob/master/gym_miniworld/envs/sidewalk.py">sidewalk environment</a> for an example of how to do this.
+See the <a class="reference external" href="https://github.com/Farama-Foundation/Miniworld/blob/master/miniworld/envs/sidewalk.py">sidewalk environment</a> for an example of how to do this.
 The <code class="docutils literal notranslate"><span class="pre">height</span></code> parameter specifies how to scale the model, based on the height you want it to have, in meters.</p>
 <figure class="align-default">
 <a class="reference internal image-reference" href="../../_images/sidewalk.jpg"><img alt="Figure of Street cone 3D models" src="../../_images/sidewalk.jpg" style="width: 260px;" />
