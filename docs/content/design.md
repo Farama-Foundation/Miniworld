@@ -12,9 +12,9 @@ Environments are essentially 2D floorplans made of connected rooms.
 Rooms can have any convex outline defined by at least 3 points.
 Portals (openings) can be created in walls to create doors or windows into other rooms.
 Hallways are themselves small rooms with some walls removed.
-To get an idea how to create and connect rooms, you should take a look at the implementation of the [ThreeRooms environment](/miniworld/envs/threerooms.py).
+To get an idea how to create and connect rooms, you should take a look at the implementation of the [ThreeRooms environment](https://github.com/Farama-Foundation/Miniworld/blob/master/miniworld/envs/threerooms.py).
 
-The entities are defined in [miniworld/entity.py](/miniworld/entity.py) and include:
+The entities are defined in [miniworld/entity.py](https://github.com/Farama-Foundation/Miniworld/blob/master/miniworld/entity.py) and include:
 
 - The agent/robot
 - Movable colored boxes
@@ -71,7 +71,7 @@ MiniWorld has built-in support for [OBJ mesh files](https://en.wikipedia.org/wik
 Some 3D models are included under the [miniworld/meshes](https://github.com/maximecb/gym-miniworld/tree/master/gym_miniworld/meshes) directory.
 These models are all tested and working with MiniWorld.
 In order to load a 3D model in an environment, you should create a `MeshEnt` object and specify the name of the model to load.
-See the [sidewalk environment](https://github.com/maximecb/gym-miniworld/blob/master/gym_miniworld/envs/sidewalk.py) for an example of how to do this.
+See the [sidewalk environment](https://github.com/Farama-Foundation/Miniworld/blob/master/miniworld/envs/sidewalk.py) for an example of how to do this.
 The `height` parameter specifies how to scale the model, based on the height you want it to have, in meters.
 
 ```{figure} /_static/environments/sidewalk.jpg
