@@ -45,7 +45,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords=["Environment", "Agent", "RL", "Gym", "Robotics", "3D"],
-    python_requires=">=3.7, <3.11",
+    python_requires=">=3.8",
     packages=["miniworld", "miniworld.envs"],
     package_data={
         "miniworld": [
@@ -56,20 +56,21 @@ setup(
             "meshes/*.obj",
         ]
     },
-    extras_require={"testing": ["pytest==7.0.1", "torch"]},
     install_requires=[
-        "numpy>=1.18.0",
-        "pyglet==1.5.27",
-        "gymnasium>=0.26.2",
+        "numpy>=1.22.0",
+        "pyglet>=1.5.27,<2.0",
+        "gymnasium>=0.29.1",
     ],
+    extras_require={"testing": ["pytest>=7.0.1", "torch"]},
     # Include textures and meshes in the package
     include_package_data=True,
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
 )

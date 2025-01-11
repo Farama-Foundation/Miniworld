@@ -6,7 +6,7 @@ title: "[Proposal] Proposal title"
 
 
 
-### Proposal 
+### Proposal
 
 A clear and concise description of the proposal.
 
@@ -30,4 +30,4 @@ Add any other context or screenshots about the feature request here.
 
 ### Checklist
 
-- [ ] I have checked that there is no similar [issue](https://github.com/Farama-Foundation/gym-miniworld/issues) in the repo (**required**)
+- [ ] I have checked that there is no similar [issue](https://github.com/Farama-Foundation/miniworld/issues) in the repo (**required**)

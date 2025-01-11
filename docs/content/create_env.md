@@ -49,7 +49,7 @@ which places the goal in the middle. Now the environment should look like this:
 :width: 500px
 ```
 
-### Add reward 
+### Add reward
 
 To add a reward when the agent gets close to the box, we can do the following:
 

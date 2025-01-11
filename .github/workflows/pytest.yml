@@ -1,0 +1,36 @@
+name: build
+on: [pull_request, push]
+
+jobs:
+  build-latest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+           docker build -f .github/docker/testing.Dockerfile \
+             --build-arg PYTHON_VERSION=${{ matrix.python-version }} \
+             --tag miniworld-docker .
+      - name: Run tests
+        run: docker run miniworld-docker pytest
+
+  build-old:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          docker build -f .github/docker/testing-old.Dockerfile \
+            --build-arg PYTHON_VERSION='3.11' \
+            --tag miniworld-docker .
+      - name: Run tests
+        run: docker run miniworld-docker pytest
+
+# Old Travis testing
+
+# Test the simulator
+# xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" ./run_tests.py
+#
+# Test RL code quickly
+# cd pytorch-a2c-ppo-acktr && xvfb-run -a -s "-screen 0 1024x768x24 -ac +extension GLX +render -noreset" time python3 main.py --no-cuda --algo a2c --log-interval 1 --num-frames 200 --num-processes 1 --num-steps 80 --lr 0.00005 --env-name MiniWorld-Hallway-v0

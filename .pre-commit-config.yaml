@@ -1,18 +1,34 @@
 ---
 repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-symlinks
+      - id: destroyed-symlinks
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-ast
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+      - id: detect-private-key
+      - id: debug-statements
   - repo: https://github.com/python/black
-    rev: 23.3.0
+    rev: 24.10.0
     hooks:
       - id: black
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.4
+    rev: v2.3.0
     hooks:
       - id: codespell
         args:
           - --skip=*.svg
           # - --ignore-words-list=
   - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
+    rev: 7.1.1
     hooks:
       - id: flake8
         args:
@@ -23,7 +39,7 @@ repos:
           - --show-source
           - --statistics
   - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0
+    rev: 5.13.2
     hooks:
       - id: isort
         args: ["--profile", "black"]
@@ -37,10 +53,10 @@ repos:
 #          - --convention=google
 #        additional_dependencies: ["toml"]
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.1
+    rev: v3.19.1
     hooks:
       - id: pyupgrade
-        args: ["--py37-plus"]
+        args: ["--py38-plus"]
 #  - repo: local
 #    hooks:
 #      - id: pyright
