@@ -1,4 +1,3 @@
-import importlib
 import math
 import pickle
 import warnings
@@ -12,7 +11,7 @@ from miniworld.entity import TextFrame
 from miniworld.miniworld import MiniWorldEnv
 from miniworld.wrappers import PyTorchObsWrapper, StochasticActionWrapper
 
-miniworld_env_ids = [env_id for env_id in gym.envs.registry if "MiniWorld" in env_id]
+miniworld_env_ids = [env_id for env_id in gym.registry if "MiniWorld" in env_id]
 
 
 def test_miniworld():
@@ -28,7 +27,7 @@ def test_miniworld():
     first_render = env.render()
     m0 = first_obs.mean()
     m1 = first_render.mean()
-    assert m0 > 0 and m0 < 255
+    assert 0 < m0 < 255
     assert abs(m0 - m1) < 5
 
     # Check that the observation shapes match in reset and step
@@ -83,15 +82,15 @@ def test_text_frame():
 def test_collision_detection():
     # Basic collision detection test
     # Make sure the agent can never get outside the room
-    env = gym.make("MiniWorld-OneRoom-v0")
+    env = gym.make("MiniWorld-OneRoom-v0").env.env
     for _ in range(30):
         env.reset()
         room = env.rooms[0]
         for _ in range(30):
             env.step(env.actions.move_forward)
             x, _, z = env.agent.pos
-            assert x >= room.min_x and x <= room.max_x
-            assert z >= room.min_z and z <= room.max_z
+            assert room.min_x <= x <= room.max_x
+            assert room.min_z <= z <= room.max_z
 
     env.close()
 
@@ -103,12 +102,8 @@ def test_all_envs(env_id):
         return
 
     env = gym.make(env_id)
-
-    spec_entry_point = env.spec.entry_point
-    mod_name, attr_name = spec_entry_point.split(":")
-    mode = importlib.import_module(mod_name)
-    attr = getattr(mode, attr_name)
-    assert isinstance(attr(), MiniWorldEnv)
+    assert isinstance(env.unwrapped, MiniWorldEnv)
+    env = env.env.env
 
     env.domain_rand = True
     # Try multiple random restarts

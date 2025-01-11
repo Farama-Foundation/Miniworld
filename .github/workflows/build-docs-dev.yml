@@ -15,7 +15,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-            python-version: '3.9'
+            python-version: '3.11'
 
       - name: Install freeglut
         run: sudo apt-get install -y freeglut3-dev xvfb

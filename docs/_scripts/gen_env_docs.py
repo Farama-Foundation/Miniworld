@@ -3,7 +3,9 @@ import re
 
 import gymnasium as gym
 
-import miniworld  # noqa: F401
+import miniworld
+
+gym.register_envs(miniworld)
 
 
 # From python docs
@@ -75,7 +77,6 @@ for env_id in miniworld_env_ids:
 |---|---|
 | Action Space | `{re.sub(' +', ' ', action_space_table)}` |
 | Observation Space | `{re.sub(' +', ' ', observation_space_table)}` |
-| Reward Range | `{env.reward_range}` |
 | Creation | `gymnasium.make("{env_spec.id}")` |
 """
         res_env_md += f"{env_attributes}\n"

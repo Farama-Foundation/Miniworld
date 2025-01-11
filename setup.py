@@ -57,11 +57,11 @@ setup(
         ]
     },
     install_requires=[
-        "numpy>=1.18.0",
-        "pyglet==1.5.27",
-        "gymnasium>=0.26.2",
+        "numpy>=1.22.0",
+        "pyglet>=1.5.27,<2.0",
+        "gymnasium>=0.29.1",
     ],
-    extras_require={"testing": ["pytest==7.0.1", "torch"]},
+    extras_require={"testing": ["pytest>=7.0.1", "torch"]},
     # Include textures and meshes in the package
     include_package_data=True,
     classifiers=[

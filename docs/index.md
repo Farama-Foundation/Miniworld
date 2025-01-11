@@ -11,17 +11,8 @@ lastpage:
 content/design
 content/troubleshooting
 content/create_env
+content/environments
 ```
-
-```{toctree}
-:hidden:
-:glob:
-:caption: Environments
-
-content/env_list.md
-environments/*
-```
-
 
 ```{toctree}
 :hidden:

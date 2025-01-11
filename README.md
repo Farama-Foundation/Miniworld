@@ -10,9 +10,9 @@ Contents:
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Environments](docs/environments.md)
-- [Design and Customization](docs/content/design.md)
-- [Troubleshooting](docs/content/troubleshooting.md)
+- [Environments](https://miniworld.farama.org/content/env_list/)
+- [Design and Customization](https://miniworld.farama.org/content/design/)
+- [Troubleshooting](https://miniworld.farama.org/content/troubleshooting/)
 
 ## Introduction
 
