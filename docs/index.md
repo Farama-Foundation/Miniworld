@@ -9,9 +9,10 @@ lastpage:
 :caption: Introduction
 
 content/design
-content/troubleshooting
+environments
 content/create_env
-environments/environments
+content/troubleshooting
+content/installation
 ```
 
 ```{toctree}
@@ -21,7 +22,6 @@ environments/environments
 release_notes
 Github <https://github.com/Farama-Foundation/Miniworld>
 Contribute to the Docs <https://github.com/Farama-Foundation/Miniworld/tree/master/docs/>
-
 ```
 
 ```{project-logo} _static/img/miniworld-text.png
@@ -51,7 +51,9 @@ The Gymnasium interface allows to initialize and interact with the Miniworld def
 
 ```python
 import gymnasium as gym
-env = gym.make("MiniWorld-OneRoom-v0")
+
+env = gym.make("MiniWorld-OneRoom-v0", render_mode="human")
+
 observation, info = env.reset(seed=42)
 for _ in range(1000):
    action = policy(observation)  # User-defined policy function
