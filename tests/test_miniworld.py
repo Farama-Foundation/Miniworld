@@ -12,7 +12,7 @@ from miniworld.entity import TextFrame
 from miniworld.miniworld import MiniWorldEnv
 from miniworld.wrappers import PyTorchObsWrapper, StochasticActionWrapper
 
-miniworld_env_ids = [env_id for env_id in gym.envs.registry if "MiniWorld" in env_id]
+miniworld_env_ids = [env_id for env_id in gym.registry if "MiniWorld" in env_id]
 
 
 def test_miniworld():

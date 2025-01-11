@@ -23,20 +23,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.11'
       - name: Install pypa/build
-        run: >-
-          python -m
-          pip install -U
-          build
+        run: python -m pip install -U build
       - name: Build a binary wheel and a source tarball
-        run: >-
-          python -m
-          build
-          --sdist
-          --wheel
-          --outdir dist/
-          .
+        run: python -m build --sdist --wheel --outdir dist/ .
       - name: Store wheels
         uses: actions/upload-artifact@v3
         with:
