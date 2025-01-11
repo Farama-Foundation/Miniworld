@@ -2,7 +2,7 @@ name: build
 on: [pull_request, push]
 
 jobs:
-  build:
+  build-latest:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -10,11 +10,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: |
-           docker build -f py.Dockerfile \
+           docker build -f .github/docker/testing.Dockerfile \
              --build-arg PYTHON_VERSION=${{ matrix.python-version }} \
-             --tag gym-miniworld-docker .
+             --tag miniworld-docker .
       - name: Run tests
-        run: docker run gym-miniworld-docker pytest
+        run: docker run miniworld-docker pytest
+
+  build-old:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: |
+          docker build -f .github/docker/testing-old.Dockerfile \
+            --build-arg PYTHON_VERSION='3.11' \
+            --tag miniworld-docker .
+      - name: Run tests
+        run: docker run miniworld-docker pytest
 
 # Old Travis testing
 
