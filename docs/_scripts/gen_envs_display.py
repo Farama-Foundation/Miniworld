@@ -10,28 +10,26 @@ gym.register_envs(miniworld)
 def create_grid_cell(env_id):
     env_name = env_id.split("-")[-2]
     return f"""
-            <a href="{env_name.lower()}">
-                <div class="env-grid__cell">
-                    <div class="cell__image-container">
-                        <img src="/_static/environments/{env_name.lower()}.jpg">
-                    </div>
-                    <div class="cell__title">
-                        <span>{env_name}</span>
-                    </div>
-                </div>
-            </a>
-    """
+    <a href="{env_name.lower()}">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/{env_name.lower()}.jpg">
+            </div>
+            <div class="cell__title">
+                <span>{env_name}</span>
+            </div>
+        </div>
+    </a>"""
 
 
 def generate_page(env_list):
     cells = [create_grid_cell(env_id) for env_id in env_list]
     cells = "\n".join(cells)
 
-    return f"""
-<div class="env-grid">
+    return f"""<div class="env-grid">
     {cells}
 </div>
-    """
+"""
 
 
 if __name__ == "__main__":
@@ -58,6 +56,7 @@ if __name__ == "__main__":
         "environments",
         "env_list.html",
     )
+    print(file_path)
 
     res = generate_page(filtered_env_ids)
 
