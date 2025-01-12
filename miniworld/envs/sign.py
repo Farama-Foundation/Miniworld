@@ -52,27 +52,23 @@ class Sign(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing a RGB image of what the agents sees.
+    representing an RGB image of what the agents see.
 
-    ## Rewards:
+    ## Rewards
 
     +1 for touching the object where the color matches the sign and the shape matches the goal
     -1 for touching any other object
 
     ## Arguments
 
+    * `size`:  size of the square room.
+    * `max_episode_steps`: number of steps before the episode ends.
+    * `color_index`: specifies whether the sign says blue (0), green (1), or red (2).
+    * `goal`: specifies box (0) or key (1).
+
     ```python
-    Sign(size=10, max_episode_steps=20, color_index=0, goal=0)
+    env = gymnasium.make("Miniworld-Sign-v0", size=10, max_episode_steps=20, color_index=0, goal=0)
     ```
-
-    `size`:  size of the square room.
-
-    `max_episode_steps`: number of steps before the episode ends.
-
-    `color_index`: specifies whether the sign says blue (0), green (1), or red (2).
-
-    `goal`: specifies box (0) or key (1).
-
     """
 
     def __init__(self, size=10, max_episode_steps=20, color_index=0, goal=0, **kwargs):

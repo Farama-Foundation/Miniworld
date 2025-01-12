@@ -1,4 +1,4 @@
-import random
+from typing import Optional
 
 import gymnasium as gym
 import numpy as np
@@ -9,8 +9,9 @@ class PyTorchObsWrapper(gym.ObservationWrapper):
     Transpose the observation image tensors for PyTorch
     """
 
-    def __init__(self, env=None):
+    def __init__(self, env):
         super().__init__(env)
+
         obs_shape = self.observation_space.shape
         self.observation_space = gym.spaces.Box(
             self.observation_space.low[0, 0, 0],
@@ -25,16 +26,17 @@ class PyTorchObsWrapper(gym.ObservationWrapper):
 
 class GreyscaleWrapper(gym.ObservationWrapper):
     """
-    Convert image obserations from RGB to greyscale
+    Convert image observations from RGB to greyscale
     """
 
-    def __init__(self, env=None):
+    def __init__(self, env):
         super().__init__(env)
+
         obs_shape = self.observation_space.shape
         self.observation_space = gym.spaces.Box(
             self.observation_space.low[0, 0, 0],
             self.observation_space.high[0, 0, 0],
-            [obs_shape[0], obs_shape[1], 1],
+            (obs_shape[0], obs_shape[1], 1),
             dtype=self.observation_space.dtype,
         )
 
@@ -52,17 +54,18 @@ class StochasticActionWrapper(gym.ActionWrapper):
     Else, a random action is sampled from the action space.
     """
 
-    def __init__(self, env=None, prob=0.9, random_action=None):
+    def __init__(self, env, prob: float = 0.9, random_action: Optional[int] = None):
         super().__init__(env)
+
         self.prob = prob
         self.random_action = random_action
 
     def action(self, action):
         """ """
-        if np.random.uniform() < self.prob:
+        if self.np_random.uniform() < self.prob:
             return action
         else:
             if self.random_action is None:
-                return random.randint(0, 6)
+                return self.np_random.integers(0, 6)
             else:
                 return self.random_action

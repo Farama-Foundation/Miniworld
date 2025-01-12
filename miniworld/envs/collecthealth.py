@@ -30,21 +30,20 @@ class CollectHealth(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing a RGB image of what the agents sees.
+    representing an RGB image of what the agents see.
 
-    ## Rewards:
+    ## Rewards
 
     +2 for each time step
     -100 for dying
 
     ## Arguments
 
+    * `size`: size of the room
+
     ```python
-    CollectHealth(size=16)
+    env = gymnasium.make("Miniworld-CollectHealth-v0", size=16)
     ```
-
-    `size`: size of the room
-
     """
 
     def __init__(self, size=16, **kwargs):

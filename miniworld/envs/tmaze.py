@@ -27,18 +27,18 @@ class TMaze(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing a RGB image of what the agents sees.
+    representing an RGB image of what the agents see.
 
-    ## Rewards:
+    ## Rewards
 
     +(1 - 0.2 * (step_count / max_episode_steps)) when box reached and zero otherwise.
 
     ## Arguments
 
     ```python
-    env = gym.make("MiniWorld-TMazeLeft-v0")
+    env = gymnasium.make("MiniWorld-TMazeLeft-v0")
     # or
-    env = gym.make("MiniWorld-TMazeRight-v0")
+    env = gymnasium.make("MiniWorld-TMazeRight-v0")
     ```
     """
 

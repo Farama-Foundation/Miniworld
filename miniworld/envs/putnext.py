@@ -28,19 +28,21 @@ class PutNext(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing a RGB image of what the agents sees.
+    representing an RGB image of what the agents see.
 
-    ## Rewards:
+    ## Rewards
 
     +(1 - 0.2 * (step_count / max_episode_steps)) when red box is next to yellow box
 
     ## Arguments
 
+    * `size`: size of world
+
     ```python
-    PutNext(size=12)
+    env = gymnasium.make("Miniworld-PutNext-v0", size=12)
     ```
 
-    `size`: size of world
+
 
     """
 

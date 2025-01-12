@@ -30,20 +30,19 @@ class RoomObjects(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing a RGB image of what the agents sees.
+    representing an RGB image of what the agents see.
 
-    ## Rewards:
+    ## Rewards
 
     None
 
     ## Arguments
 
+    * `size`: size of world
+
     ```python
-    RoomObjects(size=16)
+    env = gymnasium.make("Miniworld-RoomObjects-v0", size=16)
     ```
-
-    `size`: size of world
-
     """
 
     def __init__(self, size=10, **kwargs):

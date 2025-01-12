@@ -26,22 +26,21 @@ class OneRoom(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing a RGB image of what the agents sees.
+    representing an RGB image of what the agents see.
 
-    ## Rewards:
+    ## Rewards
 
     +(1 - 0.2 * (step_count / max_episode_steps)) when red box reached and zero otherwise.
 
     ## Arguments
 
     ```python
-    env = gym.make("MiniWorld-OneRoom-v0")
+    env = gymnasium.make("MiniWorld-OneRoom-v0")
     # or
-    env = gym.make("MiniWorld-OneRoomS6-v0")
+    env = gymnasium.make("MiniWorld-OneRoomS6-v0")
     # or
-    env = gym.make("MiniWorld-OneRoomS6Fast-v0")
+    env = gymnasium.make("MiniWorld-OneRoomS6Fast-v0")
     ```
-
     """
 
     def __init__(self, size=10, max_episode_steps=180, **kwargs):

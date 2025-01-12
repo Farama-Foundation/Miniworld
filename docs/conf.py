@@ -16,11 +16,12 @@
 
 # -- Project information -----------------------------------------------------
 import os
+import time
 
 import miniworld
 
 project = "Miniworld"
-copyright = "2023 Farama Foundation"
+copyright = f"{time.localtime().tm_year} Farama Foundation"
 author = "Farama Foundation"
 
 # The full version, including alpha/beta/rc tags
@@ -34,7 +35,6 @@ release = miniworld.__version__
 # ones.
 extensions = [
     "sphinx.ext.napoleon",
-    "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
     "sphinx.ext.githubpages",
     "sphinx.ext.viewcode",

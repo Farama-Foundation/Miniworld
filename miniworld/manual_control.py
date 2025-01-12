@@ -5,7 +5,7 @@ from pyglet.window import key
 
 
 class ManualControl:
-    def __init__(self, env, no_time_limit, domain_rand):
+    def __init__(self, env, no_time_limit: bool, domain_rand: bool):
         self.env = env.unwrapped
 
         if no_time_limit:
@@ -77,11 +77,7 @@ class ManualControl:
 
     def step(self, action):
         print(
-            "step {}/{}: {}".format(
-                self.env.unwrapped.step_count + 1,
-                self.env.unwrapped.max_episode_steps,
-                self.env.unwrapped.actions(action).name,
-            )
+            f"step {self.env.unwrapped.step_count + 1}/{self.env.unwrapped.max_episode_steps}: {self.env.unwrapped.actions(action).name}"
         )
 
         obs, reward, termination, truncation, info = self.env.step(action)
