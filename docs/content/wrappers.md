@@ -1,4 +1,4 @@
-# Wrapper
+# Wrappers
 
 Miniworld include several built in wrapper available to researchers in `miniworld.wrappers`
 

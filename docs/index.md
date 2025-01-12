@@ -8,12 +8,12 @@ lastpage:
 :hidden:
 :caption: Introduction
 
+content/installation
 content/design
 environments
 content/wrappers
 content/create_env
 content/troubleshooting
-content/installation
 ```
 
 ```{toctree}
