@@ -7,12 +7,12 @@
     <meta property="og:title" content="Miniworld Documentation" />
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research" />
-    <meta property="og:url" content="https://miniworld.farama.org/content/create_env.html" /><meta property="og:image" content="https://miniworld.farama.org/_static/img/miniworld-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Troubleshooting Guide" href="../troubleshooting/" /><link rel="prev" title="Wrapper" href="../wrappers/" />
-        <link rel="canonical" href="https://miniworld.farama.org/content/create_env.html" />
+    <meta property="og:url" content="https://miniworld.farama.org/content/wrappers.html" /><meta property="og:image" content="https://miniworld.farama.org/_static/img/miniworld-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Tutorial on Creating Environments" href="../create_env/" /><link rel="prev" title="YMaze" href="../../environments/ymaze/" />
+        <link rel="canonical" href="https://miniworld.farama.org/content/wrappers.html" />
 
     <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
-        <title>Tutorial on Creating Environments - Miniworld Documentation</title>
+        <title>Wrapper - Miniworld Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=3e7f4c72" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=82c8b628" />
@@ -230,8 +230,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../environments/ymaze/">YMaze</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../wrappers/">Wrapper</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Tutorial on Creating Environments</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Wrapper</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../create_env/">Tutorial on Creating Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../troubleshooting/">Troubleshooting Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a></li>
 </ul>
@@ -265,7 +265,7 @@
             <span>Back to top</span>
           </a>
           <div class="content-icon-container"><div class="edit-this-page">
-  <a class="muted-link" href="https://github.com/Farama-Foundation/Miniworld/edit/master/docs/content/create_env.md" title="Edit this page">
+  <a class="muted-link" href="https://github.com/Farama-Foundation/Miniworld/edit/master/docs/content/wrappers.md" title="Edit this page">
     <svg aria-hidden="true" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
       <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
       <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
@@ -296,63 +296,29 @@
           </div>
           <article role="main">
             
-            <section class="tex2jax_ignore mathjax_ignore" id="tutorial-on-creating-environments">
-<h1>Tutorial on Creating Environments<a class="headerlink" href="#tutorial-on-creating-environments" title="Link to this heading">¶</a></h1>
-<p>In this tutorial, we will go through the process of creating a new environment.</p>
-<section id="boilerplate-code">
-<h2>Boilerplate Code<a class="headerlink" href="#boilerplate-code" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="c1"># Size of environment</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+            <section class="tex2jax_ignore mathjax_ignore" id="wrapper">
+<h1>Wrapper<a class="headerlink" href="#wrapper" title="Link to this heading">¶</a></h1>
+<p>Miniworld include several built in wrapper available to researchers in <code class="docutils literal notranslate"><span class="pre">miniworld.wrappers</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="miniworld.wrappers.PyTorchObsWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">miniworld.wrappers.</span></span><span class="sig-name descname"><span class="pre">PyTorchObsWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/miniworld/wrappers/#PyTorchObsWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#miniworld.wrappers.PyTorchObsWrapper" title="Link to this definition">¶</a></dt>
+<dd><p>Transpose the observation image tensors for PyTorch</p>
+</dd></dl>
 
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<dl class="py class">
+<dt class="sig sig-object py" id="miniworld.wrappers.GreyscaleWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">miniworld.wrappers.</span></span><span class="sig-name descname"><span class="pre">GreyscaleWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/miniworld/wrappers/#GreyscaleWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#miniworld.wrappers.GreyscaleWrapper" title="Link to this definition">¶</a></dt>
+<dd><p>Convert image observations from RGB to greyscale</p>
+</dd></dl>
 
-    <span class="c1"># Allow only the movement actions</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">action_space</span> <span class="o">=</span> <span class="n">spaces</span><span class="o">.</span><span class="n">Discrete</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">move_forward</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>First, we need to create a class the inherits from <code class="docutils literal notranslate"><span class="pre">MiniWorldEnv</span></code>, we call our class <code class="docutils literal notranslate"><span class="pre">SimpleEnv</span></code>. Then, we define the action space to be only consisting of turn left (0), turn right (1), move forward (2), and move backward (3).</p>
-</section>
-<section id="generate-the-walls">
-<h2>Generate the walls<a class="headerlink" href="#generate-the-walls" title="Link to this heading">¶</a></h2>
-<p>To generate the walls, we override the function <code class="docutils literal notranslate"><span class="pre">_gen_world</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_gen_world</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_rect_room</span><span class="p">(</span><span class="n">min_x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">min_z</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">max_z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">place_agent</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>The function <code class="docutils literal notranslate"><span class="pre">_gen_world</span></code> takes the arguments: <code class="docutils literal notranslate"><span class="pre">min_x</span></code>, <code class="docutils literal notranslate"><span class="pre">max_x</span></code>, <code class="docutils literal notranslate"><span class="pre">min_z</span></code>, <code class="docutils literal notranslate"><span class="pre">max_z</span></code>. Note that instead of using the X-Y plane, we use the X-Z plane for movement. After doing this, the environment should look like this:</p>
-<figure class="align-default">
-<a class="reference internal image-reference" href="../../_images/first_step.png"><img alt="env after first step" src="../../_images/first_step.png" style="width: 500px;" />
-</a>
-</figure>
-<section id="place-goal">
-<h3>Place Goal<a class="headerlink" href="#place-goal" title="Link to this heading">¶</a></h3>
-<p>To place a goal in the environment, we use the function</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="bp">self</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">place_entity</span><span class="p">(</span><span class="n">Box</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_NAMES</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">pos</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">]),</span> <span class="nb">dir</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>which places the goal in the middle. Now the environment should look like this:</p>
-<figure class="align-default">
-<a class="reference internal image-reference" href="../../_images/second_step.png"><img alt="env after second step" src="../../_images/second_step.png" style="width: 500px;" />
-</a>
-</figure>
-</section>
-<section id="add-reward">
-<h3>Add reward<a class="headerlink" href="#add-reward" title="Link to this heading">¶</a></h3>
-<p>To add a reward when the agent gets close to the box, we can do the following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
-    <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">termination</span><span class="p">,</span> <span class="n">truncation</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+<dl class="py class">
+<dt class="sig sig-object py" id="miniworld.wrappers.StochasticActionWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">miniworld.wrappers.</span></span><span class="sig-name descname"><span class="pre">StochasticActionWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/miniworld/wrappers/#StochasticActionWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#miniworld.wrappers.StochasticActionWrapper" title="Link to this definition">¶</a></dt>
+<dd><p>Add stochasticity to the actions</p>
+<p>If a random action is provided, it is returned with probability <cite>1 - prob</cite>.
+Else, a random action is sampled from the action space.</p>
+</dd></dl>
 
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">near</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">box</span><span class="p">):</span>
-        <span class="n">reward</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reward</span><span class="p">()</span>
-        <span class="n">termination</span> <span class="o">=</span> <span class="kc">True</span>
-
-    <span class="k">return</span> <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">termination</span><span class="p">,</span> <span class="n">truncation</span><span class="p">,</span> <span class="n">info</span>
-</pre></div>
-</div>
-</section>
-</section>
 </section>
 
           </article>
@@ -360,18 +326,18 @@
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../troubleshooting/">
+            <a class="next-page" href="../create_env/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Troubleshooting Guide</div>
+                <div class="title">Tutorial on Creating Environments</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
             </a>
-            <a class="prev-page" href="../wrappers/">
+            <a class="prev-page" href="../../environments/ymaze/">
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
               </svg>
@@ -380,7 +346,7 @@
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Wrapper</div>
+                <div class="title">YMaze</div>
                 
               </div>
             </a>
@@ -424,13 +390,10 @@
           <div class="toc-tree-container">
             <div class="toc-tree">
               <ul>
-<li><a class="reference internal" href="#">Tutorial on Creating Environments</a><ul>
-<li><a class="reference internal" href="#boilerplate-code">Boilerplate Code</a></li>
-<li><a class="reference internal" href="#generate-the-walls">Generate the walls</a><ul>
-<li><a class="reference internal" href="#place-goal">Place Goal</a></li>
-<li><a class="reference internal" href="#add-reward">Add reward</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">Wrapper</a><ul>
+<li><a class="reference internal" href="#miniworld.wrappers.PyTorchObsWrapper"><code class="docutils literal notranslate"><span class="pre">PyTorchObsWrapper</span></code></a></li>
+<li><a class="reference internal" href="#miniworld.wrappers.GreyscaleWrapper"><code class="docutils literal notranslate"><span class="pre">GreyscaleWrapper</span></code></a></li>
+<li><a class="reference internal" href="#miniworld.wrappers.StochasticActionWrapper"><code class="docutils literal notranslate"><span class="pre">StochasticActionWrapper</span></code></a></li>
 </ul>
 </li>
 </ul>

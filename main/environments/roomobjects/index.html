@@ -230,6 +230,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../ymaze/">YMaze</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/wrappers/">Wrapper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/create_env/">Tutorial on Creating Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/troubleshooting/">Troubleshooting Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/installation/">Installation</a></li>
@@ -359,18 +360,20 @@ https://deepmind.com/blog/neural-scene-representation-and-rendering/</p>
 <section id="observation-space">
 <h2>Observation Space<a class="headerlink" href="#observation-space" title="Link to this heading">¶</a></h2>
 <p>The observation space is an <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">(obs_height,</span> <span class="pre">obs_width,</span> <span class="pre">3)</span></code>
-representing a RGB image of what the agents sees.</p>
+representing an RGB image of what the agents see.</p>
 </section>
 <section id="rewards">
-<h2>Rewards:<a class="headerlink" href="#rewards" title="Link to this heading">¶</a></h2>
+<h2>Rewards<a class="headerlink" href="#rewards" title="Link to this heading">¶</a></h2>
 <p>None</p>
 </section>
 <section id="arguments">
 <h2>Arguments<a class="headerlink" href="#arguments" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">RoomObjects</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>: size of world</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;Miniworld-RoomObjects-v0&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">size</span></code>: size of world</p>
 </section>
 </section>
 
@@ -407,7 +410,7 @@ representing a RGB image of what the agents sees.</p>
           <div class="bottom-of-page">
             <div class="left-details">
               <div class="copyright">
-                Copyright &#169; 2023 Farama Foundation
+                Copyright &#169; 2025 Farama Foundation
               </div>
               <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
@@ -447,7 +450,7 @@ representing a RGB image of what the agents sees.</p>
 <li><a class="reference internal" href="#description">Description</a></li>
 <li><a class="reference internal" href="#action-space">Action Space</a></li>
 <li><a class="reference internal" href="#observation-space">Observation Space</a></li>
-<li><a class="reference internal" href="#rewards">Rewards:</a></li>
+<li><a class="reference internal" href="#rewards">Rewards</a></li>
 <li><a class="reference internal" href="#arguments">Arguments</a></li>
 </ul>
 </li>

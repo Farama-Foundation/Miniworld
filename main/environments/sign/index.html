@@ -230,6 +230,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../ymaze/">YMaze</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/wrappers/">Wrapper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/create_env/">Tutorial on Creating Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/troubleshooting/">Troubleshooting Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/installation/">Installation</a></li>
@@ -354,22 +355,24 @@ the constructor respectively.</p>
 <section id="observation-space">
 <h2>Observation Space<a class="headerlink" href="#observation-space" title="Link to this heading">¶</a></h2>
 <p>The observation space is an <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">(obs_height,</span> <span class="pre">obs_width,</span> <span class="pre">3)</span></code>
-representing a RGB image of what the agents sees.</p>
+representing an RGB image of what the agents see.</p>
 </section>
 <section id="rewards">
-<h2>Rewards:<a class="headerlink" href="#rewards" title="Link to this heading">¶</a></h2>
+<h2>Rewards<a class="headerlink" href="#rewards" title="Link to this heading">¶</a></h2>
 <p>+1 for touching the object where the color matches the sign and the shape matches the goal
 -1 for touching any other object</p>
 </section>
 <section id="arguments">
 <h2>Arguments<a class="headerlink" href="#arguments" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Sign</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">goal</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">size</span></code>:  size of the square room.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_episode_steps</span></code>: number of steps before the episode ends.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">color_index</span></code>: specifies whether the sign says blue (0), green (1), or red (2).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">goal</span></code>: specifies box (0) or key (1).</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;Miniworld-Sign-v0&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_episode_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">goal</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">size</span></code>:  size of the square room.</p>
-<p><code class="docutils literal notranslate"><span class="pre">max_episode_steps</span></code>: number of steps before the episode ends.</p>
-<p><code class="docutils literal notranslate"><span class="pre">color_index</span></code>: specifies whether the sign says blue (0), green (1), or red (2).</p>
-<p><code class="docutils literal notranslate"><span class="pre">goal</span></code>: specifies box (0) or key (1).</p>
 </section>
 </section>
 
@@ -406,7 +409,7 @@ representing a RGB image of what the agents sees.</p>
           <div class="bottom-of-page">
             <div class="left-details">
               <div class="copyright">
-                Copyright &#169; 2023 Farama Foundation
+                Copyright &#169; 2025 Farama Foundation
               </div>
               <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
@@ -446,7 +449,7 @@ representing a RGB image of what the agents sees.</p>
 <li><a class="reference internal" href="#description">Description</a></li>
 <li><a class="reference internal" href="#action-space">Action Space</a></li>
 <li><a class="reference internal" href="#observation-space">Observation Space</a></li>
-<li><a class="reference internal" href="#rewards">Rewards:</a></li>
+<li><a class="reference internal" href="#rewards">Rewards</a></li>
 <li><a class="reference internal" href="#arguments">Arguments</a></li>
 </ul>
 </li>

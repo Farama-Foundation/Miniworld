@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research" />
     <meta property="og:url" content="https://miniworld.farama.org/environments/ymaze.html" /><meta property="og:image" content="https://miniworld.farama.org/_static/img/miniworld-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Tutorial on Creating Environments" href="../../content/create_env/" /><link rel="prev" title="WallGap" href="../wallgap/" />
+<link rel="index" title="Index" href="../../genindex/" /><link rel="search" title="Search" href="../../search/" /><link rel="next" title="Wrapper" href="../../content/wrappers/" /><link rel="prev" title="WallGap" href="../wallgap/" />
         <link rel="canonical" href="https://miniworld.farama.org/environments/ymaze.html" />
 
     <link rel="shortcut icon" href="../../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
@@ -230,6 +230,7 @@
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">YMaze</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../content/wrappers/">Wrapper</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/create_env/">Tutorial on Creating Environments</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/troubleshooting/">Troubleshooting Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../content/installation/">Installation</a></li>
@@ -346,17 +347,17 @@ located on the right wing of the Y-shaped junction.</p>
 <section id="observation-space">
 <h2>Observation Space<a class="headerlink" href="#observation-space" title="Link to this heading">¶</a></h2>
 <p>The observation space is an <code class="docutils literal notranslate"><span class="pre">ndarray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">(obs_height,</span> <span class="pre">obs_width,</span> <span class="pre">3)</span></code>
-representing a RGB image of what the agents sees.</p>
+representing an RGB image of what the agents see.</p>
 </section>
 <section id="rewards">
-<h2>Rewards:<a class="headerlink" href="#rewards" title="Link to this heading">¶</a></h2>
+<h2>Rewards<a class="headerlink" href="#rewards" title="Link to this heading">¶</a></h2>
 <p>+(1 - 0.2 * (step_count / max_episode_steps)) when box reached</p>
 </section>
 <section id="arguments">
 <h2>Arguments<a class="headerlink" href="#arguments" title="Link to this heading">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniWorld-YMazeLeft-v0&quot;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniWorld-YMazeLeft-v0&quot;</span><span class="p">)</span>
 <span class="c1"># or</span>
-<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniWorld-YMazeRight-v0&quot;</span><span class="p">)</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">gymnasium</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;MiniWorld-YMazeRight-v0&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -367,12 +368,12 @@ representing a RGB image of what the agents sees.</p>
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../../content/create_env/">
+            <a class="next-page" href="../../content/wrappers/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Tutorial on Creating Environments</div>
+                <div class="title">Wrapper</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
@@ -395,7 +396,7 @@ representing a RGB image of what the agents sees.</p>
           <div class="bottom-of-page">
             <div class="left-details">
               <div class="copyright">
-                Copyright &#169; 2023 Farama Foundation
+                Copyright &#169; 2025 Farama Foundation
               </div>
               <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
@@ -435,7 +436,7 @@ representing a RGB image of what the agents sees.</p>
 <li><a class="reference internal" href="#description">Description</a></li>
 <li><a class="reference internal" href="#action-space">Action Space</a></li>
 <li><a class="reference internal" href="#observation-space">Observation Space</a></li>
-<li><a class="reference internal" href="#rewards">Rewards:</a></li>
+<li><a class="reference internal" href="#rewards">Rewards</a></li>
 <li><a class="reference internal" href="#arguments">Arguments</a></li>
 </ul>
 </li>
