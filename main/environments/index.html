@@ -8,7 +8,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:description" content="Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research" />
     <meta property="og:url" content="https://miniworld.farama.org/environments.html" /><meta property="og:image" content="https://miniworld.farama.org/_static/img/miniworld-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="Tutorial on Creating Environments" href="../content/create_env/" /><link rel="prev" title="Design and Customization" href="../content/design/" />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="next" title="CollectHealth" href="collecthealth/" /><link rel="prev" title="Design and Customization" href="../content/design/" />
         <link rel="canonical" href="https://miniworld.farama.org/environments.html" />
 
     <link rel="shortcut icon" href="../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
@@ -213,7 +213,21 @@
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../content/design/">Design and Customization</a></li>
-<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+<li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Environments</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="collecthealth/">CollectHealth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fourrooms/">FourRooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hallway/">Hallway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="maze/">Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oneroom/">OneRoom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pickupobjects/">PickupObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="putnext/">PutNext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="roomobjects/">RoomObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sidewalk/">Sidewalk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sign/">Sign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="threerooms/">ThreeRooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tmaze/">TMaze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wallgap/">WallGap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ymaze/">YMaze</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../content/create_env/">Tutorial on Creating Environments</a></li>
@@ -285,6 +299,162 @@
 <h1>Environments<a class="headerlink" href="#environments" title="Link to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 </div>
+<div class="env-grid">
+    
+    <a href="collecthealth">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/collecthealth.jpg">
+            </div>
+            <div class="cell__title">
+                <span>CollectHealth</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="fourrooms">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/fourrooms.jpg">
+            </div>
+            <div class="cell__title">
+                <span>FourRooms</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="hallway">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/hallway.jpg">
+            </div>
+            <div class="cell__title">
+                <span>Hallway</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="maze">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/maze.jpg">
+            </div>
+            <div class="cell__title">
+                <span>Maze</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="oneroom">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/oneroom.jpg">
+            </div>
+            <div class="cell__title">
+                <span>OneRoom</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="pickupobjects">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/pickupobjects.jpg">
+            </div>
+            <div class="cell__title">
+                <span>PickupObjects</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="putnext">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/putnext.jpg">
+            </div>
+            <div class="cell__title">
+                <span>PutNext</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="roomobjects">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/roomobjects.jpg">
+            </div>
+            <div class="cell__title">
+                <span>RoomObjects</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="sidewalk">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/sidewalk.jpg">
+            </div>
+            <div class="cell__title">
+                <span>Sidewalk</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="sign">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/sign.jpg">
+            </div>
+            <div class="cell__title">
+                <span>Sign</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="tmaze">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/tmaze.jpg">
+            </div>
+            <div class="cell__title">
+                <span>TMaze</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="threerooms">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/threerooms.jpg">
+            </div>
+            <div class="cell__title">
+                <span>ThreeRooms</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="wallgap">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/wallgap.jpg">
+            </div>
+            <div class="cell__title">
+                <span>WallGap</span>
+            </div>
+        </div>
+    </a>
+
+    <a href="ymaze">
+        <div class="env-grid__cell">
+            <div class="cell__image-container">
+                <img src="/_static/environments/ymaze.jpg">
+            </div>
+            <div class="cell__title">
+                <span>YMaze</span>
+            </div>
+        </div>
+    </a>
+</div>
 </section>
 
           </article>
@@ -292,12 +462,12 @@
         <footer>
           
           <div class="related-pages">
-            <a class="next-page" href="../content/create_env/">
+            <a class="next-page" href="collecthealth/">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Tutorial on Creating Environments</div>
+                <div class="title">CollectHealth</div>
               </div>
               <svg class="furo-related-icon">
                 <use href="#svg-arrow-right"></use>
