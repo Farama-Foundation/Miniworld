@@ -1,21 +1,21 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="en" data-content_root="../">
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark">
-    <meta name="description" content="">
+    <meta name="description" content="Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research">
     <meta property="og:title" content="Miniworld Documentation" />
     <meta property="og:type" content="website" />
-    <meta property="og:description" content="" />
-    <meta property="og:url" content="https://miniworld.farama.org/release_notes.html" /><meta name="twitter:card" content="summary_large_image"><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
-<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="prev" title="YMaze" href="../environments/ymaze/" />
+    <meta property="og:description" content="Miniworld is a minimalistic 3D interior environment simulator for reinforcement learning & robotics research" />
+    <meta property="og:url" content="https://miniworld.farama.org/release_notes.html" /><meta property="og:image" content="https://miniworld.farama.org/_static/img/miniworld-github.png" /><meta name="twitter:card" content="summary_large_image"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex/" /><link rel="search" title="Search" href="../search/" /><link rel="prev" title="Troubleshooting Guide" href="../content/troubleshooting/" />
         <link rel="canonical" href="https://miniworld.farama.org/release_notes.html" />
 
-    <link rel="shortcut icon" href="../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 6.2.1 and Furo 2022.12.07.dev1 -->
+    <link rel="shortcut icon" href="../_static/miniworld-favicon.png"/><!-- Generated with Sphinx 7.4.7 and Furo 2023.08.19.dev1 -->
         <title>Release Notes - Miniworld Documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=721f65a87c37740baa8d605b09db5bec3a2987a8" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=67ddc8aaa908fff6a8eb5c854d313935a27431d3" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=3e7f4c72" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=82c8b628" />
     
     
 
@@ -53,18 +53,6 @@
               <line x1="0.232" y1="12" x2="23.5" y2="12"></line>
               <line x1="0.232" y1="20" x2="23.5" y2="20"></line>
             </svg>
-            <!-- <svg viewBox="0 0 24 24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <line x1="0.5" y1="4.5" x2="23.5" y2="4.5" style="fill: none; "></line>
-              <line x1="0.5" y1="12" x2="14" y2="12" ></line>
-              <line x1="0.5" y1="19.5" x2="23.5" y2="19.5"></line>
-              <polyline style="stroke-width: 0px;" points="17 7 22 12 17 17"></polyline>
-            </svg> -->
-            <!-- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:20px">
-              <defs></defs>
-              <rect y="1" width="22" height="22" rx="2" ry="2" style="fill: none;" x="1"></rect>
-              <line x1="8" y1="1" x2="8" y2="23"></line>
-              <polyline style="stroke-linecap: round; fill: none; stroke-linejoin: round;" points="13 7 17 12 13 17"></polyline>
-            </svg> -->
           </label>
         </div>
         <div class="farama-header__left farama-header__center--mobile">
@@ -224,26 +212,28 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../content/installation/">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../content/design/">Design and Customization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../content/troubleshooting/">Troubleshooting Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../environments/">Environments</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Environments</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../environments/collecthealth/">CollectHealth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/fourrooms/">FourRooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/hallway/">Hallway</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/maze/">Maze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/oneroom/">OneRoom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/pickupobjects/">PickupObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/putnext/">PutNext</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/roomobjects/">RoomObjects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/sidewalk/">Sidewalk</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/sign/">Sign</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/threerooms/">ThreeRooms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/tmaze/">TMaze</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/wallgap/">WallGap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../environments/ymaze/">YMaze</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Environments</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../content/env_list/">Environment List</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/collecthealth/">CollectHealth</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/fourrooms/">FourRooms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/hallway/">Hallway</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/maze/">Maze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/oneroom/">OneRoom</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/pickupobjects/">PickupObjects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/putnext/">PutNext</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/roomobjects/">RoomObjects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/sidewalk/">Sidewalk</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/sign/">Sign</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/threerooms/">ThreeRooms</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/tmaze/">TMaze</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/wallgap/">WallGap</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../environments/ymaze/">YMaze</a></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../content/wrappers/">Wrappers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/create_env/">Tutorial on Creating Environments</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../content/troubleshooting/">Troubleshooting Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul class="current">
@@ -306,10 +296,17 @@
           </div>
           <article role="main">
             
-            <section id="release-notes">
-<h1>Release Notes<a class="headerlink" href="#release-notes" title="Permalink to this heading">#</a></h1>
+            <section class="tex2jax_ignore mathjax_ignore" id="release-notes">
+<h1>Release Notes<a class="headerlink" href="#release-notes" title="Link to this heading">¶</a></h1>
+<section id="release-2-1-0">
+<h2>Miniworld v2.1.0<a class="headerlink" href="#release-2-1-0" title="Link to this heading">¶</a></h2>
+<p><em>Released on 2025-01-12 - <a class="reference external" href="https://github.com/Farama-Foundation/Miniworld/releases/tag/2.1.0">GitHub</a> - <a class="reference external" href="https://pypi.org/project/miniworld/2.1.0/">PyPI</a></em></p>
+<h1>v2.1.0 Release notes</h1>
+<p>In this release, Miniworld has been updated to support Gymnasium 0.29.1 and 1.0.0+, along with minor changes to the website.</p>
+<p>In addition, a <code>ManualControl</code> class has been added for easy testing by users in <code>miniworld.manual_control</code> (<a class="issue-link js-issue-link" data-error-text="Failed to load title" data-id="1673271109" data-permission-text="Title is private" data-url="https://github.com/Farama-Foundation/Miniworld/issues/94" data-hovercard-type="pull_request" data-hovercard-url="/Farama-Foundation/Miniworld/pull/94/hovercard" href="https://github.com/Farama-Foundation/Miniworld/pull/94">#94</a>). The <code>*.mtl</code> loading was more robust, and position specification is now feasible for <code>place_agent</code>.  Add a <code>StochasticAction</code> wrapper for users who wish to take random actions for a percentage of the time.</p>
+<p><strong>Full Changelog</strong>: <a class="commit-link" href="https://github.com/Farama-Foundation/Miniworld/compare/2.0.0...2.1.0"><tt>2.0.0...2.1.0</tt></a></p></section>
 <section id="release-2-0-1">
-<h2>Miniworld 2.0.1: Miniworld Becomes Mature<a class="headerlink" href="#release-2-0-1" title="Permalink to this heading">#</a></h2>
+<h2>Miniworld 2.0.1: Miniworld Becomes Mature<a class="headerlink" href="#release-2-0-1" title="Link to this heading">¶</a></h2>
 <p><em>Released on 2023-02-14 - <a class="reference external" href="https://github.com/Farama-Foundation/Miniworld/releases/tag/2.0.1">GitHub</a> - <a class="reference external" href="https://pypi.org/project/miniworld/2.0.1/">PyPI</a></em></p>
 <h3>Release Notes</h3>
 <p>MiniWorld is a minimalistic 3D interior environment simulator for reinforcement learning &amp; robotics research that allows environments to be easily edited like Minigrid meets DM Lab. It can simulate environments with rooms, doors, hallways, and various objects (e.g., office and home environments, mazes). Miniworld 2.0.0 is the first mature release within Farama. This version transitions from gym to gymnasium. Additionally, this release adds CI testing, code standardization pipeline, tests for environments, and documentation for each environment.</p>
@@ -342,7 +339,7 @@
           <div class="bottom-of-page">
             <div class="left-details">
               <div class="copyright">
-                Copyright &#169; 2022 Farama Foundation
+                Copyright &#169; 2025 Farama Foundation
               </div>
               <!--
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
@@ -379,6 +376,7 @@
             <div class="toc-tree">
               <ul>
 <li><a class="reference internal" href="#">Release Notes</a><ul>
+<li><a class="reference internal" href="#release-2-1-0">Miniworld v2.1.0</a></li>
 <li><a class="reference internal" href="#release-2-0-1">Miniworld 2.0.1: Miniworld Becomes Mature</a></li>
 </ul>
 </li>
@@ -414,12 +412,43 @@
     
     
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/scripts/furo.js"></script>
+    <script src="../_static/documentation_options.js?v=a25e6b42"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=7660844c"></script>
     
     <script>
+
+      const createProjectsList = (projects, displayImages) => {
+        const ulElem = Object.assign(document.createElement('ul'),
+          {
+            className:'farama-header-menu-list',
+          }
+        )
+        for (let project of projects) {
+          const liElem = document.createElement("li");
+          const aElem = Object.assign(document.createElement("a"),
+            {
+              href: project.link
+            }
+          );
+          liElem.appendChild(aElem);
+          if (displayImages) {
+            const imgElem = Object.assign(document.createElement("img"),
+              {
+                src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
+                alt: `${project.name} logo`,
+                className: "farama-black-logo-invert"
+              }
+            );
+            aElem.appendChild(imgElem);
+          }
+          aElem.appendChild(document.createTextNode(project.name));
+          ulElem.appendChild(liElem);
+        }
+        return ulElem;
+      }
+
       // Create menu with Farama projects by using the API at farama.org/api/projects.json
       const createCORSRequest = (method, url) => {
         let xhr = new XMLHttpRequest();
@@ -446,9 +475,15 @@
       xhr.onload = () => {
         const jsonResponse = xhr.response;
         const sections = {
-          "Documentation": [],
-          "Mature Projects": [],
-          "Incubating Projects": [],
+          "Core Projects": [],
+          "Mature Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
+          "Incubating Projects": {
+            "Documentation": [],
+            "Repositories": [],
+          },
           "Foundation": [
             {
               name: "About",
@@ -464,28 +499,38 @@
             }
           ]
         }
+
+        // Categorize projects
         Object.keys(jsonResponse).forEach(key => {
           projectJson = jsonResponse[key];
           if (projectJson.website !== null) {
             projectJson.link = projectJson.website;
-            sections["Documentation"].push(projectJson)
-          } else if (projectJson.type == "mature") {
-            projectJson.link = projectJson.github;
-            sections["Mature Projects"].push(projectJson)
           } else {
             projectJson.link = projectJson.github;
-            sections["Incubating Projects"].push(projectJson)
+          }
+          if (projectJson.type === "core") {
+            sections["Core Projects"].push(projectJson)
+          } else if (projectJson.type == "mature") {
+            if (projectJson.website !== null) {
+              sections["Mature Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Mature Projects"]["Repositories"].push(projectJson)
+            }
+          } else {
+            if (projectJson.website !== null) {
+              sections["Incubating Projects"]["Documentation"].push(projectJson)
+            } else {
+              sections["Incubating Projects"]["Repositories"].push(projectJson)
+            }
           }
         })
 
         const menuContainer = document.querySelector(".farama-header-menu__body");
 
         Object.keys(sections).forEach((key, i) => {
-          projects = sections[key];
           const sectionElem = Object.assign(
             document.createElement('div'), {
               className:'farama-header-menu__section',
-              style: "padding-left: 24px"
             }
           )
           sectionElem.appendChild(Object.assign(document.createElement('span'),
@@ -494,33 +539,37 @@
               innerText: key
             }
           ))
-          const ulElem = Object.assign(document.createElement('ul'),
-            {
-              className:'farama-header-menu-list',
-            }
-          )
-          for (let project of projects) {
-            const liElem = document.createElement("li");
-            const aElem = Object.assign(document.createElement("a"),
-              {
-                href: project.link
-              }
-            );
-            liElem.appendChild(aElem);
-            if (key !== "Foundation") {
-              const imgElem = Object.assign(document.createElement("img"),
-                {
-                  src: project.image ? imagesBasepath + project.image : imagesBasepath + "/farama_black.svg",
-                  alt: `${project.name} logo`,
-                  className: "farama-black-logo-invert"
+          // is not a list
+          if (sections[key].constructor !== Array) {
+            const subSections = sections[key];
+            const subSectionContainerElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsections-container',
+                  style: 'display: flex'
                 }
-              );
-              aElem.appendChild(imgElem);
-            }
-            aElem.appendChild(document.createTextNode(project.name));
-            ulElem.appendChild(liElem);
+            )
+            Object.keys(subSections).forEach((subKey, i) => {
+              const subSectionElem = Object.assign(
+                document.createElement('div'), {
+                  className:'farama-header-menu__subsection',
+                }
+              )
+              subSectionElem.appendChild(Object.assign(document.createElement('span'),
+                {
+                  className:'farama-header-menu__subsection-title' ,
+                  innerText: subKey
+                }
+              ))
+              const ulElem = createProjectsList(subSections[subKey], key !== 'Foundation');
+              subSectionElem.appendChild(ulElem);
+              subSectionContainerElem.appendChild(subSectionElem);
+            })
+            sectionElem.appendChild(subSectionContainerElem);
+          } else {
+            const projects = sections[key];
+            const ulElem = createProjectsList(projects, true);
+            sectionElem.appendChild(ulElem);
           }
-          sectionElem.appendChild(ulElem);
           menuContainer.appendChild(sectionElem)
         });
       }
