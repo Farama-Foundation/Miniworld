@@ -24,22 +24,20 @@ class PickupObjects(MiniWorldEnv, utils.EzPickle):
     ## Observation Space
 
     The observation space is an `ndarray` with shape `(obs_height, obs_width, 3)`
-    representing a RGB image of what the agents sees.
+    representing an RGB image of what the agents see.
 
-    ## Rewards:
+    ## Rewards
 
     +1 when agent picked up object
 
     ## Arguments
 
+    * `size`: size of world
+    * `num_objs`: number of objects
+
     ```python
-    PickupObjects(size=12, num_objs=5)
+    env = gymnasium.make("Miniworld-PickupObjects-v0", size=12, num_objs=5)
     ```
-
-    `size`: size of world
-
-    `num_objs`: number of objects
-
     """
 
     def __init__(self, size=12, num_objs=5, **kwargs):

@@ -10,6 +10,7 @@ lastpage:
 
 content/design
 environments
+content/wrappers
 content/create_env
 content/troubleshooting
 content/installation
