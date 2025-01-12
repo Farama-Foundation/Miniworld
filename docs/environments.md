@@ -3,22 +3,22 @@
 ```{toctree}
 :hidden:
 
-collecthealth
-fourrooms
-hallway
-maze
-oneroom
-pickupobjects
-putnext
-roomobjects
-sidewalk
-sign
-threerooms
-tmaze
-wallgap
-ymaze
+environments/collecthealth
+environments/fourrooms
+environments/hallway
+environments/maze
+environments/oneroom
+environments/pickupobjects
+environments/putnext
+environments/roomobjects
+environments/sidewalk
+environments/sign
+environments/threerooms
+environments/tmaze
+environments/wallgap
+environments/ymaze
 ```
 
 ```{raw} html
-   :file: env_list.html
+   :file: environments/env_list.html
 ```
