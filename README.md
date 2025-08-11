@@ -2,7 +2,7 @@
     <img src="https://raw.githubusercontent.com/Farama-Foundation/Miniworld/master/miniworld-text.png" width="500px"/>
 </p>
 
-Miniworld is being maintained by the Farama Foundation (https://farama.org/project_standards). See the [Project Roadmap](https://github.com/Farama-Foundation/Miniworld/issues/103) for details regarding the long-term plans.
+**Aug 11, 2025: This project has been deprecated due to a lack of wide spread community use, and is no longer planned to receive any additional updates or support.**
 
 [![Build Status](https://travis-ci.org/maximecb/gym-miniworld.svg?branch=master)](https://travis-ci.org/maximecb/gym-miniworld)
 
