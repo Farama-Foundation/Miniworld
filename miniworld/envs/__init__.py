@@ -1,6 +1,7 @@
 import gymnasium as gym
 
 from miniworld.envs.collecthealth import CollectHealth
+from miniworld.envs.conditionalpickupobject import ConditionalPickUpObject
 from miniworld.envs.fourrooms import FourRooms
 from miniworld.envs.hallway import Hallway
 from miniworld.envs.maze import Maze, MazeS2, MazeS3, MazeS3Fast

@@ -133,6 +133,8 @@ class MeshEnt(Entity):
         super().__init__()
 
         self.static = static
+        self.type = mesh_name.split("_")[0]
+        self.color = mesh_name.split("_")[-1]
 
         # Load the mesh
         self.mesh = ObjMesh.get(mesh_name)
