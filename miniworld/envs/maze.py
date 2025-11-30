@@ -115,7 +115,6 @@ class Maze(MiniWorldEnv, utils.EzPickle):
             visited.add(room)
 
             # Reorder the neighbors to visit in a random order
-            '''
             orders = [(0, 1), (0, -1), (-1, 0), (1, 0)]
             assert 4 <= len(orders)
             neighbors = []
@@ -126,6 +125,7 @@ class Maze(MiniWorldEnv, utils.EzPickle):
                 neighbors.append(elem)
             '''
             neighbors = self.rand.subset([(0, 1), (0, -1), (-1, 0), (1, 0)], 4)
+            '''
 
             # For each possible neighbor
             for dj, di in neighbors:
@@ -273,8 +273,8 @@ class CustomMaze(MiniWorldEnv):
                     max_x=max_x,
                     min_z=min_z,
                     max_z=max_z,
-                    wall_tex=self.rand.choice(self.wall_textures) if self.random_texture else 'brick_wall',
-                    floor_tex=self.rand.choice(self.floor_textures) if self.random_texture else 'floor_tiles_bw',
+                    wall_tex=self.np_random.choice(self.wall_textures) if self.random_texture else 'brick_wall',
+                    floor_tex=self.np_random.choice(self.floor_textures) if self.random_texture else 'floor_tiles_bw',
                 )
                 row.append(room)
 
@@ -293,7 +293,15 @@ class CustomMaze(MiniWorldEnv):
             visited.add(room)
 
             # Reorder the neighbors to visit in a random order
-            neighbors = self.rand.subset([(0, 1), (0, -1), (-1, 0), (1, 0)], 4)
+            orders = [(0, 1), (0, -1), (-1, 0), (1, 0)]
+            assert 4 <= len(orders)
+            neighbors = []
+
+            while len(neighbors) < 4:
+                elem = orders[self.np_random.choice(len(orders))]
+                orders.remove(elem)
+                neighbors.append(elem)
+            #neighbors = self.rand.subset([(0, 1), (0, -1), (-1, 0), (1, 0)], 4)
 
             # For each possible neighbor
             for dj, di in neighbors:
@@ -377,7 +385,7 @@ class CustomMaze(MiniWorldEnv):
 
         pos = np.asarray([room.mid_x, 0, room.mid_z])
         ent.pos = pos
-        ent.dir = dir if dir is not None else self.rand.float(-math.pi, math.pi)
+        ent.dir = dir if dir is not None else self.np_random.uniform(-math.pi, math.pi)
         self.entities.append(ent)
         return ent
 

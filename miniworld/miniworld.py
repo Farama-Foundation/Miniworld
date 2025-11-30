@@ -8,6 +8,10 @@ import numpy as np
 import pyglet
 from gymnasium import spaces
 from gymnasium.core import ObsType
+try:
+    from gymnasium.utils import seeding
+except ImportError:  # pragma: no cover - fall back for legacy Gym installs
+    from gym.utils import seeding  # type: ignore
 from pyglet.gl import (
     GL_AMBIENT,
     GL_AMBIENT_AND_DIFFUSE,
@@ -470,10 +474,10 @@ class MiniWorldEnv(gym.Env):
     def __init__(
         self,
         max_episode_steps: int = 1500,
-        obs_width: int = 80,
-        obs_height: int = 60,
-        window_width: int = 800,
-        window_height: int = 600,
+        obs_width: int = 64,
+        obs_height: int = 64,
+        window_width: int = 128,
+        window_height: int = 128,
         params=DEFAULT_PARAMS,
         domain_rand: bool = False,
         render_mode: Optional[str] = None,
@@ -487,7 +491,7 @@ class MiniWorldEnv(gym.Env):
 
         # Observations are RGB images with pixels in [0, 255]
         self.observation_space = spaces.Box(
-            low=0, high=255, shape=(obs_height, obs_width, 3), dtype=np.uint8
+            low=0, high=255, shape=(3, obs_height, obs_width), dtype=np.uint8
         )
 
         self.reward_range = (-math.inf, math.inf)
@@ -540,6 +544,22 @@ class MiniWorldEnv(gym.Env):
 
         # Initialize the state
         self.reset()
+
+    def seed(self, seed: Optional[int] = None):
+        """
+        Set the RNG for the environment and seed the action/observation spaces.
+        """
+
+        self._np_random, actual_seed = seeding.np_random(seed)
+        self._np_random_seed = actual_seed
+
+        if hasattr(self, "action_space") and self.action_space is not None:
+            self.action_space.seed(actual_seed)
+
+        if hasattr(self, "observation_space") and self.observation_space is not None:
+            self.observation_space.seed(actual_seed)
+
+        return [actual_seed]
 
     def reset(
         self, *, seed: Optional[int] = None, options: Optional[dict] = None
