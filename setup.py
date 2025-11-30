@@ -45,7 +45,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     keywords=["Environment", "Agent", "RL", "Gym", "Robotics", "3D"],
-    python_requires=">=3.7, <3.11",
+    python_requires=">=3.7",
     packages=["miniworld", "miniworld.envs"],
     package_data={
         "miniworld": [
