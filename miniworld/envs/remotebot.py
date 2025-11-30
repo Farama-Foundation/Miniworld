@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Entirely replicated from:
+# https://github.com/liuqh16/Miniworld/commit/bc15e7c02e04ed586bda0159293397f93495ef59
 
 import math
 
@@ -21,7 +23,7 @@ from pyglet.gl import (
     glViewport,
 )
 
-from gym_miniworld.miniworld import MiniWorldEnv
+from miniworld.miniworld import MiniWorldEnv
 
 try:
     import zmq
