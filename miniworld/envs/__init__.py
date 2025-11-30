@@ -6,10 +6,15 @@ from miniworld.envs.collecthealth import CollectHealth
 from miniworld.envs.conditionalpickupobject import ConditionalPickUpObject
 from miniworld.envs.fourrooms import FourRooms
 from miniworld.envs.hallway import Hallway
-from miniworld.envs.maze import Maze, MazeS2, MazeS3, MazeS3Fast
+from miniworld.envs.maze import (
+    Maze, MazeS2, MazeS3, MazeS3Fast, MazeS4,
+    FullMaze, FullMazeS3, FullMazeS4, FullMazeS5,
+    FullRandomMaze, FullRandomMazeS3, FullRandomMazeS4, FullRandomMazeS5,
+)
 from miniworld.envs.oneroom import OneRoom, OneRoomS6, OneRoomS6Fast
 from miniworld.envs.pickupobjects import PickupObjects
 from miniworld.envs.putnext import PutNext
+from miniworld.envs.remotebot import RemoteBot
 from miniworld.envs.roomobjects import RoomObjects
 from miniworld.envs.sidewalk import Sidewalk
 from miniworld.envs.sign import Sign
@@ -56,3 +61,5 @@ def register_envs():
 
 
 register_envs()
+
+
