@@ -64,6 +64,26 @@ def test_stochastic_wrapper():
     env.close()
 
 
+def test_stochastic_wrapper_samples_full_action_space():
+    class _DummyEnv(gym.Env):
+        def __init__(self):
+            self.action_space = gym.spaces.Discrete(8)
+            self.observation_space = gym.spaces.Box(0, 1, (1,))
+
+        def reset(self, *, seed=None, options=None):
+            super().reset(seed=seed)
+            return self.observation_space.sample(), {}
+
+        def step(self, action):
+            return self.observation_space.sample(), 0.0, False, False, {}
+
+    # prob=0.0 => wrapper always returns a random action
+    env = StochasticActionWrapper(_DummyEnv(), prob=0.0)
+    env.reset(seed=42)
+    sampled = {int(env.action(0)) for _ in range(2000)}
+    assert sampled == set(range(env.action_space.n))
+
+
 def test_text_frame():
     # Test TextFrame
     # make sure it loads the TextFrame with no issues

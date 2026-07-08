@@ -66,6 +66,6 @@ class StochasticActionWrapper(gym.ActionWrapper):
             return action
         else:
             if self.random_action is None:
-                return self.np_random.integers(0, 6)
+                return self.np_random.integers(0, self.action_space.n)
             else:
                 return self.random_action
