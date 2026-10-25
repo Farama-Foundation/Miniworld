@@ -547,6 +547,7 @@ class MiniWorldEnv(gym.Env):
         """
         Reset the simulation at the start of a new episode
         This also randomizes many environment parameters (domain randomization)
+        In human render mode, display the initial frame of the new episode.
         """
         super().reset(seed=seed)
 
@@ -599,6 +600,9 @@ class MiniWorldEnv(gym.Env):
 
         # Generate the first camera image
         obs = self.render_obs()
+
+        if self.render_mode == "human":
+            self.render()
 
         # Return first observation
         return obs, {}
