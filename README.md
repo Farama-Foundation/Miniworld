@@ -45,6 +45,7 @@ Limitations:
 - Physics are very basic, not sufficient for robot arms or manipulation
 
 List of publications & submissions using MiniWorld (please open a pull request to add missing entries):
+- [Towards Reliable VLM Judges: State-Conditional Invariance and Presentation-Aware Diagnostics](https://arxiv.org/abs/2611.13596) (University of Science and Technology of China, NeurIPS 2026, Track on Evaluations and Datasets)
 - [Towards real-world navigation with deep differentiable planners](https://arxiv.org/abs/2108.05713) (VGG, Oxford, CVPR 2022)
 - [Decoupling Exploration and Exploitation for Meta-Reinforcement Learning without Sacrifices](https://arxiv.org/abs/2008.02790) (Stanford University, ICML 2021)
 - [Rank the Episodes: A Simple Approach for Exploration in Procedurally-Generated Environments](https://openreview.net/forum?id=MtEE0CktZht) (Texas A&M University, Kuai Inc., ICLR 2021)
